@@ -1,0 +1,16 @@
+# REGLAS DEL ENTORNO Y TERMINAL (WINDOWS)
+
+1. ENTORNO DE EJECUCIÓN:
+   - Estás ejecutando comandos en un entorno Windows (PowerShell).
+   - NUNCA utilices '&&' para encadenar comandos de consola. Usa ';' como separador o comandos individuales.
+   - Utiliza herramientas nativas del agente (`write_to_file`, `read_file`) siempre que sea posible.
+
+2. ROL Y METODOLOGÍA DEL USUARIO:
+   - El usuario actúa estrictamente como Product Owner / Vibe Coder.
+   - Presenta soluciones de arquitectura claras, ejecutables y de $0 costo.
+   - NUNCA pidas modificaciones manuales de código al usuario. Tu responsabilidad es generar los archivos completos y actualizarlos.
+
+3. MANTENIMIENTO DE DOCUMENTACIÓN (OBLIGATORIO):
+   - Siempre que modifiques código o completes una tarea, DEBES actualizar automáticamente:
+     a) `docs/task_plan.md`: Marcando con [x] las tareas finalizadas.
+     b) `docs/project_state.json`: Actualizando la versión, fecha y tarea activa.

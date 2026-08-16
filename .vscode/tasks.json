@@ -1,0 +1,57 @@
+{
+    "version": "2.0.1",
+    "tasks": [
+        {
+            "label": "🛡️ 1- Git: Guardar Avance Local (Commit)",
+            "type": "shell",
+            "command": "git add . ; git commit -m '${input:commitMessage}'",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "🚀 2- Git: Subir Avances a GitHub (Push)",
+            "type": "shell",
+            "command": "git push",
+            "problemMatcher": [],
+            "group": "none"
+        },
+        {
+            "label": "⚡ 3- Git: Guardar Y Subir a GitHub (All-in-One) (Commit + Push)",
+            "type": "shell",
+            "command": "git add . ; git commit -m '${input:commitMessage}' ; git push",
+            "problemMatcher": [],
+            "group": "none"
+        },
+        {
+            "label": "📜 4- Git: Ver Historial de Checkpoints",
+            "type": "shell",
+            "command": "git log --oneline -n 10",
+            "problemMatcher": [],
+            "group": "none"
+        },
+        {
+            "label": "🚨 5- Git: Deshacer Cambios (Botón de Emergencia)",
+            "type": "shell",
+            "command": "git reset --hard",
+            "problemMatcher": [],
+            "group": "none"
+        },
+        {
+            "label": "🔍 6- Git: Ver Estado del Proyecto",
+            "type": "shell",
+            "command": "git status",
+            "problemMatcher": [],
+            "group": "none"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "commitMessage",
+            "type": "promptString",
+            "description": "Mensaje para el Checkpoint (ej. 'docs: actualiza web_spec con imagenes')"
+        }
+    ]
+}
