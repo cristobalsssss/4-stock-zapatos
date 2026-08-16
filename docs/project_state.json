@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "last_updated": "2026-08-16",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
     "active_phase": "FASE 3: CONSTRUCCIÓN DE SKILLS DE NEGOCIO EN N8N",
-    "last_completed_task": "FASE 2: Creación de la Base de Datos, Storage, Triggers de Kardex/Precios, Vistas y Políticas en Supabase",
+    "last_completed_task": "FASE 2: Creación de Base de Datos, Storage y Carga de Inventario Real (84 modelos, 714 variantes, 253 pares)",
     "current_task": "Creación de Workflows y Skills de Negocio en n8n (ConsultarStock, RegistrarVentaYDescontarStock, RegistrarDevolucion)",
     "environment": {
         "os": "Windows (PowerShell)",
@@ -12,5 +12,11 @@
         "storage": "Supabase Storage Bucket ('productos' y 'productos-imagenes')",
         "backend_skills": "n8n (Render Free)",
         "frontend": "Vercel (Free Tier)"
+    },
+    "metrics": {
+        "total_productos": 84,
+        "total_variantes": 714,
+        "variantes_con_stock": 173,
+        "total_unidades_bodega": 253
     }
 }

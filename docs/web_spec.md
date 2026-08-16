@@ -112,7 +112,15 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
 - RLS habilitado con políticas de lectura pública para el catálogo y soporte transaccional para simulación de ventas.
 - Integración con `supabase_realtime` para actualización en vivo del stock en el catálogo del cliente.
 
-## 6. REQUERIMIENTOS DEL FRONTEND (VERCEL)
+## 6. CARGA Y MIGRACIÓN DE DATOS REALES (ETL)
+- **Origen de datos:** `data/inventario_real.xlsx`
+- **Mecanismo:** Script Node.js con herencia de celdas combinadas (*Forward Fill*).
+- **Resultados de Producción:**
+  - `productos`: 84 registros únicos por código de modelo.
+  - `inventario_variantes`: 714 variantes (combinación modelo + color + talla).
+  - Unidades con stock disponible en bodega: 253 pares distribuidos en 173 variantes activas.
+
+## 7. REQUERIMIENTOS DEL FRONTEND (VERCEL)
 1. **Vista Pública (Catálogo):**
    - Tarjetas de catálogo ordenadas por modelo.
    - Selector visual de colores y tallas disponibles en tiempo real.
