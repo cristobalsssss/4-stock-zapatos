@@ -1,15 +1,15 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "1.0.0",
-    "last_updated": "2026-08-15",
+    "version": "1.1.0",
+    "last_updated": "2026-08-16",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 2: DESPLIEGUE EN SUPABASE (BASE DE DATOS Y STORAGE)",
-    "last_completed_task": "Generación de documentación estándar de arquitectura en carpeta docs",
-    "current_task": "Creación de proyecto y tablas relacionales en Supabase",
+    "active_phase": "FASE 3: CONSTRUCCIÓN DE SKILLS DE NEGOCIO EN N8N",
+    "last_completed_task": "FASE 2: Creación de la Base de Datos, Storage, Triggers de Kardex/Precios, Vistas y Políticas en Supabase",
+    "current_task": "Creación de Workflows y Skills de Negocio en n8n (ConsultarStock, RegistrarVentaYDescontarStock, RegistrarDevolucion)",
     "environment": {
         "os": "Windows (PowerShell)",
         "database": "Supabase (Postgres Free)",
-        "storage": "Supabase Storage Bucket",
+        "storage": "Supabase Storage Bucket ('productos' y 'productos-imagenes')",
         "backend_skills": "n8n (Render Free)",
         "frontend": "Vercel (Free Tier)"
     }

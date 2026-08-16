@@ -7,10 +7,10 @@
 - [x] Generar documentación de arquitectura en `docs/` (`agents.md`, `web_spec.md`, `task_plan.md`, `project_state.json`)
 
 ## FASE 2: DESPLIEGUE EN SUPABASE (BASE DE DATOS Y STORAGE)
-- [ ] Crear proyecto en Supabase (Plan Free)
-- [ ] Ejecutar script SQL de creación de las 5 tablas (`productos`, `inventario_variantes`, `imagenes_variante`, `ventas`, `detalle_movimientos`)
-- [ ] Crear Bucket público `productos-imagenes` en Supabase Storage
-- [ ] Cargar datos iniciales del catálogo desde el archivo `Stock Zapatos 15-08-2026.xlsx - Agosto-2026.csv`
+- [x] Crear proyecto en Supabase (Plan Free)
+- [x] Ejecutar script SQL de creación de las 5 tablas base (`productos`, `inventario_variantes`, `imagenes_variante`, `ventas`, `detalle_movimientos`) + tablas proactivas, triggers de kardex/precios y vistas analíticas
+- [x] Crear y configurar como públicos los Buckets `productos` y `productos-imagenes` en Supabase Storage
+- [x] Cargar datos iniciales del catálogo mediante script de inicialización (`supabase/seed.sql`)
 
 ## FASE 3: CONSTRUCCIÓN DE SKILLS DE NEGOCIO EN N8N
 - [ ] Crear Workflow/Skill 1: `ConsultarStock` (Endpoint REST para obtener disponibilidad por modelo/color/talla)
