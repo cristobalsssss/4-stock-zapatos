@@ -1,0 +1,338 @@
+{
+  "name": "Skill 3 - Registrar Devolución",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "registrar-devolucion",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-registrar-devolucion",
+      "name": "Webhook Registrar Devolución",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "webhookId": "webhook-registrar-devolucion"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extraer y validar los parámetros de devolución\nconst input = $input.first().json.body || $input.first().json;\n\nconst variante_id = input.variante_id;\nconst venta_id = input.venta_id || null;\nconst cantidad = Math.max(1, parseInt(input.cantidad, 10) || 1);\nconst motivo = (input.motivo || 'Devolución de cliente / Cambio').toString().trim();\n\nif (!variante_id) {\n  throw new Error('El campo variante_id es obligatorio');\n}\n\nreturn [{\n  json: {\n    variante_id,\n    venta_id,\n    cantidad,\n    motivo\n  }\n}];"
+      },
+      "id": "code-validar-devolucion",
+      "name": "Validar Datos Devolución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://leifskqgupgsajgemgul.supabase.co/rest/v1/inventario_variantes?id=eq.{{ $json.variante_id }}&select=*",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlaWZza3FndXBnc2FqZ2VtZ3VsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjgzMTMzOSwiZXhwIjoyMTAyNDA3MzM5fQ.TCj0nDmzNAanM5NKyKu3yfurkxOqPh2Qrkl9rfJZ86s"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlaWZza3FndXBnc2FqZ2VtZ3VsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjgzMTMzOSwiZXhwIjoyMTAyNDA3MzM5fQ.TCj0nDmzNAanM5NKyKu3yfurkxOqPh2Qrkl9rfJZ86s"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-consultar-variante-dev",
+      "name": "Consultar Variante",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Procesar cálculo de nuevo stock\nconst devData = $('Validar Datos Devolución').first().json;\nconst variante = $input.first() ? $input.first().json : null;\n\nif (!variante || !variante.id) {\n  return [{\n    json: {\n      valido: false,\n      error: 'Variante no encontrada en inventario',\n      status_code: 404\n    }\n  }];\n}\n\nconst stock_actual = parseInt(variante.stock_disponible, 10) || 0;\nconst nuevo_stock = stock_actual + devData.cantidad;\n\nreturn [{\n  json: {\n    valido: true,\n    variante_id: variante.id,\n    sku_variante: variante.sku_variante,\n    venta_id: devData.venta_id,\n    cantidad: devData.cantidad,\n    motivo: devData.motivo,\n    stock_actual,\n    nuevo_stock,\n    precio_aplicado: parseFloat(variante.precio_vendedores) || 0\n  }\n}];"
+      },
+      "id": "code-calcular-reintegro",
+      "name": "Calcular Reintegro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "variante-valida",
+              "leftValue": "={{ $json.valido }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-variante-valida",
+      "name": "¿Variante Existe?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://leifskqgupgsajgemgul.supabase.co/rest/v1/inventario_variantes?id=eq.{{ $json.variante_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlaWZza3FndXBnc2FqZ2VtZ3VsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjgzMTMzOSwiZXhwIjoyMTAyNDA3MzM5fQ.TCj0nDmzNAanM5NKyKu3yfurkxOqPh2Qrkl9rfJZ86s"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlaWZza3FndXBnc2FqZ2VtZ3VsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjgzMTMzOSwiZXhwIjoyMTAyNDA3MzM5fQ.TCj0nDmzNAanM5NKyKu3yfurkxOqPh2Qrkl9rfJZ86s"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"stock_disponible\": {{ $json.nuevo_stock }}\n}",
+        "options": {}
+      },
+      "id": "http-reintegrar-stock",
+      "name": "Reintegrar Stock",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://leifskqgupgsajgemgul.supabase.co/rest/v1/detalle_movimientos",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlaWZza3FndXBnc2FqZ2VtZ3VsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjgzMTMzOSwiZXhwIjoyMTAyNDA3MzM5fQ.TCj0nDmzNAanM5NKyKu3yfurkxOqPh2Qrkl9rfJZ86s"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlaWZza3FndXBnc2FqZ2VtZ3VsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjgzMTMzOSwiZXhwIjoyMTAyNDA3MzM5fQ.TCj0nDmzNAanM5NKyKu3yfurkxOqPh2Qrkl9rfJZ86s"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"venta_id\": {{ $('Calcular Reintegro').first().json.venta_id ? '\"' + $('Calcular Reintegro').first().json.venta_id + '\"' : 'null' }},\n  \"variante_id\": \"{{ $('Calcular Reintegro').first().json.variante_id }}\",\n  \"tipo_movimiento\": \"Devolucion\",\n  \"cantidad\": {{ $('Calcular Reintegro').first().json.cantidad }},\n  \"precio_aplicado\": {{ $('Calcular Reintegro').first().json.precio_aplicado }},\n  \"comision_vendedor\": 0,\n  \"notas\": \"{{ $('Calcular Reintegro').first().json.motivo }}\"\n}",
+        "options": {}
+      },
+      "id": "http-insertar-mov-devolucion",
+      "name": "Insertar Movimiento Devolución",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const calc = $('Calcular Reintegro').first().json;\n\nreturn [{\n  json: {\n    success: true,\n    mensaje: 'Devolución registrada con éxito y stock reintegrado',\n    variante_id: calc.variante_id,\n    sku_variante: calc.sku_variante,\n    venta_id: calc.venta_id,\n    cantidad_reintegrada: calc.cantidad,\n    motivo: calc.motivo,\n    stock_anterior: calc.stock_actual,\n    stock_disponible: calc.nuevo_stock,\n    fecha: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "code-respuesta-devolucion",
+      "name": "Formatear Respuesta Devolución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-exito-devolucion",
+      "name": "Responder Éxito Devolución",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": false,\n  \"error\": \"Variante no encontrada\"\n}",
+        "options": {
+          "responseCode": 404
+        }
+      },
+      "id": "respond-error-dev",
+      "name": "Responder Error No Encontrado",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        420
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Registrar Devolución": {
+      "main": [
+        [
+          {
+            "node": "Validar Datos Devolución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Datos Devolución": {
+      "main": [
+        [
+          {
+            "node": "Consultar Variante",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Variante": {
+      "main": [
+        [
+          {
+            "node": "Calcular Reintegro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular Reintegro": {
+      "main": [
+        [
+          {
+            "node": "¿Variante Existe?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Variante Existe?": {
+      "main": [
+        [
+          {
+            "node": "Reintegrar Stock",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder Error No Encontrado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reintegrar Stock": {
+      "main": [
+        [
+          {
+            "node": "Insertar Movimiento Devolución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insertar Movimiento Devolución": {
+      "main": [
+        [
+          {
+            "node": "Formatear Respuesta Devolución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Respuesta Devolución": {
+      "main": [
+        [
+          {
+            "node": "Responder Éxito Devolución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": true
+}

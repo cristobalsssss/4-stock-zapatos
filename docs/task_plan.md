@@ -14,9 +14,9 @@
 - [x] Cargar inventario real desde Excel (`data/inventario_real.xlsx`) mediante script ETL con herencia de celdas combinadas (84 modelos, 714 variantes, 253 unidades en stock)
 
 ## FASE 3: CONSTRUCCIÓN DE SKILLS DE NEGOCIO EN N8N
-- [ ] Crear Workflow/Skill 1: `ConsultarStock` (Endpoint REST para obtener disponibilidad por modelo/color/talla)
-- [ ] Crear Workflow/Skill 2: `RegistrarVentaYDescontarStock` (Registra en `ventas` y `detalle_movimientos`, resta stock y calcula comisión)
-- [ ] Crear Workflow/Skill 3: `RegistrarDevolucion` (Revierte transacción y suma stock)
+- [x] Crear Workflow/Skill 1: `ConsultarStock` (Endpoint REST para obtener disponibilidad por modelo/color/talla)
+- [x] Crear Workflow/Skill 2: `RegistrarVentaYDescontarStock` (Registra en `ventas` y `detalle_movimientos`, resta stock y calcula comisión)
+- [x] Crear Workflow/Skill 3: `RegistrarDevolucion` (Revierte transacción y suma stock)
 
 ## FASE 4: VIBE CODING DEL FRONTEND EN VERCEL
 - [ ] Generar estructura inicial del Frontend Web (Catálogo + Admin)

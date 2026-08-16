@@ -1,0 +1,164 @@
+{
+  "name": "Skill 1 - Consultar Stock",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "consultar-stock",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-consultar-stock",
+      "name": "Webhook Consultar Stock",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "webhookId": "webhook-consultar-stock"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extraer parámetros de búsqueda del body o query\nconst inputData = $input.first().json;\nconst body = inputData.body || {};\nconst query = inputData.query || {};\n\nconst params = {\n  codigo: (body.codigo || query.codigo || '').toString().trim().toUpperCase(),\n  talla: body.talla || query.talla || null,\n  color: (body.color || query.color || '').toString().trim().toLowerCase(),\n  nombre: (body.nombre || query.nombre || '').toString().trim().toLowerCase(),\n  incluir_precio_interno: body.incluir_precio_interno === true || body.incluir_precio_interno === 'true' || query.incluir_precio_interno === 'true'\n};\n\nreturn [{ json: { params } }];"
+      },
+      "id": "code-preparar-parametros",
+      "name": "Preparar Filtros",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://leifskqgupgsajgemgul.supabase.co/rest/v1/inventario_variantes",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlaWZza3FndXBnc2FqZ2VtZ3VsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjgzMTMzOSwiZXhwIjoyMTAyNDA3MzM5fQ.TCj0nDmzNAanM5NKyKu3yfurkxOqPh2Qrkl9rfJZ86s"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlaWZza3FndXBnc2FqZ2VtZ3VsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjgzMTMzOSwiZXhwIjoyMTAyNDA3MzM5fQ.TCj0nDmzNAanM5NKyKu3yfurkxOqPh2Qrkl9rfJZ86s"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "select",
+              "value": "id,producto_id,sku_variante,color,talla,stock_disponible,stock_minimo_alerta,imagen_portada_variante,precio_interno,precio_vendedores,productos(id,codigo_modelo,nombre_fantasia,material,taco_base,horma,info_adicional,imagen_defecto_url)"
+            },
+            {
+              "name": "stock_disponible",
+              "value": "gt.0"
+            },
+            {
+              "name": "order",
+              "value": "talla.asc"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-consultar-supabase",
+      "name": "Consultar Supabase Stock",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener filtros ingresados y datos retornados por Supabase\nconst params = $('Preparar Filtros').first().json.params;\nconst items = $input.all().map(i => i.json);\n\n// Aplicar filtros opcionales en memoria\nlet filtrados = items.filter(item => {\n  const prod = item.productos || {};\n  \n  // Filtro por código de modelo o SKU\n  if (params.codigo) {\n    const matchCodigo = (prod.codigo_modelo || '').toUpperCase().includes(params.codigo);\n    const matchSku = (item.sku_variante || '').toUpperCase().includes(params.codigo);\n    if (!matchCodigo && !matchSku) return false;\n  }\n  \n  // Filtro por talla\n  if (params.talla) {\n    if (Number(item.talla) !== Number(params.talla)) return false;\n  }\n  \n  // Filtro por color\n  if (params.color) {\n    const matchColor = (item.color || '').toLowerCase().includes(params.color);\n    if (!matchColor) return false;\n  }\n  \n  // Filtro por nombre fantasía\n  if (params.nombre) {\n    const matchNombre = (prod.nombre_fantasia || '').toLowerCase().includes(params.nombre);\n    if (!matchNombre) return false;\n  }\n  \n  return true;\n});\n\n// Formatear la salida según las reglas de negocio\nconst catalogoFormateado = filtrados.map(item => {\n  const prod = item.productos || {};\n  const registro = {\n    variante_id: item.id,\n    producto_id: item.producto_id,\n    codigo_modelo: prod.codigo_modelo,\n    nombre_fantasia: prod.nombre_fantasia,\n    sku: item.sku_variante,\n    color: item.color,\n    talla: item.talla,\n    stock_disponible: item.stock_disponible,\n    material: prod.material,\n    taco_base: prod.taco_base,\n    horma: prod.horma,\n    info_adicional: prod.info_adicional,\n    imagen_url: item.imagen_portada_variante || prod.imagen_defecto_url || null,\n    precio_vendedores: Number(item.precio_vendedores)\n  };\n  \n  // Regla: precio_interno solo si incluir_precio_interno es true\n  if (params.incluir_precio_interno) {\n    registro.precio_interno = Number(item.precio_interno);\n  }\n  \n  return registro;\n});\n\nreturn [{\n  json: {\n    success: true,\n    total_disponibles: catalogoFormateado.length,\n    filtros_aplicados: params,\n    productos: catalogoFormateado\n  }\n}];"
+      },
+      "id": "code-filtrar-formatear",
+      "name": "Filtrar y Formatear",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-webhook-stock",
+      "name": "Responder Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Consultar Stock": {
+      "main": [
+        [
+          {
+            "node": "Preparar Filtros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Filtros": {
+      "main": [
+        [
+          {
+            "node": "Consultar Supabase Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Supabase Stock": {
+      "main": [
+        [
+          {
+            "node": "Filtrar y Formatear",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar y Formatear": {
+      "main": [
+        [
+          {
+            "node": "Responder Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": true
+}
