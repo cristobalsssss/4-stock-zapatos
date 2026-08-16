@@ -9,7 +9,7 @@
     "environment": {
         "os": "Windows (PowerShell)",
         "database": "Supabase (Postgres Free)",
-        "storage": "Supabase Storage Bucket ('productos' y 'productos-imagenes')",
+        "storage": "Supabase Storage Bucket ('calzado-imagenes', 'productos', 'productos-imagenes')",
         "backend_skills": "n8n (Render Free)",
         "frontend": "Vercel (Free Tier)"
     },

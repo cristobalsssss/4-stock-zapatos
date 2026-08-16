@@ -8,17 +8,35 @@
 ## 2. ARQUITECTURA DEL SISTEMA
 \[ FRONTEND (Vercel) \] <---> \[ SKILLS ENGINE (n8n en Render) \] <---> \[ DATABASE & STORAGE (Supabase) \]
 
-- Catálogo Público: Consultar Stock
-- Panel Admin Movimientos: Registrar Venta/Devolución
-- Base de Datos: 5 Tablas Relacionales
-- Almacenamiento: Buckets públicos 'productos' y 'productos-imagenes' en Supabase Storage
+- **Catálogo Público:** Consultar Stock en tiempo real e interactuar con galería de imágenes.
+- **Panel Admin Movimientos:** Registrar Venta, Devolución, Gestión de Stock e Imágenes.
+- **Base de Datos:** 5 Tablas Relacionales + Tablas de Auditoría/Telemetría + Vistas Optimizadas.
+- **Almacenamiento (Supabase Storage):** Bucket público `calzado-imagenes` (y buckets auxiliares `productos`, `productos-imagenes`).
+  - Módulo de carga rápida con actualización automática de `imagen_portada_variante` o `imagen_defecto_url`.
 
-## 3. LÓGICA FINANCIERA Y DE PRECIOS
-- `precio_interno`: Precio base oficial de venta directa (remate).
-- `precio_vendedores`: Precio asignado al vendedor externo.
-- `comision_vendedor`: Delta automático calculado al momento de la venta (`precio_vendedores` - `precio_interno`). Si el precio interno cambia (remate sobre remate), la comisión se ajusta automáticamente sobre el nuevo valor base.
+## 3. ENDPOINTS DE PRODUCCIÓN N8N (SKILLS ENGINE)
+- **Skill 1 (Consultar Stock):** `https://n8n-backend-finanzas.onrender.com/webhook/consultar-stock`
+  - Método: `POST` / `GET`
+  - Filtros opcionales: `codigo`, `talla`, `color`, `nombre`, `incluir_precio_interno`.
+- **Skill 2 (Registrar Venta):** `https://n8n-backend-finanzas.onrender.com/webhook/registrar-venta`
+  - Método: `POST`
+  - Payload: `{ variante_id, cantidad, vendedor, medio_pago, precio_aplicado, comision_vendedor, notas }`
+- **Skill 3 (Registrar Devolución):** `https://n8n-backend-finanzas.onrender.com/webhook/registrar-devolucion`
+  - Método: `POST`
+  - Payload: `{ variante_id, cantidad, motivo, venta_id }`
 
-## 4. MODELO DE DATOS EN SUPABASE (5 TABLAS BASE)
+## 4. LÓGICA FINANCIERA, PRECIOS Y COMISIONES
+- `precio_interno`: Precio base oficial de costo/remate para venta directa del dueño/admin.
+- `precio_vendedores`: Precio oficial sugerido de venta para vendedores externos.
+- **Regla de Venta Directa (Dueño / Admin):**
+  - Se aplica `precio_interno`.
+  - La comisión calculada es **$0**.
+- **Regla de Venta por Vendedor:**
+  - Se aplica `precio_vendedores`.
+  - La comisión calculada es: **`(precio_vendedores - precio_interno) * cantidad`**.
+  - Si se aplica un precio especial manual, la comisión es: **`(precio_aplicado - precio_interno) * cantidad`** (siempre con piso en $0).
+
+## 5. MODELO DE DATOS EN SUPABASE (5 TABLAS BASE)
 
 ### Tabla 1: `productos` (Ficha General del Modelo)
 - `id` (uuid, PK, default: gen_random_uuid())
@@ -75,7 +93,7 @@
 - `notas` (text)
 - `created_at` (timestamptz, default: now())
 
-## 5. FUNCIONALIDADES PROACTIVAS AÑADIDAS POR LA IA
+## 6. FUNCIONALIDADES PROACTIVAS AÑADIDAS POR LA IA
 
 Como experto en arquitectura de software para E-commerce y Gestión de Inventarios de Calzado, se implementaron las siguientes adiciones incrementales y no destructivas:
 
@@ -112,7 +130,7 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
 - RLS habilitado con políticas de lectura pública para el catálogo y soporte transaccional para simulación de ventas.
 - Integración con `supabase_realtime` para actualización en vivo del stock en el catálogo del cliente.
 
-## 6. CARGA Y MIGRACIÓN DE DATOS REALES (ETL)
+## 7. CARGA Y MIGRACIÓN DE DATOS REALES (ETL)
 - **Origen de datos:** `data/inventario_real.xlsx`
 - **Mecanismo:** Script Node.js con herencia de celdas combinadas (*Forward Fill*).
 - **Resultados de Producción:**
@@ -120,13 +138,21 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
   - `inventario_variantes`: 714 variantes (combinación modelo + color + talla).
   - Unidades con stock disponible en bodega: 253 pares distribuidos en 173 variantes activas.
 
-## 7. REQUERIMIENTOS DEL FRONTEND (VERCEL)
+## 8. ALMACENAMIENTO DE IMÁGENES (SUPABASE STORAGE)
+- **Bucket Público:** `calzado-imagenes` (configurado como público en Supabase Storage con políticas de lectura anónima y subida de archivos).
+- **Estructura y Enlace de Imágenes:**
+  - Actualización directa de `imagen_defecto_url` en la tabla `productos`.
+  - Actualización directa de `imagen_portada_variante` en la tabla `inventario_variantes`.
+  - Galería multi-ángulo vinculada en `imagenes_variante` con campos `angulo_descripcion` y `orden_posicion`.
+- **Módulo de Carga Rápida en Panel Admin:** Interfaz con drag & drop / selección de archivo para subir imágenes directamente a Supabase Storage y asociar la URL pública al modelo o variante correspondiente.
+
+## 9. REQUERIMIENTOS DEL FRONTEND (VERCEL)
 1. **Vista Pública (Catálogo):**
-   - Tarjetas de catálogo ordenadas por modelo.
-   - Selector visual de colores y tallas disponibles en tiempo real.
-   - Al hacer clic en un producto, abre un modal con la galería de fotos multi-ángulo de la variante seleccionada.
+   - Tarjetas de catálogo ordenadas por modelo con renderizado dinámico de imagen principal.
+   - Selector visual interactivo de colores y tallas disponibles en tiempo real (consumiendo Skill 1 o Supabase directo).
+   - Modal con visor de detalles del calzado y galería multi-ángulo.
 2. **Vista Administración (Panel Privado):**
-   - Módulo de simulación / registro de Ventas (descuenta stock automáticamente).
-   - Módulo de registro de Devoluciones (reintegra stock).
-   - Módulo de carga/gestión de imágenes para productos y variantes.
-   - Panel de Alertas de Stock Crítico y Resumen de Comisiones.
+   - **Módulo de Ventas:** Simulación y registro con selector de vendedor, cálculo dinámico de precio (interno vs vendedor) y comisiones en vivo (consumiendo Skill 2).
+   - **Módulo de Devoluciones:** Reintegro inmediato al stock con trazabilidad de motivo (consumiendo Skill 3).
+   - **Módulo de Gestión de Imágenes:** Carga y asignación rápida de fotos al bucket `calzado-imagenes`.
+   - **Módulo Analítico:** Alertas de stock crítico y liquidación en vivo de comisiones por vendedor.
