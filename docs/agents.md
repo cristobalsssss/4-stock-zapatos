@@ -20,3 +20,9 @@ Cada vez que la IA complete una tarea del plan de trabajo o realice un cambio es
   - Base de Datos y Storage: Supabase Free Tier.
   - Backend/Skills Engine: n8n hosted en Render.
   - Frontend: Vercel Free Tier.
+
+
+## 5. Regla de Oro para Componentes Interactivos y Física de UI:
+- **No reinventar la rueda:** Queda estrictamente prohibido programar motores matemáticos o gestos táctiles desde cero (drag, pan, pinch-to-zoom, calendarios complejos, carruseles avanzados).
+- **Librerías estándar:** Siempre se debe priorizar e instalar librerías estándar de la industria, probadas y optimizadas para móviles (ej: `react-zoom-pan-pinch`, `lucide-react`, etc.).
+- **Mobile-First & Capas Limpias:** Todo modal o visor debe aislar sus capas (`pointer-events-none` en contenedores flotantes y `pointer-events-auto` solo en botones activos) para nunca bloquear gestos en iOS Safari y Android Chrome.
