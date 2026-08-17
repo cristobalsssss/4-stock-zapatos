@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, Move, Sparkles } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Move } from 'lucide-react';
 
 export default function InteractiveLightbox({
   isOpen,
@@ -47,18 +47,22 @@ export default function InteractiveLightbox({
   const currentImage = images[currentIndex] || images[0];
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-md flex flex-col justify-between p-3 sm:p-6 select-none animate-fade-in touch-none overflow-hidden">
-      {/* TransformWrapper con key={currentIndex} para aislamiento y reseteo total de zoom al cambiar de foto */}
+    <div 
+      style={{ touchAction: 'none' }}
+      className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-md flex flex-col justify-between p-3 sm:p-6 select-none animate-fade-in touch-none overflow-hidden"
+    >
+      {/* TransformWrapper con Fullscreen Touch Engine y reseteo por key={currentIndex} */}
       <TransformWrapper
         key={currentIndex}
-        initialScale={1}
+        wrapperStyle={{ width: "100%", height: "100%", position: "relative" }}
+        contentStyle={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
         minScale={1}
-        maxScale={5}
+        maxScale={6}
         centerOnInit={true}
-        wheel={{ step: 0.2, disabled: false }}
-        pinch={{ step: 5, disabled: false }}
-        doubleClick={{ mode: 'toggle', step: 2.5 }}
+        pinch={{ step: 1, disabled: false }}
         panning={{ disabled: false, velocityDisabled: false }}
+        doubleClick={{ mode: "toggle", step: 2.5 }}
+        wheel={{ step: 0.15, disabled: false }}
       >
         {({ zoomIn, zoomOut, resetTransform, state }) => {
           const currentScale = +(state?.scale || 1).toFixed(1);
@@ -68,7 +72,10 @@ export default function InteractiveLightbox({
               {/* ========================================================= */}
               {/* BARRA SUPERIOR (Overlay pointer-events-none con z-50)     */}
               {/* ========================================================= */}
-              <div className="w-full max-w-6xl mx-auto flex items-center justify-between text-white z-50 pointer-events-none mb-2">
+              <div 
+                style={{ touchAction: 'none' }}
+                className="w-full max-w-6xl mx-auto flex items-center justify-between text-white z-50 pointer-events-none mb-2 touch-none"
+              >
                 <div className="min-w-0 pr-4 pointer-events-auto">
                   <div className="flex items-center gap-2">
                     <h3 className="font-display font-extrabold text-sm sm:text-lg text-white truncate">
@@ -108,7 +115,7 @@ export default function InteractiveLightbox({
                     <button
                       type="button"
                       onClick={() => zoomIn(0.5)}
-                      disabled={currentScale >= 5}
+                      disabled={currentScale >= 6}
                       className="p-1.5 sm:p-2 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-800 disabled:opacity-30 transition-all active:scale-95 cursor-pointer"
                       title="Aumentar Zoom (+)"
                     >
@@ -128,18 +135,21 @@ export default function InteractiveLightbox({
               </div>
 
               {/* ========================================================= */}
-              {/* ÁREA CENTRAL INTERACTIVA DE ZOOM & PAN (Despejada 100%)    */}
+              {/* ÁREA CENTRAL INTERACTIVA DE ZOOM & PAN (100% PANTALLA)    */}
               {/* ========================================================= */}
-              <div className="relative w-full h-full flex-1 flex items-center justify-center overflow-hidden my-auto">
+              <div 
+                style={{ touchAction: 'none' }}
+                className="relative w-full h-full flex-1 flex items-center justify-center overflow-hidden my-auto touch-none"
+              >
                 <TransformComponent
-                  wrapperClass="!w-full !h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
-                  contentClass="!w-full !h-full flex items-center justify-center"
+                  wrapperClass="!w-full !h-full !touch-none"
+                  contentClass="!w-full !h-full flex items-center justify-center !touch-none"
                 >
                   <img
                     src={currentImage?.url}
                     alt={currentImage?.label || title}
                     draggable={false}
-                    className="max-h-[80vh] max-w-full object-contain pointer-events-auto select-none rounded-2xl shadow-2xl mx-auto my-auto"
+                    className="max-h-[85vh] max-w-[90vw] object-contain select-none pointer-events-auto rounded-2xl shadow-2xl"
                   />
                 </TransformComponent>
 
@@ -153,7 +163,10 @@ export default function InteractiveLightbox({
 
                 {/* Flechas Laterales de Navegación (pointer-events-none en wrapper, pointer-events-auto en botones) */}
                 {images.length > 1 && (
-                  <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-2 sm:px-4 pointer-events-none z-50">
+                  <div 
+                    style={{ touchAction: 'none' }}
+                    className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-2 sm:px-4 pointer-events-none z-50 touch-none"
+                  >
                     <button
                       type="button"
                       onClick={handlePrev}
@@ -178,7 +191,10 @@ export default function InteractiveLightbox({
               {/* CARRUSEL INFERIOR (Overlay pointer-events-none con z-50)   */}
               {/* ========================================================= */}
               {images.length > 1 && (
-                <div className="w-full max-w-6xl mx-auto flex items-center justify-center gap-2 overflow-x-auto py-2 z-50 pointer-events-none">
+                <div 
+                  style={{ touchAction: 'none' }}
+                  className="w-full max-w-6xl mx-auto flex items-center justify-center gap-2 overflow-x-auto py-2 z-50 pointer-events-none touch-none"
+                >
                   {images.map((img, idx) => (
                     <button
                       key={idx}
