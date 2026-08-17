@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "last_updated": "2026-08-16",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #1 APLICADA)",
-    "last_completed_task": "REVISIÓN #1: Asociación de fotos por Color/Modelo, Galería General fluida, Grid de miniaturas existentes en Admin con eliminación y reemplazo, PIN Tiny1234",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #2 APLICADA)",
+    "last_completed_task": "REVISIÓN #2: Prioridad de portada principal base, filtrado estricto de galería por color y Lightbox / Zoom pantalla completa",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",

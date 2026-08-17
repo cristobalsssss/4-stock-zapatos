@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Eye, ShoppingBag, Check, AlertTriangle, Layers } from 'lucide-react';
+import { Eye, ShoppingBag, Check, AlertTriangle, Layers, ZoomIn } from 'lucide-react';
 
 export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
   const variantes = product.inventario_variantes || [];
@@ -15,7 +15,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
     return Array.from(map.values());
   }, [variantes]);
 
-  // Color seleccionado por defecto: el primero que tenga stock o el primero de la lista
+  // Color seleccionado por defecto: el primero con stock o el primero de la lista
   const [selectedColor, setSelectedColor] = useState(() => {
     const conStock = coloresDisponibles.find(c => {
       const varsColor = variantes.filter(v => v.color === c.color);
@@ -55,9 +55,11 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
     return variantes.reduce((sum, v) => sum + (v.stock_disponible || 0), 0);
   }, [variantes]);
 
-  // Imagen activa: Portada del color seleccionado (compartida por todas las tallas de ese color) o fallback a imagen de modelo
+  // =========================================================================
+  // REGLA UX: IMAGEN DEL COLOR SELECCIONADO (O PORTADA PRINCIPAL BASE)
+  // =========================================================================
   const displayImage = useMemo(() => {
-    // Buscar si alguna variante de este color tiene foto de portada
+    // Buscar si alguna variante de este color específico tiene foto de portada
     const varConFoto = variantes.find(v => v.color === selectedColor && v.imagen_portada_variante);
     return varConFoto?.imagen_portada_variante || product.imagen_defecto_url || null;
   }, [variantes, selectedColor, product.imagen_defecto_url]);
@@ -87,14 +89,17 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
   };
 
   return (
-    <article className="group bg-white rounded-2xl border border-zinc-200/80 hover:border-zinc-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden">
-      {/* Imagen Principal y Badges */}
-      <div className="relative aspect-[4/3] bg-zinc-100 overflow-hidden flex items-center justify-center">
+    <article className="group bg-white rounded-3xl border border-zinc-200/80 hover:border-zinc-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden">
+      {/* Contenedor de Imagen Maximizado */}
+      <div 
+        onClick={() => onOpenGallery(product, activeVariant)}
+        className="relative aspect-[4/3] bg-zinc-100 overflow-hidden flex items-center justify-center cursor-pointer group/img"
+      >
         {displayImage ? (
           <img
             src={displayImage}
             alt={`${product.codigo_modelo} - ${product.nombre_fantasia} (${selectedColor})`}
-            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover object-center group-hover/img:scale-106 transition-transform duration-500"
             loading="lazy"
           />
         ) : (
@@ -110,19 +115,19 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
         )}
 
         {/* Badge Código de Modelo */}
-        <div className="absolute top-3 left-3 bg-zinc-900/80 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-lg tracking-wider uppercase shadow-sm">
+        <div className="absolute top-3 left-3 bg-zinc-900/85 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-lg tracking-wider uppercase shadow-sm">
           {product.codigo_modelo}
         </div>
 
         {/* Badge Disponibilidad Global */}
         <div className="absolute top-3 right-3">
           {totalStockProducto > 0 ? (
-            <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+            <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               {totalStockProducto} {totalStockProducto === 1 ? 'par' : 'pares'}
             </span>
           ) : (
-            <span className="bg-zinc-800/90 text-zinc-300 text-[11px] font-medium px-2 py-0.5 rounded-full shadow-xs">
+            <span className="bg-zinc-800/90 text-zinc-300 text-[11px] font-medium px-2.5 py-0.5 rounded-full shadow-xs">
               Agotado
             </span>
           )}
@@ -130,9 +135,13 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
 
         {/* Botón Ver Galería Flotante */}
         <button
-          onClick={() => onOpenGallery(product, activeVariant)}
-          className="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-zinc-800 p-2 rounded-xl shadow-md hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 text-xs font-semibold backdrop-blur-sm"
-          title="Ver galería general de fotos"
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenGallery(product, activeVariant);
+          }}
+          className="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-zinc-800 p-2 rounded-xl shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 text-xs font-semibold backdrop-blur-sm border border-zinc-200"
+          title="Ver galería general de fotos y zoom"
         >
           <Eye className="w-4 h-4 text-brand-600" />
           <span className="hidden sm:inline">Ver Galería</span>
@@ -142,9 +151,12 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
       {/* Contenido de la Ficha */}
       <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div>
-          {/* Título y Material */}
+          {/* Título y Precio */}
           <div className="flex items-baseline justify-between gap-2 mb-1">
-            <h3 className="font-display font-bold text-base sm:text-lg text-zinc-900 tracking-tight line-clamp-1">
+            <h3 
+              onClick={() => onOpenGallery(product, activeVariant)}
+              className="font-display font-bold text-base sm:text-lg text-zinc-900 tracking-tight line-clamp-1 cursor-pointer hover:text-brand-600 transition-colors"
+            >
               {product.nombre_fantasia || `Modelo ${product.codigo_modelo}`}
             </h3>
             <span className="font-display font-extrabold text-base sm:text-lg text-brand-700 tracking-tight whitespace-nowrap">
@@ -152,7 +164,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
             </span>
           </div>
 
-          {/* Atributos: Taco, Horma, Material */}
+          {/* Atributos: Material, Taco, Horma */}
           <p className="text-xs text-zinc-500 mb-3 line-clamp-1">
             {[product.material, product.taco_base, product.horma ? `Horma ${product.horma}` : null]
               .filter(Boolean)
@@ -174,6 +186,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
                   return (
                     <button
                       key={c.color}
+                      type="button"
                       onClick={() => handleSelectColor(c.color)}
                       className={`px-2.5 py-1 text-xs font-medium rounded-lg border transition-all ${
                         isSelected
@@ -196,7 +209,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
                 Tallas Disponibles:
               </span>
               {activeVariant && activeVariant.stock_disponible === 1 && (
-                <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded flex items-center gap-1 animate-pulse">
+                <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded flex items-center gap-1 animate-pulse border border-amber-200">
                   <AlertTriangle className="w-3 h-3" />
                   ¡Último par!
                 </span>
@@ -212,6 +225,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
                 return (
                   <button
                     key={v.id}
+                    type="button"
                     onClick={() => setSelectedVariantId(v.id)}
                     disabled={!hayStock}
                     className={`h-9 flex flex-col items-center justify-center rounded-xl text-xs font-bold transition-all ${
@@ -239,6 +253,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
 
         {/* Botón de Acción Principal: Reservar Par */}
         <button
+          type="button"
           onClick={handleAdd}
           disabled={!activeVariant || activeVariant.stock_disponible <= 0}
           className={`w-full py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all active:scale-98 shadow-sm ${
@@ -257,7 +272,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
           ) : activeVariant && activeVariant.stock_disponible > 0 ? (
             <>
               <ShoppingBag className="w-4 h-4" />
-              <span>Reservar Talla {activeVariant.talla} ({activeVariant.color})</span>
+              <span>Reservar Talla {activeVariant.talla} ({selectedColor})</span>
             </>
           ) : (
             <span>Sin Stock en esta Talla</span>

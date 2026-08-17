@@ -140,10 +140,10 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
 
 ## 8. ALMACENAMIENTO Y GESTIÓN DE IMÁGENES (SUPABASE STORAGE)
 - **Bucket Público Principal:** `productos-imagenes` (y bucket de respaldo `calzado-imagenes`).
-- **Lógica de Asociación por Modelo y Color (Revisión #1):**
-  - **Foto Principal del Modelo:** Se almacena en `imagen_defecto_url` en la tabla `productos`.
+- **Lógica de Asociación por Modelo y Color:**
+  - **Foto Principal del Modelo:** Se almacena en `imagen_defecto_url` en la tabla `productos` y actúa como la portada inicial destacada (índice 0).
   - **Foto de Portada del Color:** Se asocia a nivel de `(producto_id, color)`. Todas las tallas que pertenezcan a ese color comparten automáticamente la misma fotografía de portada en el catálogo.
-  - **Galería General:** Conjunto de fotografías adicionales asociadas al modelo y color (`imagenes_variante`), sin distinción de ángulos técnicos.
+  - **Galería General por Color (Revisión #2):** Al seleccionar un color específico, la galería filtra de manera estricta para mostrar **únicamente** las fotografías pertenecientes a ese color, ocultando fotos de otros colores para garantizar máxima fidelidad visual al cliente.
 - **Módulo de Gestión en Panel Admin:**
   - Selector de Modelo y Color.
   - **Grid de Miniaturas Existentes:** Muestra todas las fotos cargadas para el modelo/color actual con opción de eliminación directa (icono papelera) para permitir reemplazo inmediato.
@@ -151,9 +151,10 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
 
 ## 9. REQUERIMIENTOS DEL FRONTEND (VERCEL)
 1. **Ruta Pública (`/`):**
-   - **Catálogo Editorial Boutique:** Tarjetas ordenadas por modelo, filtros en tiempo real por búsqueda de texto, modelo, color y talla disponible.
-   - **Selector Visual de Colores y Tallas:** Al seleccionar un color, se renderiza la imagen asociada a dicho color para todas sus tallas.
-   - **Galería General:** Modal interactivo con carrusel fluido de todas las imágenes registradas para ese modelo y color.
+   - **Catálogo Editorial Boutique:** Tarjetas ordenadas por modelo con contenedor de imagen maximizado, filtros en tiempo real por búsqueda de texto, modelo, color y talla disponible.
+   - **Orden de Portada Principal:** En la vista inicial o antes de seleccionar un color, la foto base destacada del producto es la primera imagen visible.
+   - **Filtrado Estricto de Galería por Color:** Al pulsar sobre un color ("Negro", "Suela", "Rojo"), la tarjeta y el modal de detalle refrescan instantáneamente la imagen y la galería para exhibir exclusivamente las tomas de ese color.
+   - **Lightbox / Zoom Pantalla Completa:** Vista ampliada en alta resolución accesible haciendo clic sobre la foto o sobre el icono de lupa flotante, con fondo oscuro inmersivo, controles de navegación (flechas / swipe) y soporte para teclado (`Escape`, `ArrowLeft`, `ArrowRight`).
    - **Bolsa de Reserva & WhatsApp Directo:** Drawer de reserva donde el cliente añade pares seleccionados, ingresa su Nombre y Comuna/Ciudad, generando un enlace directo `https://wa.me/?text=...` con el pedido formal preformateado para la vendedora.
 
 2. **Ruta Privada (`/admin`):**

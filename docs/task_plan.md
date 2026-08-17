@@ -28,6 +28,9 @@
 - [x] REVISIÓN #1: Renombrar y simplificar a "Galería General" sin clasificaciones de ángulos
 - [x] REVISIÓN #1: Grid de miniaturas existentes en Admin con opción de eliminación y reemplazo inmediato
 - [x] REVISIÓN #1: Validación de contraseña de administrador `Tiny1234`
+- [x] REVISIÓN #2: Prioridad de portada principal base del modelo en vista inicial del catálogo
+- [x] REVISIÓN #2: Filtrado estricto de galería por color (ocultando fotos de otros colores)
+- [x] REVISIÓN #2: Maximización visual y Lightbox / Zoom de pantalla completa con soporte táctil y teclado
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
