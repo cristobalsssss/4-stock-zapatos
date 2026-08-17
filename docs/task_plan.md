@@ -36,6 +36,7 @@
 - [x] REVISIÓN #4: Reseteo sincronizado de zoom al cambiar de foto en carrusel y drag global de ventana
 - [x] REVISIÓN #4: Gestos táctiles móviles perfeccionados (touch-action none, pinch-to-zoom fluido, doble tap y swipe)
 - [x] REVISIÓN #5: Integración del motor de zoom estándar `react-zoom-pan-pinch` con aislamiento por `key={currentIndex}`
+- [x] REVISIÓN #6: Despeje total de capas y eventos en Lightbox (pointer-events-auto en TransformComponent/img, overlays en z-50 e indicador visual)
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

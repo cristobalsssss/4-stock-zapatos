@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "1.9.0",
-    "last_updated": "2026-08-16",
+    "version": "2.0.0",
+    "last_updated": "2026-08-16 23:55:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #5 APLICADA)",
-    "last_completed_task": "REVISIÓN #5: Integración del motor de zoom estándar 'react-zoom-pan-pinch' con aislamiento estricto por 'key={currentIndex}', pinch-to-zoom nativo y panning fluido",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #6 APLICADA)",
+    "last_completed_task": "REVISIÓN #6: Despeje total de capas y eventos en Lightbox (pointer-events-auto en TransformComponent/img, overlays flotantes con z-50 e indicador visual de control)",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",
