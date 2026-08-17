@@ -38,6 +38,7 @@
 - [x] REVISIÓN #5: Integración del motor de zoom estándar `react-zoom-pan-pinch` con aislamiento por `key={currentIndex}`
 - [x] REVISIÓN #6: Despeje total de capas y eventos en Lightbox (pointer-events-auto en TransformComponent/img, overlays en z-50 e indicador visual)
 - [x] REVISIÓN #7: Fullscreen Touch Engine con wrapperStyle/contentStyle al 100%, touch-none global y doble tap a 2.5x
+- [x] REVISIÓN #8: Mobile Viewport & Touch Engine Fix (72vh/68vh delimitado, touch-auto y pointer-events-auto en botones z-50)
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

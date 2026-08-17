@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "2.1.0",
-    "last_updated": "2026-08-17 00:20:00",
+    "version": "2.2.0",
+    "last_updated": "2026-08-17 00:30:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #7 APLICADA)",
-    "last_completed_task": "REVISIÓN #7: Fullscreen Touch Engine en Lightbox con wrapperStyle y contentStyle al 100%, touch-none global en contenedores y doble tap a 2.5x",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #8 APLICADA)",
+    "last_completed_task": "REVISIÓN #8: Mobile Viewport & Touch Engine Fix (72vh/68vh delimitado, touch-auto y pointer-events-auto en botones z-50 para respuesta táctil instantánea)",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",
