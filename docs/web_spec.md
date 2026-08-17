@@ -139,20 +139,23 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
   - Unidades con stock disponible en bodega: 253 pares distribuidos en 173 variantes activas.
 
 ## 8. ALMACENAMIENTO DE IMÁGENES (SUPABASE STORAGE)
-- **Bucket Público:** `calzado-imagenes` (configurado como público en Supabase Storage con políticas de lectura anónima y subida de archivos).
+- **Bucket Público Principal:** `productos-imagenes` (y bucket de respaldo `calzado-imagenes`).
 - **Estructura y Enlace de Imágenes:**
-  - Actualización directa de `imagen_defecto_url` en la tabla `productos`.
-  - Actualización directa de `imagen_portada_variante` en la tabla `inventario_variantes`.
+  - Actualización de `imagen_defecto_url` en la tabla `productos`.
+  - Actualización de `imagen_portada_variante` en la tabla `inventario_variantes`.
   - Galería multi-ángulo vinculada en `imagenes_variante` con campos `angulo_descripcion` y `orden_posicion`.
-- **Módulo de Carga Rápida en Panel Admin:** Interfaz con drag & drop / selección de archivo para subir imágenes directamente a Supabase Storage y asociar la URL pública al modelo o variante correspondiente.
+- **Módulo de Carga Rápida en Panel Admin:** Interfaz con Drag & Drop / selector de archivo para subir imágenes directo a `productos-imagenes` y asociar la URL pública al modelo o variante.
 
 ## 9. REQUERIMIENTOS DEL FRONTEND (VERCEL)
-1. **Vista Pública (Catálogo):**
-   - Tarjetas de catálogo ordenadas por modelo con renderizado dinámico de imagen principal.
-   - Selector visual interactivo de colores y tallas disponibles en tiempo real (consumiendo Skill 1 o Supabase directo).
-   - Modal con visor de detalles del calzado y galería multi-ángulo.
-2. **Vista Administración (Panel Privado):**
-   - **Módulo de Ventas:** Simulación y registro con selector de vendedor, cálculo dinámico de precio (interno vs vendedor) y comisiones en vivo (consumiendo Skill 2).
-   - **Módulo de Devoluciones:** Reintegro inmediato al stock con trazabilidad de motivo (consumiendo Skill 3).
-   - **Módulo de Gestión de Imágenes:** Carga y asignación rápida de fotos al bucket `calzado-imagenes`.
-   - **Módulo Analítico:** Alertas de stock crítico y liquidación en vivo de comisiones por vendedor.
+1. **Ruta Pública (`/`):**
+   - **Catálogo Editorial Boutique:** Tarjetas ordenadas por modelo, filtros en tiempo real por búsqueda de texto, modelo, color y talla disponible.
+   - **Selector Visual de Variantes:** Interacción táctil para elegir color y talla con visualización de stock en vivo (Badge verde esmeralda para disponible, ámbar para 1 par restante).
+   - **Galería Multi-Ángulo:** Modal interactivo con carrusel/zoom de imágenes del modelo y variante.
+   - **Bolsa de Reserva & WhatsApp Directo:** Drawer / Modal de reserva donde el cliente añade pares seleccionados, ingresa su Nombre y Comuna/Ciudad, generando un enlace directo `https://wa.me/?text=...` con el pedido formal preformateado para la vendedora.
+
+2. **Ruta Privada (`/admin`):**
+   - **Acceso Protegido por PIN:** Autenticación por contraseña configurada en `VITE_ADMIN_PASSWORD`.
+   - **Módulo de Venta Multi-Producto:** Permite añadir múltiples pares a una misma venta, seleccionar vendedor, medio de pago, selector de fecha histórica o actual, campo de notas personalizadas y cálculo automático de comisiones en vivo.
+   - **Módulo de Devoluciones:** Selector de variante y cantidad a reintegrar con registro obligatorio de motivo.
+   - **Gestor de Subida de Fotos:** Zona de Drag & Drop con previsualización inmediata y carga a Supabase Storage (`productos-imagenes`), actualizando la base de datos automáticamente.
+   - **Panel Analítico y Alertas:** Monitor de stock crítico (<= 2 pares o agotados) y resumen de métricas generales.

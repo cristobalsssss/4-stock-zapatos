@@ -19,10 +19,11 @@
 - [x] Crear Workflow/Skill 3: `RegistrarDevolucion` (Revierte transacción y suma stock)
 
 ## FASE 4: VIBE CODING DEL FRONTEND EN VERCEL
-- [ ] Generar estructura inicial del Frontend Web (Catálogo + Admin)
-- [ ] Conectar vista de catálogo público con Supabase/n8n
-- [ ] Implementar visualizador de variante y galería multi-ángulo
-- [ ] Implementar Panel Admin para simular ventas, devoluciones y ver kardex
+- [x] Generar estructura inicial del Frontend Web (Catálogo + Admin) en React + Vite + Tailwind CSS
+- [x] Conectar vista de catálogo público con Supabase/n8n con buscador y filtros en tiempo real
+- [x] Implementar visualizador de variante, alertas de stock y galería multi-ángulo modal
+- [x] Implementar Bolsa de Reserva con redirección inteligente y mensaje formateado a WhatsApp directo
+- [x] Implementar Panel Admin protegido por PIN para venta multi-producto, devoluciones y subida de fotos drag & drop a Storage
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
