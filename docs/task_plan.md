@@ -31,6 +31,8 @@
 - [x] REVISIÓN #2: Prioridad de portada principal base del modelo en vista inicial del catálogo
 - [x] REVISIÓN #2: Filtrado estricto de galería por color (ocultando fotos de otros colores)
 - [x] REVISIÓN #2: Maximización visual y Lightbox / Zoom de pantalla completa con soporte táctil y teclado
+- [x] REVISIÓN #3: Estados iniciales neutros (sin preselección de color ni talla) con botón de reserva condicional
+- [x] REVISIÓN #3: Zoom interactivo profundo en Lightbox (Desktop: rueda + drag & pan / Móvil: pinch-to-zoom + doble tap)
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
