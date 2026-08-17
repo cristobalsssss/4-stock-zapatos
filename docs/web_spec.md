@@ -157,10 +157,11 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
      * Se muestra únicamente la foto de portada principal del modelo.
      * El botón de reserva se encuentra **estrictamente deshabilitado** con mensaje orientativo: *"Selecciona color y talla para reservar"*.
      * Al elegir color, se filtran las tallas y fotos correspondientes; una vez seleccionada la talla, el botón pasa a estar 100% activo.
-   - **Zoom Interactivo Profundo y Gestos Táctiles (Revisión #4):**
-     * **Reseteo Sincronizado en Carrusel:** Al navegar entre fotos (flechas laterales, swipe, teclado o miniaturas), el zoom y la posición se restablecen limpiamente a 1x (0,0), garantizando que cada foto nueva se aprecie centrada y nítida.
-     * **Desktop (Rueda & Arrastre 360°):** Zoom no-pasivo mediante rueda del ratón (hasta 4x) y arrastre sostenido (`drag & pan`) continuo con listener a nivel de ventana para explorar detalles sin trabas.
-     * **Móvil / Táctil (Touch & Pinch):** `touch-action: none` para anular rebotes del navegador; gesto de pinza de 2 dedos (pinch-to-zoom fluido entre 1x y 4x), doble toque (1x $\leftrightarrow$ 2.5x) y deslizamiento horizontal rápido (swipe) para cambiar de foto en escala 1x.
+   - **Zoom Interactivo Profundo y Gestos Táctiles (Revisión #5 - Motor Estándar react-zoom-pan-pinch):**
+     * **Aislamiento Total de Estado (`key={currentIndex}`):** Al cambiar de foto (flechas, miniaturas o swipe), el `TransformWrapper` se reinicia limpiamente a 1x (0,0), garantizando que no se arrastren offsets ni zoom residual a la siguiente fotografía.
+     * **Desktop (Rueda & Panning 360°):** Zoom fluido mediante rueda del ratón (wheel hasta 5x) y arrastre sostenido (`drag & pan`) libre en todas las direcciones con visualización de escala en tiempo real.
+     * **Móvil / Táctil (Pinch & Double-Tap):** Gesto de pinza nativo con 2 dedos (pinch-to-zoom continuo), doble toque (double-tap toggle) para zoom/reset rápido y arrastre suave con 1 dedo sobre imagen ampliada.
+     * **Toolbar Flotante:** Controles independientes fuera del viewport de transformación para zoom in (+), zoom out (-), reset (1x), cerrar y flechas de navegación.
    - **Bolsa de Reserva & WhatsApp Directo:** Drawer de reserva donde el cliente añade pares seleccionados, ingresa su Nombre y Comuna/Ciudad, generando un enlace directo `https://wa.me/?text=...` con el pedido formal preformateado para la vendedora.
 
 2. **Ruta Privada (`/admin`):**

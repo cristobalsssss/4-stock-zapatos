@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "1.8.0",
+    "version": "1.9.0",
     "last_updated": "2026-08-16",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #4 APLICADA)",
-    "last_completed_task": "REVISIÓN #4: Reseteo sincronizado de zoom al navegar en carrusel, drag continuo en ventana y gestos táctiles móviles perfeccionados (pinch-to-zoom, swipe, double-tap)",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #5 APLICADA)",
+    "last_completed_task": "REVISIÓN #5: Integración del motor de zoom estándar 'react-zoom-pan-pinch' con aislamiento estricto por 'key={currentIndex}', pinch-to-zoom nativo y panning fluido",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",
