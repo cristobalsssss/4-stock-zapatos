@@ -15,145 +15,255 @@ export default function InteractiveLightbox({
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  const dragStartRef = useRef({ x: 0, y: 0 });
+  const positionRef = useRef({ x: 0, y: 0 });
+  const scaleRef = useRef(1);
+
+  // Sync refs with state
+  positionRef.current = position;
+  scaleRef.current = scale;
 
   // Touch tracking for pinch and double-tap
   const lastTouchDistRef = useRef(null);
+  const touchStartPosRef = useRef({ x: 0, y: 0 });
   const lastTapRef = useRef(0);
-  const containerRef = useRef(null);
+  const viewportRef = useRef(null);
 
   const currentImage = images[currentIndex] || images[0];
 
-  // Reset zoom & pan when image changes
+  // Reseteo limpio de zoom y posición al cambiar de foto
   const resetZoom = useCallback(() => {
     setScale(1);
     setPosition({ x: 0, y: 0 });
+    scaleRef.current = 1;
+    positionRef.current = { x: 0, y: 0 };
+    setIsDragging(false);
   }, []);
 
+  // Actualizar índice si cambia el prop initialIndex
   useEffect(() => {
+    setCurrentIndex(initialIndex);
     resetZoom();
-  }, [currentIndex, resetZoom]);
+  }, [initialIndex, resetZoom]);
+
+  // Al cambiar la foto en el carrusel, resetear inmediatamente
+  const changeImage = useCallback((newIndex) => {
+    resetZoom();
+    setCurrentIndex(newIndex);
+  }, [resetZoom]);
 
   const handlePrev = useCallback((e) => {
     if (e) e.stopPropagation();
-    setCurrentIndex(prev => (prev > 0 ? prev - 1 : images.length - 1));
-  }, [images.length]);
+    const prevIdx = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+    changeImage(prevIdx);
+  }, [currentIndex, images.length, changeImage]);
 
   const handleNext = useCallback((e) => {
     if (e) e.stopPropagation();
-    setCurrentIndex(prev => (prev < images.length - 1 ? prev + 1 : 0));
-  }, [images.length]);
+    const nextIdx = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+    changeImage(nextIdx);
+  }, [currentIndex, images.length, changeImage]);
 
-  // Zoom controls
+  // Controles de zoom con límites seguros
   const zoomIn = (e) => {
     if (e) e.stopPropagation();
-    setScale(prev => Math.min(4, +(prev + 0.5).toFixed(2)));
+    setScale(prev => {
+      const next = Math.min(4, +(prev + 0.5).toFixed(2));
+      scaleRef.current = next;
+      return next;
+    });
   };
 
   const zoomOut = (e) => {
     if (e) e.stopPropagation();
     setScale(prev => {
       const next = Math.max(1, +(prev - 0.5).toFixed(2));
-      if (next === 1) setPosition({ x: 0, y: 0 });
+      scaleRef.current = next;
+      if (next === 1) {
+        setPosition({ x: 0, y: 0 });
+        positionRef.current = { x: 0, y: 0 };
+      }
       return next;
     });
   };
 
-  // Mouse wheel zoom
-  const handleWheel = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const delta = e.deltaY < 0 ? 0.25 : -0.25;
-    setScale(prev => {
-      const next = Math.min(4, Math.max(1, +(prev + delta).toFixed(2)));
-      if (next === 1) setPosition({ x: 0, y: 0 });
-      return next;
-    });
-  };
+  // =========================================================================
+  // NAVEGACIÓN Y EVENTOS DE RUEDA (WHEEL) CON LISTENER NO-PASIVO
+  // =========================================================================
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
 
-  // Mouse drag handlers
+    const onWheel = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const delta = e.deltaY < 0 ? 0.3 : -0.3;
+      const currentScale = scaleRef.current;
+      const nextScale = Math.min(4, Math.max(1, +(currentScale + delta).toFixed(2)));
+
+      scaleRef.current = nextScale;
+      setScale(nextScale);
+
+      if (nextScale === 1) {
+        setPosition({ x: 0, y: 0 });
+        positionRef.current = { x: 0, y: 0 };
+      }
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [currentIndex]);
+
+  // =========================================================================
+  // DRAG & PAN EN DESKTOP (MOUSE) CON LISTENER GLOBAL DE WINDOW
+  // =========================================================================
   const handleMouseDown = (e) => {
-    if (scale <= 1) return;
+    if (scaleRef.current <= 1) return;
+    e.preventDefault();
     setIsDragging(true);
-    setDragStart({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y
-    });
+    dragStartRef.current = {
+      x: e.clientX - positionRef.current.x,
+      y: e.clientY - positionRef.current.y
+    };
   };
 
-  const handleMouseMove = (e) => {
-    if (!isDragging || scale <= 1) return;
-    setPosition({
-      x: e.clientX - dragStart.x,
-      y: e.clientY - dragStart.y
-    });
-  };
+  useEffect(() => {
+    if (!isDragging) return;
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
+    const handleWindowMouseMove = (e) => {
+      const newPos = {
+        x: e.clientX - dragStartRef.current.x,
+        y: e.clientY - dragStartRef.current.y
+      };
+      positionRef.current = newPos;
+      setPosition(newPos);
+    };
 
-  // Touch handlers (Pinch to zoom + Double tap + Touch drag)
-  const handleTouchStart = (e) => {
-    if (e.touches.length === 2) {
-      // Pinch start
-      const dist = Math.hypot(
-        e.touches[0].clientX - e.touches[1].clientX,
-        e.touches[0].clientY - e.touches[1].clientY
-      );
-      lastTouchDistRef.current = dist;
-    } else if (e.touches.length === 1) {
-      const now = Date.now();
-      if (now - lastTapRef.current < 300) {
-        // Double tap toggle
-        setScale(prev => {
-          const next = prev > 1 ? 1 : 2.5;
-          if (next === 1) setPosition({ x: 0, y: 0 });
-          return next;
-        });
-      } else {
-        // Start single finger drag if zoomed
-        if (scale > 1) {
-          setIsDragging(true);
-          setDragStart({
-            x: e.touches[0].clientX - position.x,
-            y: e.touches[0].clientY - position.y
-          });
+    const handleWindowMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    window.addEventListener('mousemove', handleWindowMouseMove);
+    window.addEventListener('mouseup', handleWindowMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', handleWindowMouseMove);
+      window.removeEventListener('mouseup', handleWindowMouseUp);
+    };
+  }, [isDragging]);
+
+  // =========================================================================
+  // GESTOS TÁCTILES FLUIDOS EN MÓVIL (PINCH-TO-ZOOM + SWIPE + DOUBLE TAP)
+  // =========================================================================
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const onTouchStart = (e) => {
+      if (e.touches.length === 2) {
+        // Inicio de Pinch
+        e.preventDefault();
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        lastTouchDistRef.current = dist;
+      } else if (e.touches.length === 1) {
+        const touch = e.touches[0];
+        touchStartPosRef.current = { x: touch.clientX, y: touch.clientY };
+
+        const now = Date.now();
+        if (now - lastTapRef.current < 300) {
+          // Doble Tap: Alternar entre 1x y 2.5x
+          e.preventDefault();
+          const next = scaleRef.current > 1 ? 1 : 2.5;
+          scaleRef.current = next;
+          setScale(next);
+          if (next === 1) {
+            setPosition({ x: 0, y: 0 });
+            positionRef.current = { x: 0, y: 0 };
+          }
+        } else {
+          // Inicio de arrastre si hay zoom
+          if (scaleRef.current > 1) {
+            e.preventDefault();
+            dragStartRef.current = {
+              x: touch.clientX - positionRef.current.x,
+              y: touch.clientY - positionRef.current.y
+            };
+          }
+        }
+        lastTapRef.current = now;
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (e.touches.length === 2 && lastTouchDistRef.current !== null) {
+        // Gesto Pinch activo
+        e.preventDefault();
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        const factor = dist / lastTouchDistRef.current;
+        const currentScale = scaleRef.current;
+        const nextScale = Math.min(4, Math.max(1, +(currentScale * factor).toFixed(2)));
+
+        scaleRef.current = nextScale;
+        setScale(nextScale);
+
+        if (nextScale === 1) {
+          setPosition({ x: 0, y: 0 });
+          positionRef.current = { x: 0, y: 0 };
+        }
+        lastTouchDistRef.current = dist;
+      } else if (e.touches.length === 1 && scaleRef.current > 1) {
+        // Arrastre con 1 dedo sobre imagen ampliada
+        e.preventDefault();
+        const touch = e.touches[0];
+        const newPos = {
+          x: touch.clientX - dragStartRef.current.x,
+          y: touch.clientY - dragStartRef.current.y
+        };
+        positionRef.current = newPos;
+        setPosition(newPos);
+      }
+    };
+
+    const onTouchEnd = (e) => {
+      if (e.touches.length === 0) {
+        lastTouchDistRef.current = null;
+
+        // Si la escala es 1 y fue un deslizamiento horizontal rápido (Swipe), navegar entre fotos
+        if (scaleRef.current === 1 && e.changedTouches.length === 1) {
+          const touchEnd = e.changedTouches[0];
+          const diffX = touchEnd.clientX - touchStartPosRef.current.x;
+          const diffY = touchEnd.clientY - touchStartPosRef.current.y;
+
+          if (Math.abs(diffX) > 60 && Math.abs(diffY) < 50) {
+            if (diffX < 0) {
+              handleNext();
+            } else {
+              handlePrev();
+            }
+          }
         }
       }
-      lastTapRef.current = now;
-    }
-  };
+    };
 
-  const handleTouchMove = (e) => {
-    if (e.touches.length === 2 && lastTouchDistRef.current !== null) {
-      // Pinch move
-      const dist = Math.hypot(
-        e.touches[0].clientX - e.touches[1].clientX,
-        e.touches[0].clientY - e.touches[1].clientY
-      );
-      const factor = dist / lastTouchDistRef.current;
-      setScale(prev => {
-        const next = Math.min(4, Math.max(1, +(prev * factor).toFixed(2)));
-        if (next === 1) setPosition({ x: 0, y: 0 });
-        return next;
-      });
-      lastTouchDistRef.current = dist;
-    } else if (e.touches.length === 1 && isDragging && scale > 1) {
-      // Touch drag
-      setPosition({
-        x: e.touches[0].clientX - dragStart.x,
-        y: e.touches[0].clientY - dragStart.y
-      });
-    }
-  };
+    el.addEventListener('touchstart', onTouchStart, { passive: false });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    el.addEventListener('touchend', onTouchEnd, { passive: false });
 
-  const handleTouchEnd = () => {
-    lastTouchDistRef.current = null;
-    setIsDragging(false);
-  };
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [currentIndex, handleNext, handlePrev]);
 
-  // Keyboard navigation
+  // Atajos de teclado
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
@@ -169,10 +279,8 @@ export default function InteractiveLightbox({
 
   return (
     <div
-      ref={containerRef}
-      onWheel={handleWheel}
       onClick={onClose}
-      className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-md flex flex-col justify-between p-3 sm:p-6 select-none animate-fade-in touch-none"
+      className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-md flex flex-col justify-between p-3 sm:p-6 select-none animate-fade-in touch-none overflow-hidden"
     >
       {/* Barra Superior */}
       <div 
@@ -184,7 +292,7 @@ export default function InteractiveLightbox({
             {title}
           </h3>
           <p className="text-xs text-zinc-400 font-medium">
-            {subtitle || `Foto ${currentIndex + 1} de ${images.length}`} • Zoom actual: <strong className="text-brand-400">{scale}x</strong>
+            {subtitle || `Foto ${currentIndex + 1} de ${images.length}`} • Zoom: <strong className="text-brand-400">{scale}x</strong>
           </p>
         </div>
 
@@ -236,14 +344,11 @@ export default function InteractiveLightbox({
 
       {/* Lienzo Principal de Imagen con Drag & Pinch Zoom */}
       <div
+        ref={viewportRef}
         onClick={(e) => e.stopPropagation()}
         onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        className={`relative flex-1 w-full max-w-6xl mx-auto flex items-center justify-center overflow-hidden ${
+        style={{ touchAction: 'none' }}
+        className={`relative flex-1 w-full max-w-6xl mx-auto flex items-center justify-center overflow-hidden touch-none ${
           scale > 1 ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
         }`}
       >
@@ -253,9 +358,10 @@ export default function InteractiveLightbox({
             transition: isDragging ? 'none' : 'transform 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
             transformOrigin: 'center center'
           }}
-          className="will-change-transform flex items-center justify-center max-h-full max-w-full"
+          className="will-change-transform flex items-center justify-center max-h-full max-w-full pointer-events-none select-none"
         >
           <img
+            key={currentImage?.url}
             src={currentImage?.url}
             alt={currentImage?.label || title}
             draggable={false}
@@ -304,7 +410,7 @@ export default function InteractiveLightbox({
             <button
               key={idx}
               type="button"
-              onClick={() => setCurrentIndex(idx)}
+              onClick={() => changeImage(idx)}
               className={`w-13 h-13 sm:w-15 sm:h-15 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 bg-zinc-900 ${
                 currentIndex === idx
                   ? 'border-brand-500 scale-110 shadow-lg ring-2 ring-brand-500/30'

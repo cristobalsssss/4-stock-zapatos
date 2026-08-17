@@ -157,9 +157,10 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
      * Se muestra únicamente la foto de portada principal del modelo.
      * El botón de reserva se encuentra **estrictamente deshabilitado** con mensaje orientativo: *"Selecciona color y talla para reservar"*.
      * Al elegir color, se filtran las tallas y fotos correspondientes; una vez seleccionada la talla, el botón pasa a estar 100% activo.
-   - **Zoom Interactivo Profundo en Lightbox (Revisión #3):**
-     * **Desktop:** Magnificación interactiva con rueda del ratón (zoom in / zoom out entre 1x y 4x) y arrastre (drag & pan) con el cursor para inspeccionar texturas, costuras y acabados del calzado. Barra flotante con botones (+), (-) y restablecer (1x).
-     * **Móvil / Touch:** Gesto táctil de pinza con dos dedos (pinch-to-zoom), doble toque (double-tap) para alternar zoom (1x <-> 2.5x) y deslizamiento fluido con un dedo sobre la imagen ampliada.
+   - **Zoom Interactivo Profundo y Gestos Táctiles (Revisión #4):**
+     * **Reseteo Sincronizado en Carrusel:** Al navegar entre fotos (flechas laterales, swipe, teclado o miniaturas), el zoom y la posición se restablecen limpiamente a 1x (0,0), garantizando que cada foto nueva se aprecie centrada y nítida.
+     * **Desktop (Rueda & Arrastre 360°):** Zoom no-pasivo mediante rueda del ratón (hasta 4x) y arrastre sostenido (`drag & pan`) continuo con listener a nivel de ventana para explorar detalles sin trabas.
+     * **Móvil / Táctil (Touch & Pinch):** `touch-action: none` para anular rebotes del navegador; gesto de pinza de 2 dedos (pinch-to-zoom fluido entre 1x y 4x), doble toque (1x $\leftrightarrow$ 2.5x) y deslizamiento horizontal rápido (swipe) para cambiar de foto en escala 1x.
    - **Bolsa de Reserva & WhatsApp Directo:** Drawer de reserva donde el cliente añade pares seleccionados, ingresa su Nombre y Comuna/Ciudad, generando un enlace directo `https://wa.me/?text=...` con el pedido formal preformateado para la vendedora.
 
 2. **Ruta Privada (`/admin`):**

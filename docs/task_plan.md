@@ -33,6 +33,8 @@
 - [x] REVISIÓN #2: Maximización visual y Lightbox / Zoom de pantalla completa con soporte táctil y teclado
 - [x] REVISIÓN #3: Estados iniciales neutros (sin preselección de color ni talla) con botón de reserva condicional
 - [x] REVISIÓN #3: Zoom interactivo profundo en Lightbox (Desktop: rueda + drag & pan / Móvil: pinch-to-zoom + doble tap)
+- [x] REVISIÓN #4: Reseteo sincronizado de zoom al cambiar de foto en carrusel y drag global de ventana
+- [x] REVISIÓN #4: Gestos táctiles móviles perfeccionados (touch-action none, pinch-to-zoom fluido, doble tap y swipe)
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
