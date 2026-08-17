@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Eye, ShoppingBag, Check, AlertTriangle, Sparkles, Layers } from 'lucide-react';
+import { Eye, ShoppingBag, Check, AlertTriangle, Layers } from 'lucide-react';
 
 export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
   const variantes = product.inventario_variantes || [];
@@ -55,8 +55,12 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
     return variantes.reduce((sum, v) => sum + (v.stock_disponible || 0), 0);
   }, [variantes]);
 
-  // Imagen activa a mostrar
-  const displayImage = activeVariant?.imagen_portada_variante || product.imagen_defecto_url || null;
+  // Imagen activa: Portada del color seleccionado (compartida por todas las tallas de ese color) o fallback a imagen de modelo
+  const displayImage = useMemo(() => {
+    // Buscar si alguna variante de este color tiene foto de portada
+    const varConFoto = variantes.find(v => v.color === selectedColor && v.imagen_portada_variante);
+    return varConFoto?.imagen_portada_variante || product.imagen_defecto_url || null;
+  }, [variantes, selectedColor, product.imagen_defecto_url]);
 
   // Precio a mostrar
   const precio = activeVariant ? Number(activeVariant.precio_vendedores) : (variantes[0] ? Number(variantes[0].precio_vendedores) : 0);
@@ -89,7 +93,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
         {displayImage ? (
           <img
             src={displayImage}
-            alt={`${product.codigo_modelo} - ${product.nombre_fantasia}`}
+            alt={`${product.codigo_modelo} - ${product.nombre_fantasia} (${selectedColor})`}
             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
@@ -128,7 +132,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
         <button
           onClick={() => onOpenGallery(product, activeVariant)}
           className="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-zinc-800 p-2 rounded-xl shadow-md hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 text-xs font-semibold backdrop-blur-sm"
-          title="Ver fotos y detalles"
+          title="Ver galería general de fotos"
         >
           <Eye className="w-4 h-4 text-brand-600" />
           <span className="hidden sm:inline">Ver Galería</span>

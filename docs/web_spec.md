@@ -138,24 +138,27 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
   - `inventario_variantes`: 714 variantes (combinación modelo + color + talla).
   - Unidades con stock disponible en bodega: 253 pares distribuidos en 173 variantes activas.
 
-## 8. ALMACENAMIENTO DE IMÁGENES (SUPABASE STORAGE)
+## 8. ALMACENAMIENTO Y GESTIÓN DE IMÁGENES (SUPABASE STORAGE)
 - **Bucket Público Principal:** `productos-imagenes` (y bucket de respaldo `calzado-imagenes`).
-- **Estructura y Enlace de Imágenes:**
-  - Actualización de `imagen_defecto_url` en la tabla `productos`.
-  - Actualización de `imagen_portada_variante` en la tabla `inventario_variantes`.
-  - Galería multi-ángulo vinculada en `imagenes_variante` con campos `angulo_descripcion` y `orden_posicion`.
-- **Módulo de Carga Rápida en Panel Admin:** Interfaz con Drag & Drop / selector de archivo para subir imágenes directo a `productos-imagenes` y asociar la URL pública al modelo o variante.
+- **Lógica de Asociación por Modelo y Color (Revisión #1):**
+  - **Foto Principal del Modelo:** Se almacena en `imagen_defecto_url` en la tabla `productos`.
+  - **Foto de Portada del Color:** Se asocia a nivel de `(producto_id, color)`. Todas las tallas que pertenezcan a ese color comparten automáticamente la misma fotografía de portada en el catálogo.
+  - **Galería General:** Conjunto de fotografías adicionales asociadas al modelo y color (`imagenes_variante`), sin distinción de ángulos técnicos.
+- **Módulo de Gestión en Panel Admin:**
+  - Selector de Modelo y Color.
+  - **Grid de Miniaturas Existentes:** Muestra todas las fotos cargadas para el modelo/color actual con opción de eliminación directa (icono papelera) para permitir reemplazo inmediato.
+  - **Zona de Drag & Drop:** Carga rápida de nuevas fotografías a Supabase Storage y actualización en tiempo real en la base de datos.
 
 ## 9. REQUERIMIENTOS DEL FRONTEND (VERCEL)
 1. **Ruta Pública (`/`):**
    - **Catálogo Editorial Boutique:** Tarjetas ordenadas por modelo, filtros en tiempo real por búsqueda de texto, modelo, color y talla disponible.
-   - **Selector Visual de Variantes:** Interacción táctil para elegir color y talla con visualización de stock en vivo (Badge verde esmeralda para disponible, ámbar para 1 par restante).
-   - **Galería Multi-Ángulo:** Modal interactivo con carrusel/zoom de imágenes del modelo y variante.
-   - **Bolsa de Reserva & WhatsApp Directo:** Drawer / Modal de reserva donde el cliente añade pares seleccionados, ingresa su Nombre y Comuna/Ciudad, generando un enlace directo `https://wa.me/?text=...` con el pedido formal preformateado para la vendedora.
+   - **Selector Visual de Colores y Tallas:** Al seleccionar un color, se renderiza la imagen asociada a dicho color para todas sus tallas.
+   - **Galería General:** Modal interactivo con carrusel fluido de todas las imágenes registradas para ese modelo y color.
+   - **Bolsa de Reserva & WhatsApp Directo:** Drawer de reserva donde el cliente añade pares seleccionados, ingresa su Nombre y Comuna/Ciudad, generando un enlace directo `https://wa.me/?text=...` con el pedido formal preformateado para la vendedora.
 
 2. **Ruta Privada (`/admin`):**
-   - **Acceso Protegido por PIN:** Autenticación por contraseña configurada en `VITE_ADMIN_PASSWORD`.
-   - **Módulo de Venta Multi-Producto:** Permite añadir múltiples pares a una misma venta, seleccionar vendedor, medio de pago, selector de fecha histórica o actual, campo de notas personalizadas y cálculo automático de comisiones en vivo.
+   - **Acceso Protegido por PIN:** Autenticación por contraseña configurada en `VITE_ADMIN_PASSWORD` (por defecto `Tiny1234` / `Gaspi.123#2026`).
+   - **Módulo de Venta Multi-Producto:** Permite añadir múltiples pares a una misma venta, selector de vendedor, medio de pago, selector de fecha histórica o actual, campo de notas personalizadas y cálculo automático de comisiones en vivo.
    - **Módulo de Devoluciones:** Selector de variante y cantidad a reintegrar con registro obligatorio de motivo.
-   - **Gestor de Subida de Fotos:** Zona de Drag & Drop con previsualización inmediata y carga a Supabase Storage (`productos-imagenes`), actualizando la base de datos automáticamente.
+   - **Gestor de Fotos & Galería General:** Previsualización en grid de fotos existentes, eliminación con un clic y zona de Drag & Drop para subir y reemplazar imágenes por modelo y color.
    - **Panel Analítico y Alertas:** Monitor de stock crítico (<= 2 pares o agotados) y resumen de métricas generales.

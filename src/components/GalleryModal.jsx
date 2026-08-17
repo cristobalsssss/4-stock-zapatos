@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { X, ChevronLeft, ChevronRight, ShoppingBag, Check, Layers, AlertTriangle } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ShoppingBag, Check, Layers, Sparkles } from 'lucide-react';
 
 export default function GalleryModal({ product, initialVariant, onClose, onAddToBag }) {
   if (!product) return null;
@@ -15,38 +15,46 @@ export default function GalleryModal({ product, initialVariant, onClose, onAddTo
     return variantes.find(v => v.id === selectedVariantId) || variantes[0] || null;
   }, [variantes, selectedVariantId]);
 
-  // Construir lista de imágenes para este modelo y variante
+  // Construir lista de imágenes para este modelo y color (Galería General)
   const allImages = useMemo(() => {
     const list = [];
+    const colorActivo = activeVariant?.color;
     
-    // 1. Imagen de portada de la variante activa
-    if (activeVariant?.imagen_portada_variante) {
+    // 1. Imagen de portada de este color (de cualquier variante con este color)
+    const varConFoto = variantes.find(v => v.color === colorActivo && v.imagen_portada_variante);
+    if (varConFoto?.imagen_portada_variante) {
       list.push({
-        url: activeVariant.imagen_portada_variante,
-        label: `Portada ${activeVariant.color} Talla ${activeVariant.talla}`
+        url: varConFoto.imagen_portada_variante,
+        label: `Foto Principal (${colorActivo})`
       });
     }
 
-    // 2. Galería multi-ángulo de la variante activa
-    if (activeVariant?.imagenes_variante && activeVariant.imagenes_variante.length > 0) {
-      activeVariant.imagenes_variante.forEach(img => {
-        list.push({
-          url: img.imagen_url,
-          label: img.angulo_descripcion || 'Ángulo Detalle'
-        });
-      });
-    }
+    // 2. Galería de fotos asociadas a variantes de este color
+    const variantesDeEsteColor = variantes.filter(v => v.color === colorActivo);
+    const addedUrls = new Set(list.map(i => i.url));
 
-    // 3. Imagen por defecto del modelo
-    if (product.imagen_defecto_url && !list.some(i => i.url === product.imagen_defecto_url)) {
+    variantesDeEsteColor.forEach(v => {
+      (v.imagenes_variante || []).forEach(img => {
+        if (!addedUrls.has(img.imagen_url)) {
+          addedUrls.add(img.imagen_url);
+          list.push({
+            url: img.imagen_url,
+            label: `Galería (${colorActivo})`
+          });
+        }
+      });
+    });
+
+    // 3. Imagen general del modelo si no está en la lista
+    if (product.imagen_defecto_url && !addedUrls.has(product.imagen_defecto_url)) {
       list.push({
         url: product.imagen_defecto_url,
-        label: 'Vista General del Modelo'
+        label: 'Foto General del Modelo'
       });
     }
 
     return list;
-  }, [product, activeVariant]);
+  }, [product, activeVariant, variantes]);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [addedAnimation, setAddedAnimation] = useState(false);
@@ -93,13 +101,13 @@ export default function GalleryModal({ product, initialVariant, onClose, onAddTo
           <X className="w-5 h-5" />
         </button>
 
-        {/* Visor de Imágenes (Lado Izquierdo) */}
+        {/* Visor de Imágenes - Galería General */}
         <div className="w-full md:w-1/2 bg-zinc-100 relative flex flex-col items-center justify-center min-h-[280px] sm:min-h-[380px] p-4">
           {currentImage ? (
             <div className="relative w-full h-full flex items-center justify-center">
               <img
                 src={currentImage.url}
-                alt={currentImage.label}
+                alt={product.nombre_fantasia || product.codigo_modelo}
                 className="max-h-[340px] md:max-h-[460px] w-auto object-contain rounded-xl transition-all duration-300"
               />
               
@@ -121,9 +129,9 @@ export default function GalleryModal({ product, initialVariant, onClose, onAddTo
                 </>
               )}
 
-              {/* Etiqueta de Ángulo */}
-              <div className="absolute bottom-3 left-3 bg-zinc-900/80 backdrop-blur-md text-white text-[11px] font-medium px-2.5 py-1 rounded-lg">
-                {currentImage.label}
+              {/* Indicador de fotos */}
+              <div className="absolute bottom-3 left-3 bg-zinc-900/80 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-lg">
+                Foto {activeImageIndex + 1} de {allImages.length}
               </div>
             </div>
           ) : (
@@ -134,7 +142,7 @@ export default function GalleryModal({ product, initialVariant, onClose, onAddTo
             </div>
           )}
 
-          {/* Miniaturas */}
+          {/* Miniaturas de la Galería General */}
           {allImages.length > 1 && (
             <div className="flex items-center gap-2 mt-3 overflow-x-auto max-w-full pb-1">
               {allImages.map((img, idx) => (
@@ -210,7 +218,10 @@ export default function GalleryModal({ product, initialVariant, onClose, onAddTo
                   return (
                     <button
                       key={v.id}
-                      onClick={() => setSelectedVariantId(v.id)}
+                      onClick={() => {
+                        setSelectedVariantId(v.id);
+                        setActiveImageIndex(0);
+                      }}
                       disabled={!hayStock}
                       className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between ${
                         isSelected

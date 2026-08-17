@@ -260,27 +260,94 @@ export async function actualizarImagenModelo(productoId, url) {
 }
 
 /**
- * Actualiza la imagen de portada de una variante en 'inventario_variantes'
+ * Elimina la imagen por defecto de un modelo
  */
-export async function actualizarImagenVariante(varianteId, url) {
+export async function eliminarImagenModelo(productoId) {
   const { error } = await supabase
-    .from('inventario_variantes')
-    .update({ imagen_portada_variante: url, updated_at: new Date().toISOString() })
-    .eq('id', varianteId);
+    .from('productos')
+    .update({ imagen_defecto_url: null, updated_at: new Date().toISOString() })
+    .eq('id', productoId);
   if (error) throw error;
 }
 
 /**
- * Añade una imagen a la galería multi-ángulo en 'imagenes_variante'
+ * Actualiza la imagen de portada para TODAS las variantes de un (producto_id, color)
  */
-export async function agregarImagenGaleria(varianteId, url, angulo = 'Vista General') {
+export async function actualizarImagenColor(productoId, color, url) {
+  const { error } = await supabase
+    .from('inventario_variantes')
+    .update({ imagen_portada_variante: url, updated_at: new Date().toISOString() })
+    .eq('producto_id', productoId)
+    .eq('color', color);
+  if (error) throw error;
+}
+
+/**
+ * Elimina la imagen de portada para todas las variantes de un (producto_id, color)
+ */
+export async function eliminarImagenColor(productoId, color) {
+  const { error } = await supabase
+    .from('inventario_variantes')
+    .update({ imagen_portada_variante: null, updated_at: new Date().toISOString() })
+    .eq('producto_id', productoId)
+    .eq('color', color);
+  if (error) throw error;
+}
+
+/**
+ * Añade una imagen a la Galería General de una variante o color
+ */
+export async function agregarImagenGaleriaColor(productoId, color, url) {
+  // Obtener una variante de ese color para asociar la foto en la BD
+  const { data: variante, error: vErr } = await supabase
+    .from('inventario_variantes')
+    .select('id')
+    .eq('producto_id', productoId)
+    .eq('color', color)
+    .limit(1)
+    .single();
+
+  if (vErr || !variante) {
+    // Si no se encuentra variante específica, tomar cualquier variante del producto
+    const { data: vFallback } = await supabase
+      .from('inventario_variantes')
+      .select('id')
+      .eq('producto_id', productoId)
+      .limit(1)
+      .single();
+
+    if (!vFallback) throw new Error('No se encontró variante para asociar la imagen');
+    
+    const { error } = await supabase
+      .from('imagenes_variante')
+      .insert({
+        variante_id: vFallback.id,
+        imagen_url: url,
+        angulo_descripcion: 'Galería General',
+        orden_posicion: 1
+      });
+    if (error) throw error;
+    return;
+  }
+
   const { error } = await supabase
     .from('imagenes_variante')
     .insert({
-      variante_id: varianteId,
+      variante_id: variante.id,
       imagen_url: url,
-      angulo_descripcion: angulo,
+      angulo_descripcion: 'Galería General',
       orden_posicion: 1
     });
+  if (error) throw error;
+}
+
+/**
+ * Elimina una imagen de la galería por su ID
+ */
+export async function eliminarImagenGaleria(imagenId) {
+  const { error } = await supabase
+    .from('imagenes_variante')
+    .delete()
+    .eq('id', imagenId);
   if (error) throw error;
 }

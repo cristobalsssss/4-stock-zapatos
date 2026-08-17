@@ -12,14 +12,23 @@ import {
   Calendar, 
   User, 
   CreditCard, 
-  FileText, 
   Layers, 
   DollarSign, 
-  Image as ImageIcon,
+  ImageIcon,
   Search,
-  ArrowRight
+  RefreshCw
 } from 'lucide-react';
-import { registrarVenta, registrarDevolucion, subirImagenStorage, actualizarImagenModelo, actualizarImagenVariante, agregarImagenGaleria } from '../lib/api';
+import { 
+  registrarVenta, 
+  registrarDevolucion, 
+  subirImagenStorage, 
+  actualizarImagenModelo, 
+  eliminarImagenModelo,
+  actualizarImagenColor, 
+  eliminarImagenColor,
+  agregarImagenGaleriaColor,
+  eliminarImagenGaleria 
+} from '../lib/api';
 
 export default function AdminPanel({ products, onDataChanged }) {
   const [activeTab, setActiveTab] = useState('ventas'); // 'ventas' | 'devoluciones' | 'imagenes' | 'alertas'
@@ -62,13 +71,11 @@ export default function AdminPanel({ products, onDataChanged }) {
   const [isProcessingSale, setIsProcessingSale] = useState(false);
   const [saleResult, setSaleResult] = useState(null);
 
-  // Añadir variante a la lista de venta multi-producto
   const handleAddVariantToSale = () => {
     if (!selectedVariantToAdd) return;
     const v = allVariants.find(item => item.id === selectedVariantToAdd);
     if (!v || v.stock_disponible <= 0) return;
 
-    // Verificar si ya existe en la lista
     const existing = saleItems.find(item => item.variante_id === v.id);
     if (existing) {
       if (existing.cantidad < v.stock_disponible) {
@@ -112,7 +119,6 @@ export default function AdminPanel({ products, onDataChanged }) {
     setSaleItems(prev => prev.filter(item => item.variante_id !== varId));
   };
 
-  // Cálculos totales de la venta
   const totalMontoVenta = saleItems.reduce((acc, item) => acc + (item.precio_unitario * item.cantidad), 0);
   const totalComisionVenta = saleItems.reduce((acc, item) => {
     if (vendedor.toLowerCase().includes('admin') || vendedor.toLowerCase().includes('dueño')) {
@@ -128,13 +134,12 @@ export default function AdminPanel({ products, onDataChanged }) {
     setSaleResult(null);
 
     try {
-      const results = [];
       for (const item of saleItems) {
         const comisionItem = (vendedor.toLowerCase().includes('admin') || vendedor.toLowerCase().includes('dueño'))
           ? 0
           : Math.max(0, (item.precio_unitario - item.precio_interno) * item.cantidad);
 
-        const res = await registrarVenta({
+        await registrarVenta({
           variante_id: item.variante_id,
           cantidad: item.cantidad,
           vendedor,
@@ -144,14 +149,11 @@ export default function AdminPanel({ products, onDataChanged }) {
           notas: notasVenta || `Venta Multi-par (${vendedor})`,
           fecha_venta: new Date(fechaVenta).toISOString()
         });
-        results.push(res);
       }
 
       setSaleResult({
         success: true,
-        message: `¡Venta de ${saleItems.length} producto(s) registrada con éxito!`,
-        total: totalMontoVenta,
-        comision: totalComisionVenta
+        message: `¡Venta de ${saleItems.length} producto(s) procesada con éxito y stock actualizado!`
       });
       setSaleItems([]);
       setNotasVenta('');
@@ -211,17 +213,103 @@ export default function AdminPanel({ products, onDataChanged }) {
     }
   };
 
-  // ==========================================
-  // ESTADO PARA TAB 3: GESTOR DE FOTOS DRAG & DROP
-  // ==========================================
-  const [uploadTargetType, setUploadTargetType] = useState('modelo'); // 'modelo' | 'variante' | 'galeria'
-  const [uploadModelId, setUploadModelId] = useState('');
-  const [uploadVariantId, setUploadVariantId] = useState('');
-  const [uploadAngle, setUploadAngle] = useState('Vista Lateral');
+  // ==========================================================
+  // ESTADO PARA TAB 3: GESTOR DE FOTOS POR MODELO Y COLOR
+  // ==========================================================
+  const [uploadTargetType, setUploadTargetType] = useState('color'); // 'color' | 'modelo' | 'galeria'
+  const [selectedModelId, setSelectedModelId] = useState(() => products[0]?.id || '');
+  const [selectedColorName, setSelectedColorName] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(null);
+  const [deletingImageId, setDeletingImageId] = useState(null);
+
+  // Modelo actualmente seleccionado en el gestor de imágenes
+  const currentSelectedProduct = useMemo(() => {
+    return products.find(p => p.id === selectedModelId) || products[0] || null;
+  }, [products, selectedModelId]);
+
+  // Colores únicos del modelo seleccionado
+  const availableColorsForModel = useMemo(() => {
+    if (!currentSelectedProduct) return [];
+    const setColores = new Set();
+    (currentSelectedProduct.inventario_variantes || []).forEach(v => {
+      if (v.color) setColores.add(v.color.trim());
+    });
+    return Array.from(setColores);
+  }, [currentSelectedProduct]);
+
+  // Auto-seleccionar primer color si no hay ninguno seleccionado o cambió el modelo
+  React.useEffect(() => {
+    if (availableColorsForModel.length > 0 && (!selectedColorName || !availableColorsForModel.includes(selectedColorName))) {
+      setSelectedColorName(availableColorsForModel[0]);
+    }
+  }, [availableColorsForModel, selectedColorName]);
+
+  // Imágenes existentes del modelo / color seleccionado para la vista previa en grid
+  const existingImagesForCurrentSelection = useMemo(() => {
+    if (!currentSelectedProduct) return [];
+    const list = [];
+
+    // 1. Imagen por defecto del modelo
+    if (currentSelectedProduct.imagen_defecto_url) {
+      list.push({
+        id: `modelo-${currentSelectedProduct.id}`,
+        type: 'modelo',
+        title: 'Foto Principal del Modelo',
+        subtitle: currentSelectedProduct.codigo_modelo,
+        url: currentSelectedProduct.imagen_defecto_url,
+        canDelete: true,
+        deleteAction: () => eliminarImagenModelo(currentSelectedProduct.id)
+      });
+    }
+
+    // 2. Portadas de Colores
+    const variantes = currentSelectedProduct.inventario_variantes || [];
+    const portadasPorColor = new Map();
+
+    variantes.forEach(v => {
+      if (v.imagen_portada_variante && !portadasPorColor.has(v.color)) {
+        portadasPorColor.set(v.color, v.imagen_portada_variante);
+      }
+    });
+
+    portadasPorColor.forEach((imgUrl, colorName) => {
+      // Si la URL no es idéntica a la principal de modelo
+      list.push({
+        id: `color-${currentSelectedProduct.id}-${colorName}`,
+        type: 'color',
+        title: `Portada Color: ${colorName}`,
+        subtitle: `Aplica a todas las tallas ${colorName}`,
+        url: imgUrl,
+        canDelete: true,
+        deleteAction: () => eliminarImagenColor(currentSelectedProduct.id, colorName)
+      });
+    });
+
+    // 3. Galería General
+    const galeriaMap = new Map();
+    variantes.forEach(v => {
+      (v.imagenes_variante || []).forEach(g => {
+        if (!galeriaMap.has(g.id)) {
+          galeriaMap.set(g.id, {
+            id: g.id,
+            type: 'galeria',
+            title: `Galería General (${v.color})`,
+            subtitle: 'Foto adicional',
+            url: g.imagen_url,
+            canDelete: true,
+            deleteAction: () => eliminarImagenGaleria(g.id)
+          });
+        }
+      });
+    });
+
+    galeriaMap.forEach(item => list.push(item));
+
+    return list;
+  }, [currentSelectedProduct]);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -233,25 +321,26 @@ export default function AdminPanel({ products, onDataChanged }) {
   };
 
   const handleExecuteUpload = async () => {
-    if (!selectedFile) return;
+    if (!selectedFile || !currentSelectedProduct) return;
     setIsUploading(true);
     setUploadStatus(null);
 
     try {
       const publicUrl = await subirImagenStorage(selectedFile, uploadTargetType);
 
-      if (uploadTargetType === 'modelo' && uploadModelId) {
-        await actualizarImagenModelo(uploadModelId, publicUrl);
-      } else if (uploadTargetType === 'variante' && uploadVariantId) {
-        await actualizarImagenVariante(uploadVariantId, publicUrl);
-      } else if (uploadTargetType === 'galeria' && uploadVariantId) {
-        await agregarImagenGaleria(uploadVariantId, publicUrl, uploadAngle);
+      if (uploadTargetType === 'modelo') {
+        await actualizarImagenModelo(currentSelectedProduct.id, publicUrl);
+      } else if (uploadTargetType === 'color') {
+        if (!selectedColorName) throw new Error('Debes seleccionar un color');
+        await actualizarImagenColor(currentSelectedProduct.id, selectedColorName, publicUrl);
+      } else if (uploadTargetType === 'galeria') {
+        if (!selectedColorName) throw new Error('Debes seleccionar un color');
+        await agregarImagenGaleriaColor(currentSelectedProduct.id, selectedColorName, publicUrl);
       }
 
       setUploadStatus({
         success: true,
-        message: `¡Imagen subida con éxito a Supabase Storage!`,
-        url: publicUrl
+        message: `¡Imagen subida y vinculada con éxito!`
       });
       setSelectedFile(null);
       setFilePreview(null);
@@ -264,6 +353,27 @@ export default function AdminPanel({ products, onDataChanged }) {
       });
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleDeleteImage = async (item) => {
+    if (!window.confirm(`¿Estás seguro de eliminar esta imagen (${item.title})?`)) return;
+    setDeletingImageId(item.id);
+    try {
+      await item.deleteAction();
+      setUploadStatus({
+        success: true,
+        message: `Imagen eliminada correctamente.`
+      });
+      if (onDataChanged) onDataChanged();
+    } catch (err) {
+      console.error(err);
+      setUploadStatus({
+        success: false,
+        message: `Error al eliminar la imagen: ${err.message}`
+      });
+    } finally {
+      setDeletingImageId(null);
     }
   };
 
@@ -294,7 +404,7 @@ export default function AdminPanel({ products, onDataChanged }) {
             Panel de Operaciones & Inventario
           </h1>
           <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
-            Registro de ventas multi-par, devoluciones, carga de fotos a Storage y control de stock.
+            Registro de ventas multi-par, devoluciones, gestión de fotos por color y control de stock.
           </p>
         </div>
       </div>
@@ -381,7 +491,7 @@ export default function AdminPanel({ products, onDataChanged }) {
           }`}
         >
           <UploadCloud className="w-4 h-4 text-teal-400" />
-          <span>Gestor de Fotos Storage</span>
+          <span>Gestor de Fotos & Galería</span>
         </button>
 
         <button
@@ -417,7 +527,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                   onChange={e => setSelectedVariantToAdd(e.target.value)}
                   className="flex-1 px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm text-zinc-900 font-medium focus:outline-hidden focus:ring-2 focus:ring-zinc-900"
                 >
-                  <option value="">-- Seleccionar Modelo / Talla con Stock --</option>
+                  <option value="">-- Seleccionar Modelo / Color / Talla con Stock --</option>
                   {variantesConStock.map(v => (
                     <option key={v.id} value={v.id}>
                       {v.codigo_modelo} - {v.nombre_fantasia} | {v.color} | Talla {v.talla} (Stock: {v.stock_disponible}p) - ${Number(v.precio_vendedores).toLocaleString('es-CL')}
@@ -705,8 +815,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                 value={devVentaId}
                 onChange={e => setDevVentaId(e.target.value)}
                 className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900"
-              >
-              </input>
+              />
             </div>
 
             {devResult && (
@@ -729,76 +838,31 @@ export default function AdminPanel({ products, onDataChanged }) {
         </div>
       )}
 
-      {/* ========================================== */}
-      {/* TAB 3: GESTOR DE FOTOS STORAGE DRAG & DROP */}
-      {/* ========================================== */}
+      {/* ========================================================== */}
+      {/* TAB 3: GESTOR DE FOTOS POR MODELO Y COLOR & VISTA PREVIA  */}
+      {/* ========================================================== */}
       {activeTab === 'imagenes' && (
-        <div className="max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-6 animate-fade-in">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center">
-              <UploadCloud className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-display font-bold text-lg text-zinc-900">Gestor de Fotos en Supabase Storage</h3>
-              <p className="text-xs text-zinc-500">Carga archivos directo al bucket público 'productos-imagenes'.</p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {/* Destino de la Imagen */}
-            <div>
-              <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
-                ¿Dónde se aplicará esta foto?:
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setUploadTargetType('modelo')}
-                  className={`p-3 rounded-xl border text-xs font-bold transition-all ${
-                    uploadTargetType === 'modelo'
-                      ? 'border-brand-600 bg-brand-50 text-brand-900'
-                      : 'border-zinc-200 hover:bg-zinc-50 text-zinc-700'
-                  }`}
-                >
-                  Portada Modelo
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setUploadTargetType('variante')}
-                  className={`p-3 rounded-xl border text-xs font-bold transition-all ${
-                    uploadTargetType === 'variante'
-                      ? 'border-brand-600 bg-brand-50 text-brand-900'
-                      : 'border-zinc-200 hover:bg-zinc-50 text-zinc-700'
-                  }`}
-                >
-                  Portada Color/Variante
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setUploadTargetType('galeria')}
-                  className={`p-3 rounded-xl border text-xs font-bold transition-all ${
-                    uploadTargetType === 'galeria'
-                      ? 'border-brand-600 bg-brand-50 text-brand-900'
-                      : 'border-zinc-200 hover:bg-zinc-50 text-zinc-700'
-                  }`}
-                >
-                  Galería Multi-Ángulo
-                </button>
-              </div>
-            </div>
-
-            {/* Selectores dinámicos */}
-            {uploadTargetType === 'modelo' && (
+        <div className="max-w-5xl mx-auto space-y-8 animate-fade-in">
+          {/* Selector de Modelo Principal */}
+          <div className="bg-white p-6 rounded-3xl border border-zinc-200 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
-                  Seleccionar Ficha de Modelo:
-                </label>
+                <h3 className="font-display font-bold text-lg text-zinc-900 flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5 text-teal-600" />
+                  <span>Gestor de Fotografías por Modelo y Color</span>
+                </h3>
+                <p className="text-xs text-zinc-500">
+                  Las fotos se asocian a nivel de modelo y color para que todas las tallas compartan automáticamente las mismas imágenes.
+                </p>
+              </div>
+
+              {/* Selector de Modelo */}
+              <div className="w-full sm:w-80">
                 <select
-                  value={uploadModelId}
-                  onChange={e => setUploadModelId(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-semibold text-zinc-900"
+                  value={selectedModelId}
+                  onChange={e => setSelectedModelId(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-bold text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-zinc-900"
                 >
-                  <option value="">-- Seleccionar Modelo --</option>
                   {products.map(p => (
                     <option key={p.id} value={p.id}>
                       {p.codigo_modelo} - {p.nombre_fantasia || 'Sin Nombre'}
@@ -806,85 +870,199 @@ export default function AdminPanel({ products, onDataChanged }) {
                   ))}
                 </select>
               </div>
-            )}
+            </div>
+          </div>
 
-            {(uploadTargetType === 'variante' || uploadTargetType === 'galeria') && (
+          {/* Grid de Fotos Existentes del Modelo Seleccionado */}
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-5">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
               <div>
-                <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
-                  Seleccionar Variante de Color/Talla:
-                </label>
-                <select
-                  value={uploadVariantId}
-                  onChange={e => setUploadVariantId(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-semibold text-zinc-900"
-                >
-                  <option value="">-- Seleccionar Variante --</option>
-                  {allVariants.map(v => (
-                    <option key={v.id} value={v.id}>
-                      {v.codigo_modelo} - {v.nombre_fantasia} | {v.color} Talla {v.talla}
-                    </option>
-                  ))}
-                </select>
+                <h4 className="font-display font-bold text-base text-zinc-900">
+                  Fotografías Registradas para {currentSelectedProduct?.codigo_modelo} ({currentSelectedProduct?.nombre_fantasia})
+                </h4>
+                <span className="text-xs text-zinc-500">
+                  {existingImagesForCurrentSelection.length} foto(s) cargadas en Supabase Storage
+                </span>
               </div>
-            )}
-
-            {uploadTargetType === 'galeria' && (
-              <div>
-                <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
-                  Descripción del Ángulo:
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ej: Vista frontal, Vista taco, Vista suela..."
-                  value={uploadAngle}
-                  onChange={e => setUploadAngle(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 font-medium"
-                />
-              </div>
-            )}
-
-            {/* Zona de Drag & Drop */}
-            <div className="border-2 border-dashed border-zinc-300 hover:border-brand-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-zinc-50 relative">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              {filePreview ? (
-                <div className="flex flex-col items-center justify-center">
-                  <img src={filePreview} alt="Preview" className="h-40 w-auto object-contain rounded-xl shadow-md mb-2" />
-                  <span className="text-xs font-semibold text-brand-700">{selectedFile?.name}</span>
-                  <span className="text-[11px] text-zinc-400">Clic para cambiar imagen</span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center text-zinc-400">
-                  <UploadCloud className="w-10 h-10 text-zinc-400 mb-2" />
-                  <p className="font-display font-bold text-sm text-zinc-700">
-                    Arrastra una foto o haz clic para seleccionarla
-                  </p>
-                  <span className="text-xs text-zinc-400 mt-1">PNG, JPG, WEBP hasta 10MB</span>
-                </div>
-              )}
             </div>
 
-            {uploadStatus && (
-              <div className={`p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
-                uploadStatus.success ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'
-              }`}>
-                {uploadStatus.success ? <CheckCircle2 className="w-4 h-4 flex-shrink-0" /> : <XCircle className="w-4 h-4 flex-shrink-0" />}
-                <span>{uploadStatus.message}</span>
+            {existingImagesForCurrentSelection.length === 0 ? (
+              <div className="p-8 text-center bg-zinc-50 rounded-2xl border border-dashed border-zinc-200 text-zinc-400">
+                <ImageIcon className="w-10 h-10 mx-auto text-zinc-300 mb-2" />
+                <p className="text-sm font-semibold text-zinc-700">No hay fotos registradas para este modelo aún</p>
+                <p className="text-xs text-zinc-400 mt-1">Usa la sección inferior para cargar la foto de portada del color o modelo.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {existingImagesForCurrentSelection.map(img => (
+                  <div
+                    key={img.id}
+                    className="group relative bg-zinc-50 rounded-2xl border border-zinc-200 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col"
+                  >
+                    {/* Imagen */}
+                    <div className="aspect-[4/3] bg-zinc-100 overflow-hidden relative flex items-center justify-center">
+                      <img
+                        src={img.url}
+                        alt={img.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {/* Botón de Eliminación Rápida */}
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteImage(img)}
+                        disabled={deletingImageId === img.id}
+                        title="Eliminar esta foto y permitir reemplazarla"
+                        className="absolute top-2 right-2 p-2 rounded-xl bg-rose-600/90 hover:bg-rose-700 text-white shadow-md transition-all opacity-90 sm:opacity-0 sm:group-hover:opacity-100 active:scale-95"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* Información y Tag */}
+                    <div className="p-3 text-xs space-y-1">
+                      <span className={`inline-block text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase ${
+                        img.type === 'modelo'
+                          ? 'bg-zinc-900 text-white'
+                          : img.type === 'color'
+                          ? 'bg-brand-100 text-brand-900 border border-brand-200'
+                          : 'bg-teal-50 text-teal-800 border border-teal-200'
+                      }`}>
+                        {img.type === 'modelo' ? 'Foto Principal Modelo' : img.type === 'color' ? 'Portada Color' : 'Galería General'}
+                      </span>
+                      <p className="font-bold text-zinc-900 truncate">{img.title}</p>
+                      <p className="text-[11px] text-zinc-400 truncate">{img.subtitle}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
+          </div>
 
-            <button
-              type="button"
-              onClick={handleExecuteUpload}
-              disabled={!selectedFile || isUploading || (uploadTargetType === 'modelo' && !uploadModelId) || (uploadTargetType !== 'modelo' && !uploadVariantId)}
-              className="w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 text-white font-bold text-sm rounded-2xl shadow-md transition-all active:scale-98"
-            >
-              {isUploading ? 'Subiendo y Actualizando Base de Datos...' : 'Subir Imagen y Vincular'}
-            </button>
+          {/* Formulario de Carga de Nuevas Fotos */}
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-6">
+            <h4 className="font-display font-bold text-base text-zinc-900 border-b border-zinc-100 pb-3 flex items-center gap-2">
+              <UploadCloud className="w-5 h-5 text-teal-600" />
+              <span>Subir Nueva Foto / Reemplazo</span>
+            </h4>
+
+            <div className="space-y-4">
+              {/* Tipo de Aplicación */}
+              <div>
+                <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
+                  Tipo de Foto a Vincular:
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setUploadTargetType('color')}
+                    className={`p-3 rounded-xl border text-xs font-bold transition-all ${
+                      uploadTargetType === 'color'
+                        ? 'border-brand-600 bg-brand-50 text-brand-900 ring-1 ring-brand-500'
+                        : 'border-zinc-200 hover:bg-zinc-50 text-zinc-700'
+                    }`}
+                  >
+                    1. Portada del Color (Todas las Tallas)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUploadTargetType('galeria')}
+                    className={`p-3 rounded-xl border text-xs font-bold transition-all ${
+                      uploadTargetType === 'galeria'
+                        ? 'border-brand-600 bg-brand-50 text-brand-900 ring-1 ring-brand-500'
+                        : 'border-zinc-200 hover:bg-zinc-50 text-zinc-700'
+                    }`}
+                  >
+                    2. Foto para Galería General
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUploadTargetType('modelo')}
+                    className={`p-3 rounded-xl border text-xs font-bold transition-all ${
+                      uploadTargetType === 'modelo'
+                        ? 'border-brand-600 bg-brand-50 text-brand-900 ring-1 ring-brand-500'
+                        : 'border-zinc-200 hover:bg-zinc-50 text-zinc-700'
+                    }`}
+                  >
+                    3. Foto Principal del Modelo
+                  </button>
+                </div>
+              </div>
+
+              {/* Selector de Color si aplica */}
+              {(uploadTargetType === 'color' || uploadTargetType === 'galeria') && (
+                <div>
+                  <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
+                    Seleccionar Color a Aplicar *:
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {availableColorsForModel.map(color => (
+                      <button
+                        key={color}
+                        type="button"
+                        onClick={() => setSelectedColorName(color)}
+                        className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                          selectedColorName === color
+                            ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs'
+                            : 'bg-zinc-50 hover:bg-zinc-100 text-zinc-700 border-zinc-200'
+                        }`}
+                      >
+                        {color}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Zona de Drag & Drop */}
+              <div className="border-2 border-dashed border-zinc-300 hover:border-brand-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-zinc-50 relative">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                {filePreview ? (
+                  <div className="flex flex-col items-center justify-center">
+                    <img src={filePreview} alt="Preview" className="h-44 w-auto object-contain rounded-xl shadow-md mb-2" />
+                    <span className="text-xs font-semibold text-brand-700">{selectedFile?.name}</span>
+                    <span className="text-[11px] text-zinc-400">Clic para cambiar imagen</span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-zinc-400">
+                    <UploadCloud className="w-10 h-10 text-zinc-400 mb-2" />
+                    <p className="font-display font-bold text-sm text-zinc-700">
+                      Arrastra la foto aquí o haz clic para seleccionarla
+                    </p>
+                    <span className="text-xs text-zinc-400 mt-1">PNG, JPG, WEBP hasta 10MB</span>
+                  </div>
+                )}
+              </div>
+
+              {uploadStatus && (
+                <div className={`p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+                  uploadStatus.success ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'
+                }`}>
+                  {uploadStatus.success ? <CheckCircle2 className="w-4 h-4 flex-shrink-0" /> : <XCircle className="w-4 h-4 flex-shrink-0" />}
+                  <span>{uploadStatus.message}</span>
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={handleExecuteUpload}
+                disabled={!selectedFile || isUploading}
+                className="w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 text-white font-bold text-sm rounded-2xl shadow-md transition-all active:scale-98 flex items-center justify-center gap-2"
+              >
+                {isUploading ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Subiendo a Supabase Storage...</span>
+                  </>
+                ) : (
+                  <span>Subir Foto y Vincular a {currentSelectedProduct?.codigo_modelo} {uploadTargetType === 'color' ? `(${selectedColorName})` : ''}</span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

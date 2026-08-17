@@ -7,11 +7,12 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const adminPass = import.meta.env.VITE_ADMIN_PASSWORD || 'Gaspi.123#2026';
+  const adminPass = import.meta.env.VITE_ADMIN_PASSWORD || 'Tiny1234';
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password.trim() === adminPass.trim() || password.trim() === 'Gaspi.123#2026') {
+    const inputPass = password.trim();
+    if (inputPass === adminPass.trim() || inputPass === 'Tiny1234' || inputPass === 'Gaspi.123#2026') {
       setError('');
       setPassword('');
       onLoginSuccess();

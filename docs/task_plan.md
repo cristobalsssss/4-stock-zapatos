@@ -21,9 +21,13 @@
 ## FASE 4: VIBE CODING DEL FRONTEND EN VERCEL
 - [x] Generar estructura inicial del Frontend Web (Catálogo + Admin) en React + Vite + Tailwind CSS
 - [x] Conectar vista de catálogo público con Supabase/n8n con buscador y filtros en tiempo real
-- [x] Implementar visualizador de variante, alertas de stock y galería multi-ángulo modal
+- [x] Implementar visualizador de variante, alertas de stock y galería modal
 - [x] Implementar Bolsa de Reserva con redirección inteligente y mensaje formateado a WhatsApp directo
 - [x] Implementar Panel Admin protegido por PIN para venta multi-producto, devoluciones y subida de fotos drag & drop a Storage
+- [x] REVISIÓN #1: Asociación de imágenes por Modelo y Color (compartidas por todas las tallas del color)
+- [x] REVISIÓN #1: Renombrar y simplificar a "Galería General" sin clasificaciones de ángulos
+- [x] REVISIÓN #1: Grid de miniaturas existentes en Admin con opción de eliminación y reemplazo inmediato
+- [x] REVISIÓN #1: Validación de contraseña de administrador `Tiny1234`
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
