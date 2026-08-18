@@ -102,7 +102,10 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
 
   return (
     <>
-      <article className="group bg-white rounded-3xl border border-zinc-200/80 hover:border-zinc-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden">
+      <article 
+        id={`product-${product.codigo_modelo}`}
+        className="group bg-white rounded-3xl border border-zinc-200/80 hover:border-zinc-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden"
+      >
         {/* Contenedor de Imagen Maximizado */}
         <div 
           onClick={() => onOpenGallery(product, activeVariant || { color: selectedColor })}

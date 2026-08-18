@@ -42,6 +42,10 @@
 - [x] REVISIÓN #9: Modal de Venta con Precio Libre y Promociones (Monto Real / Cobrado editable)
 - [x] REVISIÓN #9: Pestaña "Detalle de Movimientos" (Kardex en vivo con fechas de operación y registro, badges y filtros)
 - [x] REVISIÓN #9: Widget de Chatbot Asistente en catálogo con consulta de stock y derivación a WhatsApp
+- [x] REVISIÓN #10: Ajuste de Dueña a "Carmen" ($0 com), entregas presenciales Concepción/Penco y envíos Starken Por Pagar
+- [x] REVISIÓN #10: Pestaña "⚙️ Parámetros" para WhatsApp y políticas de entrega configurables
+- [x] REVISIÓN #10: Pestaña "📋 Reservas" con ciclo de vida (Pendiente, Cancelada, Convertir a Venta)
+- [x] REVISIÓN #10: Formulario de Reserva con prefijo `+56 9 ` y Chatbot con badges interactivos y sugerencias por quiebre de stock
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

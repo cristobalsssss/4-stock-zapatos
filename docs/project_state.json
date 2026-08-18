@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "2.3.0",
-    "last_updated": "2026-08-17 22:50:00",
+    "version": "2.4.0",
+    "last_updated": "2026-08-17 23:35:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #9 APLICADA)",
-    "last_completed_task": "REVISIÓN #9: Modal de Venta con Precio Libre y Promociones, Pestaña de Detalle de Movimientos (Kardex en vivo) y Widget de Chatbot Asistente con derivación a WhatsApp",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #10 APLICADA)",
+    "last_completed_task": "REVISIÓN #10: Chatbot contextualizado (quiebre de stock, Concepción/Penco y Starken), Parámetros Dinámicos, Gestión de Reservas con ciclo de vida y formalización de Carmen como dueña",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",

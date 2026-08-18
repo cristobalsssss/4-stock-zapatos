@@ -19,7 +19,15 @@ import {
   RefreshCw,
   History,
   FileText,
-  Filter
+  Filter,
+  Settings,
+  ClipboardList,
+  Phone,
+  Truck,
+  MapPin,
+  Check,
+  Ban,
+  ArrowRight
 } from 'lucide-react';
 import { 
   registrarVenta, 
@@ -31,11 +39,15 @@ import {
   eliminarImagenColor,
   agregarImagenGaleriaColor,
   eliminarImagenGaleria,
-  getDetalleMovimientos 
+  getDetalleMovimientos,
+  getConfiguracion,
+  guardarConfiguracion,
+  getReservas,
+  actualizarEstadoReserva
 } from '../lib/api';
 
 export default function AdminPanel({ products, onDataChanged }) {
-  const [activeTab, setActiveTab] = useState('ventas'); // 'ventas' | 'movimientos' | 'devoluciones' | 'imagenes' | 'alertas'
+  const [activeTab, setActiveTab] = useState('ventas'); // 'ventas' | 'reservas' | 'movimientos' | 'devoluciones' | 'imagenes' | 'parametros' | 'alertas'
 
   // KPIs
   const totalModelos = products.length;
@@ -64,10 +76,10 @@ export default function AdminPanel({ products, onDataChanged }) {
   }, [allVariants]);
 
   // =========================================================================
-  // ESTADO PARA TAB 1: VENTA MULTI-PRODUCTO (CON PRECIO LIBRE Y PROMOCIONES)
+  // ESTADO PARA TAB 1: VENTA MULTI-PRODUCTO (DUEÑA: CARMEN)
   // =========================================================================
   const [fechaVenta, setFechaVenta] = useState(() => new Date().toISOString().split('T')[0]);
-  const [vendedor, setVendedor] = useState('admin_stephanie');
+  const [vendedor, setVendedor] = useState('admin_carmen');
   const [medioPago, setMedioPago] = useState('Transferencia');
   const [notasVenta, setNotasVenta] = useState('');
   const [saleItems, setSaleItems] = useState([]);
@@ -119,7 +131,6 @@ export default function AdminPanel({ products, onDataChanged }) {
     }));
   };
 
-  // Actualización de precio unitario libre (Monto Real / Cobrado)
   const handleUpdateSaleItemPrice = (varId, newPrice) => {
     setSaleItems(prev => prev.map(item => {
       if (item.variante_id === varId) {
@@ -135,7 +146,7 @@ export default function AdminPanel({ products, onDataChanged }) {
 
   const totalMontoVenta = saleItems.reduce((acc, item) => acc + (item.precio_unitario * item.cantidad), 0);
   const totalComisionVenta = saleItems.reduce((acc, item) => {
-    if (vendedor.toLowerCase().includes('admin') || vendedor.toLowerCase().includes('dueño')) {
+    if (vendedor.toLowerCase().includes('admin') || vendedor.toLowerCase().includes('dueño') || vendedor.toLowerCase().includes('carmen')) {
       return acc + 0;
     }
     const delta = Math.max(0, item.precio_unitario - item.precio_interno);
@@ -149,7 +160,7 @@ export default function AdminPanel({ products, onDataChanged }) {
 
     try {
       for (const item of saleItems) {
-        const comisionItem = (vendedor.toLowerCase().includes('admin') || vendedor.toLowerCase().includes('dueño'))
+        const comisionItem = (vendedor.toLowerCase().includes('admin') || vendedor.toLowerCase().includes('dueño') || vendedor.toLowerCase().includes('carmen'))
           ? 0
           : Math.max(0, (item.precio_unitario - item.precio_interno) * item.cantidad);
 
@@ -160,7 +171,7 @@ export default function AdminPanel({ products, onDataChanged }) {
           medio_pago: medioPago,
           precio_aplicado: item.precio_unitario,
           comision_vendedor: comisionItem,
-          notas: notasVenta || `Venta Multi-par (${vendedor})`,
+          notas: notasVenta || `Venta (${vendedor})`,
           fecha_venta: new Date(fechaVenta).toISOString()
         });
       }
@@ -173,6 +184,7 @@ export default function AdminPanel({ products, onDataChanged }) {
       setNotasVenta('');
       if (onDataChanged) onDataChanged();
       loadMovimientos();
+      loadReservas();
     } catch (err) {
       console.error(err);
       setSaleResult({
@@ -185,12 +197,87 @@ export default function AdminPanel({ products, onDataChanged }) {
   };
 
   // =========================================================================
-  // ESTADO PARA TAB 2: DETALLE DE MOVIMIENTOS (HISTORIAL KARDEX EN VIVO)
+  // ESTADO PARA TAB 2: GESTIÓN DE RESERVAS DE CLIENTES
+  // =========================================================================
+  const [reservas, setReservas] = useState([]);
+  const [isLoadingReservas, setIsLoadingReservas] = useState(false);
+  const [reservaSearch, setReservaSearch] = useState('');
+  const [reservaFilterEstado, setReservaFilterEstado] = useState('todos');
+
+  const loadReservas = async () => {
+    setIsLoadingReservas(true);
+    try {
+      const data = await getReservas();
+      setReservas(data || []);
+    } catch (err) {
+      console.error('Error al cargar reservas:', err);
+    } finally {
+      setIsLoadingReservas(false);
+    }
+  };
+
+  useEffect(() => {
+    loadReservas();
+  }, []);
+
+  const handleCambiarEstadoReserva = async (reservaId, nuevoEstado) => {
+    try {
+      await actualizarEstadoReserva(reservaId, nuevoEstado);
+      loadReservas();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleConvertirReservaAVenta = (reserva) => {
+    // Cargar items de la reserva al tab de ventas
+    const itemsCargados = [];
+    (reserva.items || []).forEach(it => {
+      const v = allVariants.find(vItem => vItem.id === it.variante_id);
+      if (v) {
+        itemsCargados.push({
+          variante_id: v.id,
+          codigo_modelo: v.codigo_modelo,
+          nombre_fantasia: v.nombre_fantasia,
+          color: v.color,
+          talla: v.talla,
+          sku: v.sku_variante,
+          stock_disponible: v.stock_disponible,
+          precio_unitario: Number(it.precio) || Number(v.precio_vendedores),
+          precio_interno: Number(v.precio_interno),
+          cantidad: it.quantity || 1
+        });
+      }
+    });
+
+    if (itemsCargados.length > 0) {
+      setSaleItems(itemsCargados);
+    }
+    setNotasVenta(`Reserva de ${reserva.cliente_nombre} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.notas || ''}`);
+    setActiveTab('ventas');
+    handleCambiarEstadoReserva(reserva.id, 'Completada');
+  };
+
+  const filteredReservas = useMemo(() => {
+    return reservas.filter(r => {
+      if (reservaFilterEstado !== 'todos' && r.estado !== reservaFilterEstado) return false;
+      if (!reservaSearch.trim()) return true;
+      const q = reservaSearch.toLowerCase();
+      const nom = (r.cliente_nombre || '').toLowerCase();
+      const com = (r.cliente_comuna || '').toLowerCase();
+      const tel = (r.cliente_whatsapp || '').toLowerCase();
+      const not = (r.notas || '').toLowerCase();
+      return nom.includes(q) || com.includes(q) || tel.includes(q) || not.includes(q);
+    });
+  }, [reservas, reservaFilterEstado, reservaSearch]);
+
+  // =========================================================================
+  // ESTADO PARA TAB 3: DETALLE DE MOVIMIENTOS KARDEX
   // =========================================================================
   const [movimientos, setMovimientos] = useState([]);
   const [isLoadingMovimientos, setIsLoadingMovimientos] = useState(false);
   const [movSearch, setMovSearch] = useState('');
-  const [movFilterTipo, setMovFilterTipo] = useState('todos'); // 'todos' | 'Venta' | 'Devolucion' | 'Ajuste'
+  const [movFilterTipo, setMovFilterTipo] = useState('todos');
 
   const loadMovimientos = async () => {
     setIsLoadingMovimientos(true);
@@ -212,16 +299,12 @@ export default function AdminPanel({ products, onDataChanged }) {
 
   const filteredMovimientos = useMemo(() => {
     return movimientos.filter(m => {
-      // Filtro de tipo
       if (movFilterTipo !== 'todos') {
         const t = (m.tipo_movimiento || '').toLowerCase();
         if (!t.includes(movFilterTipo.toLowerCase())) return false;
       }
-
-      // Filtro de búsqueda
       if (!movSearch.trim()) return true;
       const q = movSearch.toLowerCase();
-
       const prod = m.inventario_variantes?.productos;
       const cod = (prod?.codigo_modelo || '').toLowerCase();
       const nom = (prod?.nombre_fantasia || '').toLowerCase();
@@ -235,7 +318,7 @@ export default function AdminPanel({ products, onDataChanged }) {
   }, [movimientos, movFilterTipo, movSearch]);
 
   // ==========================================
-  // ESTADO PARA TAB 3: DEVOLUCIONES
+  // ESTADO PARA TAB 4: DEVOLUCIONES
   // ==========================================
   const [devVariantId, setDevVariantId] = useState('');
   const [devCantidad, setDevCantidad] = useState(1);
@@ -280,9 +363,9 @@ export default function AdminPanel({ products, onDataChanged }) {
   };
 
   // ==========================================================
-  // ESTADO PARA TAB 4: GESTOR DE FOTOS POR MODELO Y COLOR
+  // ESTADO PARA TAB 5: GESTOR DE FOTOS POR MODELO Y COLOR
   // ==========================================================
-  const [uploadTargetType, setUploadTargetType] = useState('color'); // 'color' | 'modelo' | 'galeria'
+  const [uploadTargetType, setUploadTargetType] = useState('color');
   const [selectedModelId, setSelectedModelId] = useState(() => products[0]?.id || '');
   const [selectedColorName, setSelectedColorName] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
@@ -314,7 +397,6 @@ export default function AdminPanel({ products, onDataChanged }) {
     if (!currentSelectedProduct) return [];
     const list = [];
 
-    // 1. Imagen por defecto del modelo
     if (currentSelectedProduct.imagen_defecto_url) {
       list.push({
         id: `modelo-${currentSelectedProduct.id}`,
@@ -327,7 +409,6 @@ export default function AdminPanel({ products, onDataChanged }) {
       });
     }
 
-    // 2. Portadas de Colores
     const variantes = currentSelectedProduct.inventario_variantes || [];
     const portadasPorColor = new Map();
 
@@ -349,7 +430,6 @@ export default function AdminPanel({ products, onDataChanged }) {
       });
     });
 
-    // 3. Galería General
     const galeriaMap = new Map();
     variantes.forEach(v => {
       (v.imagenes_variante || []).forEach(g => {
@@ -368,7 +448,6 @@ export default function AdminPanel({ products, onDataChanged }) {
     });
 
     galeriaMap.forEach(item => list.push(item));
-
     return list;
   }, [currentSelectedProduct]);
 
@@ -438,8 +517,40 @@ export default function AdminPanel({ products, onDataChanged }) {
     }
   };
 
+  // =========================================================================
+  // ESTADO PARA TAB 6: ⚙️ PARÁMETROS DINÁMICOS Y CONFIGURACIÓN
+  // =========================================================================
+  const [configParams, setConfigParams] = useState({
+    telefono_whatsapp: '+56993125219',
+    nombre_duena: 'Carmen',
+    modalidad_tienda: 'Venta 100% online, sin tienda física abierta al público. Precios de remate y liquidación de bodega hasta agotar stock.',
+    entregas_locales: 'Entregas presenciales en Concepción y Penco (a coordinar con Carmen).',
+    envios_nacionales: 'Envíos por Starken a todo Chile en modalidad "Por Pagar".'
+  });
+  const [isSavingConfig, setIsSavingConfig] = useState(false);
+  const [configStatusMsg, setConfigStatusMsg] = useState(null);
+
+  useEffect(() => {
+    getConfiguracion().then(data => setConfigParams(data));
+  }, []);
+
+  const handleSaveConfig = async (e) => {
+    e.preventDefault();
+    setIsSavingConfig(true);
+    setConfigStatusMsg(null);
+    try {
+      await guardarConfiguracion(configParams);
+      setConfigStatusMsg({ success: true, text: '¡Configuración guardada exitosamente!' });
+    } catch (err) {
+      console.error(err);
+      setConfigStatusMsg({ success: false, text: `Error al guardar: ${err.message}` });
+    } finally {
+      setIsSavingConfig(false);
+    }
+  };
+
   // ==========================================
-  // TAB 5: BÚSQUEDA EN ALERTAS
+  // TAB 7: BÚSQUEDA EN ALERTAS
   // ==========================================
   const [alertSearch, setAlertSearch] = useState('');
   const filteredAlerts = useMemo(() => {
@@ -459,13 +570,13 @@ export default function AdminPanel({ products, onDataChanged }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-6">
         <div>
           <span className="text-xs font-bold text-brand-700 uppercase tracking-wider bg-brand-50 px-2.5 py-1 rounded-md">
-            Consola Privada
+            Consola de Gestión
           </span>
           <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-zinc-900 tracking-tight mt-1">
             Panel de Operaciones & Inventario
           </h1>
           <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
-            Registro de ventas con precio libre, detalle de movimientos, devoluciones y gestor de fotos.
+            Gestión de ventas, reservas de clientes, kardex de movimientos, parámetros y fotografías.
           </p>
         </div>
       </div>
@@ -496,24 +607,24 @@ export default function AdminPanel({ products, onDataChanged }) {
 
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-zinc-200/80 shadow-xs">
           <div className="flex items-center justify-between text-zinc-400 mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Variantes Activas</span>
-            <Sparkles className="w-4 h-4 text-brand-600" />
+            <span className="text-xs font-bold uppercase tracking-wider">Reservas Activas</span>
+            <ClipboardList className="w-4 h-4 text-amber-600" />
           </div>
-          <div className="font-display font-extrabold text-2xl sm:text-3xl text-brand-700">
-            {variantesConStock.length}
+          <div className="font-display font-extrabold text-2xl sm:text-3xl text-amber-700">
+            {reservas.filter(r => r.estado === 'Pendiente').length}
           </div>
-          <span className="text-[11px] text-zinc-400">de 714 totales</span>
+          <span className="text-[11px] text-zinc-400">pendientes de entrega</span>
         </div>
 
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-zinc-200/80 shadow-xs">
           <div className="flex items-center justify-between text-zinc-400 mb-2">
             <span className="text-xs font-bold uppercase tracking-wider">Alertas Stock</span>
-            <AlertTriangle className="w-4 h-4 text-amber-600" />
+            <AlertTriangle className="w-4 h-4 text-rose-600" />
           </div>
-          <div className="font-display font-extrabold text-2xl sm:text-3xl text-amber-700">
+          <div className="font-display font-extrabold text-2xl sm:text-3xl text-rose-700">
             {variantesCriticas.length}
           </div>
-          <span className="text-[11px] text-amber-600 font-medium">0 o &lt;= 2 pares</span>
+          <span className="text-[11px] text-rose-600 font-medium">0 o &lt;= 2 pares</span>
         </div>
       </div>
 
@@ -522,7 +633,7 @@ export default function AdminPanel({ products, onDataChanged }) {
         <button
           type="button"
           onClick={() => setActiveTab('ventas')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
             activeTab === 'ventas'
               ? 'bg-zinc-900 text-white shadow-sm'
               : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
@@ -534,8 +645,21 @@ export default function AdminPanel({ products, onDataChanged }) {
 
         <button
           type="button"
+          onClick={() => setActiveTab('reservas')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
+            activeTab === 'reservas'
+              ? 'bg-zinc-900 text-white shadow-sm'
+              : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
+          }`}
+        >
+          <ClipboardList className="w-4 h-4 text-amber-400" />
+          <span>Reservas ({reservas.filter(r => r.estado === 'Pendiente').length})</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setActiveTab('movimientos')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
             activeTab === 'movimientos'
               ? 'bg-zinc-900 text-white shadow-sm'
               : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
@@ -548,45 +672,58 @@ export default function AdminPanel({ products, onDataChanged }) {
         <button
           type="button"
           onClick={() => setActiveTab('devoluciones')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
             activeTab === 'devoluciones'
               ? 'bg-zinc-900 text-white shadow-sm'
               : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
           }`}
         >
-          <RotateCcw className="w-4 h-4 text-amber-400" />
+          <RotateCcw className="w-4 h-4 text-rose-400" />
           <span>Devoluciones</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('imagenes')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
             activeTab === 'imagenes'
               ? 'bg-zinc-900 text-white shadow-sm'
               : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
           }`}
         >
           <UploadCloud className="w-4 h-4 text-teal-400" />
-          <span>Gestor de Fotos & Galería</span>
+          <span>Gestor de Fotos</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('parametros')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
+            activeTab === 'parametros'
+              ? 'bg-zinc-900 text-white shadow-sm'
+              : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
+          }`}
+        >
+          <Settings className="w-4 h-4 text-zinc-400" />
+          <span>Parámetros & WhatsApp</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('alertas')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
             activeTab === 'alertas'
               ? 'bg-zinc-900 text-white shadow-sm'
               : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
           }`}
         >
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
-          <span>Monitor de Stock Crítico ({variantesCriticas.length})</span>
+          <AlertTriangle className="w-4 h-4 text-amber-500" />
+          <span>Stock Crítico ({variantesCriticas.length})</span>
         </button>
       </div>
 
       {/* ========================================================================= */}
-      {/* TAB 1: TERMINAL DE VENTAS MULTI-PRODUCTO (CON MONTO DE VENTA EDITABLE)    */}
+      {/* TAB 1: TERMINAL DE VENTAS MULTI-PRODUCTO (CON PRECIO LIBRE Y CARMEN)      */}
       {/* ========================================================================= */}
       {activeTab === 'ventas' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
@@ -730,7 +867,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                 </div>
               </div>
 
-              {/* Vendedor */}
+              {/* Vendedor (Nombre Dueña: Carmen) */}
               <div>
                 <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
                   Vendedor / Canal:
@@ -742,7 +879,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                     onChange={e => setVendedor(e.target.value)}
                     className="w-full pl-9 pr-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-semibold text-zinc-800"
                   >
-                    <option value="admin_stephanie">admin_stephanie (Dueño / Venta Directa $0 Com)</option>
+                    <option value="admin_carmen">Carmen (Dueña / Venta Directa $0 Com)</option>
                     <option value="camila">Camila (Vendedora Externa)</option>
                     <option value="valentina">Valentina (Vendedora Externa)</option>
                     <option value="catalina">Catalina (Vendedora Externa)</option>
@@ -777,7 +914,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                 </label>
                 <input
                   type="text"
-                  placeholder="Ej: Cliente retira en showroom..."
+                  placeholder="Ej: Cliente retira en Concepción..."
                   value={notasVenta}
                   onChange={e => setNotasVenta(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-800 font-medium"
@@ -831,7 +968,182 @@ export default function AdminPanel({ products, onDataChanged }) {
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 2: DETALLE DE MOVIMIENTOS (HISTORIAL KARDEX EN VIVO)                  */}
+      {/* TAB 2: 📋 GESTIÓN DE RESERVAS DE CLIENTES (CICLO DE VIDA)                  */}
+      {/* ========================================================================= */}
+      {activeTab === 'reservas' && (
+        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-6 animate-fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-100 pb-4">
+            <div>
+              <h3 className="font-display font-bold text-lg text-zinc-900 flex items-center gap-2">
+                <ClipboardList className="w-5 h-5 text-amber-600" />
+                <span>Gestión de Reservas de Clientes</span>
+              </h3>
+              <p className="text-xs text-zinc-500">
+                Control de solicitudes originadas en la Bolsa de Reserva y el Asistente Chatbot.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={loadReservas}
+              disabled={isLoadingReservas}
+              className="px-3.5 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all self-start sm:self-auto cursor-pointer"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoadingReservas ? 'animate-spin' : ''}`} />
+              <span>Refrescar</span>
+            </button>
+          </div>
+
+          {/* Filtros */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
+              <input
+                type="text"
+                placeholder="Buscar por nombre, teléfono WhatsApp, comuna o notas..."
+                value={reservaSearch}
+                onChange={e => setReservaSearch(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 font-medium"
+              />
+            </div>
+
+            <select
+              value={reservaFilterEstado}
+              onChange={e => setReservaFilterEstado(e.target.value)}
+              className="px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs font-bold text-zinc-800"
+            >
+              <option value="todos">Todos los Estados ({reservas.length})</option>
+              <option value="Pendiente">Solo Pendientes</option>
+              <option value="Completada">Solo Completadas</option>
+              <option value="Cancelada">Solo Canceladas</option>
+            </select>
+          </div>
+
+          {/* Tabla de Reservas */}
+          <div className="border border-zinc-200 rounded-2xl overflow-x-auto">
+            <table className="w-full text-left text-xs min-w-[800px]">
+              <thead className="bg-zinc-50 text-zinc-500 font-bold uppercase text-[10px] tracking-wider border-b border-zinc-200">
+                <tr>
+                  <th className="p-3">Fecha / Hora</th>
+                  <th className="p-3">Cliente</th>
+                  <th className="p-3">WhatsApp</th>
+                  <th className="p-3">Comuna</th>
+                  <th className="p-3">Pares / Detalles</th>
+                  <th className="p-3">Estado</th>
+                  <th className="p-3 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-200">
+                {isLoadingReservas ? (
+                  <tr>
+                    <td colSpan={7} className="p-8 text-center text-zinc-400">
+                      <RefreshCw className="w-6 h-6 animate-spin mx-auto text-brand-600 mb-2" />
+                      <span>Cargando reservas...</span>
+                    </td>
+                  </tr>
+                ) : filteredReservas.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="p-8 text-center text-zinc-400 font-medium">
+                      No hay solicitudes de reserva registradas con esos filtros.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredReservas.map(res => (
+                    <tr key={res.id} className="hover:bg-zinc-50/70 transition-colors">
+                      <td className="p-3 whitespace-nowrap font-medium text-zinc-600">
+                        {new Date(res.created_at).toLocaleString('es-CL', {
+                          day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
+                        })}
+                      </td>
+                      <td className="p-3 font-bold text-zinc-900 whitespace-nowrap">
+                        {res.cliente_nombre}
+                      </td>
+                      <td className="p-3 whitespace-nowrap font-mono text-zinc-700">
+                        <a
+                          href={`https://wa.me/${(res.cliente_whatsapp || '').replace(/[^0-9]/g, '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-emerald-700 font-bold hover:underline"
+                        >
+                          {res.cliente_whatsapp || 'N/A'}
+                        </a>
+                      </td>
+                      <td className="p-3 font-medium text-zinc-700 whitespace-nowrap">
+                        {res.cliente_comuna || 'Concepción'}
+                      </td>
+                      <td className="p-3 max-w-xs">
+                        {res.items && res.items.length > 0 ? (
+                          <div className="space-y-1">
+                            {res.items.map((it, idx) => (
+                              <div key={idx} className="text-[11px] text-zinc-700">
+                                • <strong className="text-zinc-900">{it.codigo_modelo}</strong> ({it.color}, T{it.talla}) x{it.quantity}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-[11px] text-zinc-500">{res.notas || 'Consulta general'}</span>
+                        )}
+                      </td>
+                      <td className="p-3">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${
+                          res.estado === 'Completada'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : res.estado === 'Cancelada'
+                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                            : 'bg-amber-50 text-amber-800 border border-amber-200'
+                        }`}>
+                          {res.estado || 'Pendiente'}
+                        </span>
+                      </td>
+                      <td className="p-3 text-right whitespace-nowrap space-x-1.5">
+                        {res.estado === 'Pendiente' && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => handleConvertirReservaAVenta(res)}
+                              className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer active:scale-95 shadow-xs"
+                              title="Cargar al módulo de venta para cobrar y descontar stock"
+                            >
+                              <span>Convertir a Venta</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleCambiarEstadoReserva(res.id, 'Cancelada')}
+                              className="px-2 py-1 bg-zinc-100 hover:bg-rose-50 text-zinc-600 hover:text-rose-700 rounded-lg text-xs font-semibold transition-all cursor-pointer"
+                              title="Cancelar reserva"
+                            >
+                              ✕
+                            </button>
+                          </>
+                        )}
+                        {res.estado === 'Cancelada' && (
+                          <button
+                            type="button"
+                            onClick={() => handleCambiarEstadoReserva(res.id, 'Pendiente')}
+                            className="px-2 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-lg text-xs font-medium cursor-pointer"
+                          >
+                            Reabrir
+                          </button>
+                        )}
+                        {res.estado === 'Completada' && (
+                          <span className="text-[11px] text-emerald-700 font-bold flex items-center justify-end gap-1">
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Venta Realizada</span>
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB 3: DETALLE DE MOVIMIENTOS KARDEX                                      */}
       {/* ========================================================================= */}
       {activeTab === 'movimientos' && (
         <div className="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-6 animate-fade-in">
@@ -857,7 +1169,7 @@ export default function AdminPanel({ products, onDataChanged }) {
             </button>
           </div>
 
-          {/* Filtros y Buscador */}
+          {/* Filtros */}
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
@@ -962,7 +1274,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                           ${mov.comision_vendedor ? Number(mov.comision_vendedor).toLocaleString('es-CL') : '0'}
                         </td>
                         <td className="p-3 text-zinc-700 whitespace-nowrap">
-                          <div className="font-semibold text-zinc-800">{mov.ventas?.vendedor || 'Directo'}</div>
+                          <div className="font-semibold text-zinc-800">{mov.ventas?.vendedor || 'Carmen'}</div>
                           <div className="text-[11px] text-zinc-400">{mov.ventas?.medio_pago || 'N/A'}</div>
                         </td>
                         <td className="p-3 font-mono text-[10px] text-zinc-400 whitespace-nowrap">
@@ -982,7 +1294,7 @@ export default function AdminPanel({ products, onDataChanged }) {
       )}
 
       {/* ========================================== */}
-      {/* TAB 3: MÓDULO DE DEVOLUCIONES              */}
+      {/* TAB 4: MÓDULO DE DEVOLUCIONES              */}
       {/* ========================================== */}
       {activeTab === 'devoluciones' && (
         <div className="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-6 animate-fade-in">
@@ -1082,7 +1394,7 @@ export default function AdminPanel({ products, onDataChanged }) {
       )}
 
       {/* ========================================================== */}
-      {/* TAB 4: GESTOR DE FOTOS POR MODELO Y COLOR & VISTA PREVIA  */}
+      {/* TAB 5: GESTOR DE FOTOS POR MODELO Y COLOR & VISTA PREVIA  */}
       {/* ========================================================== */}
       {activeTab === 'imagenes' && (
         <div className="max-w-5xl mx-auto space-y-8 animate-fade-in">
@@ -1142,14 +1454,12 @@ export default function AdminPanel({ products, onDataChanged }) {
                     key={img.id}
                     className="group relative bg-zinc-50 rounded-2xl border border-zinc-200 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col"
                   >
-                    {/* Imagen */}
                     <div className="aspect-[4/3] bg-zinc-100 overflow-hidden relative flex items-center justify-center">
                       <img
                         src={img.url}
                         alt={img.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      {/* Botón de Eliminación Rápida */}
                       <button
                         type="button"
                         onClick={() => handleDeleteImage(img)}
@@ -1161,7 +1471,6 @@ export default function AdminPanel({ products, onDataChanged }) {
                       </button>
                     </div>
 
-                    {/* Información y Tag */}
                     <div className="p-3 text-xs space-y-1">
                       <span className={`inline-block text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase ${
                         img.type === 'modelo'
@@ -1231,7 +1540,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                 </div>
               </div>
 
-              {/* Selector de Color si aplica */}
+              {/* Selector de Color */}
               {(uploadTargetType === 'color' || uploadTargetType === 'galeria') && (
                 <div>
                   <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
@@ -1310,8 +1619,124 @@ export default function AdminPanel({ products, onDataChanged }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
+      {/* TAB 6: ⚙️ PARÁMETROS & CONFIGURACIÓN DINÁMICA DE LA TIENDA                 */}
+      {/* ========================================================================= */}
+      {activeTab === 'parametros' && (
+        <div className="max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-6 animate-fade-in">
+          <div className="flex items-center gap-3 border-b border-zinc-100 pb-4">
+            <div className="w-10 h-10 rounded-2xl bg-zinc-100 text-zinc-800 flex items-center justify-center">
+              <Settings className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-lg text-zinc-900">Parámetros Dinámicos de la Tienda</h3>
+              <p className="text-xs text-zinc-500">Configuración de contacto, WhatsApp oficial y modalidades de entrega.</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSaveConfig} className="space-y-5">
+            {/* Teléfono WhatsApp y Nombre */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
+                  Teléfono WhatsApp Oficial (wa.me) *:
+                </label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
+                  <input
+                    type="text"
+                    required
+                    value={configParams.telefono_whatsapp}
+                    onChange={e => setConfigParams({ ...configParams, telefono_whatsapp: e.target.value })}
+                    className="w-full pl-9 pr-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-mono font-bold text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-zinc-900"
+                    placeholder="+569XXXXXXXX"
+                  />
+                </div>
+                <span className="text-[11px] text-zinc-400 mt-0.5 block">Receptor oficial de pedidos y reservas</span>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
+                  Nombre de la Dueña / Administradora *:
+                </label>
+                <div className="relative">
+                  <User className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
+                  <input
+                    type="text"
+                    required
+                    value={configParams.nombre_duena}
+                    onChange={e => setConfigParams({ ...configParams, nombre_duena: e.target.value })}
+                    className="w-full pl-9 pr-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-bold text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-zinc-900"
+                    placeholder="Carmen"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Modalidad de la Tienda */}
+            <div>
+              <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
+                Modalidad de la Tienda (Online & Bodega) *:
+              </label>
+              <textarea
+                rows={2}
+                value={configParams.modalidad_tienda}
+                onChange={e => setConfigParams({ ...configParams, modalidad_tienda: e.target.value })}
+                className="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-medium text-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-zinc-900 leading-relaxed"
+              />
+              <span className="text-[11px] text-zinc-400 mt-0.5 block">Utilizado por el Chatbot para orientar sobre la tienda física</span>
+            </div>
+
+            {/* Entregas Presenciales */}
+            <div>
+              <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-zinc-400" />
+                <span>Entregas Locales (Presenciales) *:</span>
+              </label>
+              <input
+                type="text"
+                value={configParams.entregas_locales}
+                onChange={e => setConfigParams({ ...configParams, entregas_locales: e.target.value })}
+                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-medium text-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-zinc-900"
+              />
+            </div>
+
+            {/* Envíos Nacionales */}
+            <div>
+              <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider flex items-center gap-1">
+                <Truck className="w-3.5 h-3.5 text-zinc-400" />
+                <span>Envíos Nacionales (Starken) *:</span>
+              </label>
+              <input
+                type="text"
+                value={configParams.envios_nacionales}
+                onChange={e => setConfigParams({ ...configParams, envios_nacionales: e.target.value })}
+                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-medium text-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-zinc-900"
+              />
+            </div>
+
+            {configStatusMsg && (
+              <div className={`p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+                configStatusMsg.success ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'
+              }`}>
+                {configStatusMsg.success ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+                <span>{configStatusMsg.text}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSavingConfig}
+              className="w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 text-white font-bold text-sm rounded-2xl shadow-md transition-all active:scale-98 cursor-pointer"
+            >
+              {isSavingConfig ? 'Guardando Parámetros...' : 'Guardar Parámetros de la Tienda'}
+            </button>
+          </form>
+        </div>
+      )}
+
       {/* ========================================== */}
-      {/* TAB 5: MONITOR DE STOCK CRÍTICO           */}
+      {/* TAB 7: MONITOR DE STOCK CRÍTICO           */}
       {/* ========================================== */}
       {activeTab === 'alertas' && (
         <div className="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-5 animate-fade-in">

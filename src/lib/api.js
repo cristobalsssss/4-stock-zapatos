@@ -402,7 +402,134 @@ export async function getDetalleMovimientos() {
 }
 
 /**
- * Envía consulta al Chatbot Asistente vía n8n con fallback inteligente local
+ * Configuración dinámica de la tienda y parámetros de contacto
+ */
+const DEFAULT_CONFIG = {
+  telefono_whatsapp: '+56993125219',
+  nombre_duena: 'Carmen',
+  modalidad_tienda: 'Venta 100% online, sin tienda física abierta al público. Precios de remate y liquidación de bodega hasta agotar stock.',
+  entregas_locales: 'Entregas presenciales en Concepción y Penco (a coordinar con Carmen).',
+  envios_nacionales: 'Envíos por Starken a todo Chile en modalidad "Por Pagar".'
+};
+
+export async function getConfiguracion() {
+  try {
+    const local = localStorage.getItem('boutique_configuracion');
+    if (local) return { ...DEFAULT_CONFIG, ...JSON.parse(local) };
+  } catch (e) {
+    console.error(e);
+  }
+  return DEFAULT_CONFIG;
+}
+
+export async function guardarConfiguracion(nuevaConfig) {
+  try {
+    const configCompleta = { ...DEFAULT_CONFIG, ...nuevaConfig };
+    localStorage.setItem('boutique_configuracion', JSON.stringify(configCompleta));
+    return configCompleta;
+  } catch (e) {
+    console.error('Error al guardar configuración:', e);
+    throw e;
+  }
+}
+
+/**
+ * Gestión de Reservas de Clientes (Ciclo de Vida)
+ */
+export async function getReservas() {
+  try {
+    // Intentar consultar tabla reservas en Supabase si existe
+    const { data, error } = await supabase
+      .from('reservas')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error && data) return data;
+  } catch (err) {
+    console.warn('Tabla reservas no disponible en Supabase, utilizando fallback persistente:', err);
+  }
+
+  // Fallback persistente en localStorage
+  try {
+    const local = localStorage.getItem('boutique_reservas');
+    return local ? JSON.parse(local) : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function guardarReserva(reservaData) {
+  const nuevaReserva = {
+    id: `res-${Date.now()}`,
+    created_at: new Date().toISOString(),
+    cliente_nombre: reservaData.cliente_nombre,
+    cliente_whatsapp: reservaData.cliente_whatsapp,
+    cliente_comuna: reservaData.cliente_comuna,
+    notas: reservaData.notas || '',
+    items: reservaData.items || [],
+    total: reservaData.total || 0,
+    estado: 'Pendiente' // 'Pendiente' | 'Completada' | 'Cancelada'
+  };
+
+  try {
+    // Intentar insertar en Supabase
+    const { data, error } = await supabase
+      .from('reservas')
+      .insert({
+        cliente_nombre: nuevaReserva.cliente_nombre,
+        cliente_whatsapp: nuevaReserva.cliente_whatsapp,
+        cliente_comuna: nuevaReserva.cliente_comuna,
+        notas: nuevaReserva.notas,
+        items: nuevaReserva.items,
+        total: nuevaReserva.total,
+        estado: 'Pendiente'
+      })
+      .select()
+      .single();
+
+    if (!error && data) {
+      nuevaReserva.id = data.id;
+    }
+  } catch (err) {
+    console.warn('Fallback a almacenamiento local para reserva:', err);
+  }
+
+  // Guardar en localStorage
+  try {
+    const prev = await getReservas();
+    const actualizadas = [nuevaReserva, ...prev.filter(r => r.id !== nuevaReserva.id)];
+    localStorage.setItem('boutique_reservas', JSON.stringify(actualizadas));
+  } catch (e) {
+    console.error(e);
+  }
+
+  return nuevaReserva;
+}
+
+export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
+  try {
+    await supabase
+      .from('reservas')
+      .update({ estado: nuevoEstado, updated_at: new Date().toISOString() })
+      .eq('id', reservaId);
+  } catch (err) {
+    console.warn('Fallo actualización en Supabase de reserva:', err);
+  }
+
+  // Actualizar en localStorage
+  try {
+    const list = await getReservas();
+    const actualizadas = list.map(r => r.id === reservaId ? { ...r, estado: nuevoEstado } : r);
+    localStorage.setItem('boutique_reservas', JSON.stringify(actualizadas));
+    return actualizadas;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+/**
+ * Envía consulta al Chatbot Asistente vía n8n con fallback inteligente y contexto de negocio
  */
 export async function consultarChatbot(mensaje, productosLocales = []) {
   try {
@@ -415,26 +542,52 @@ export async function consultarChatbot(mensaje, productosLocales = []) {
     if (res.ok) {
       const data = await res.json();
       if (data && (data.respuesta || data.text || data.message)) {
-        return data.respuesta || data.text || data.message;
+        return {
+          text: data.respuesta || data.text || data.message,
+          modelosMencionados: data.modelos || []
+        };
       }
     }
   } catch (err) {
     console.warn('Chatbot n8n no disponible o en reposo, usando asistente local inteligente:', err);
   }
 
-  // Fallback Asistente Local Inteligente
+  // Fallback Asistente Local Inteligente con Contexto de Negocio
   const q = mensaje.toLowerCase().trim();
 
-  if (q.includes('hola') || q.includes('buenas') || q.includes('inicio') || q.includes('menu')) {
-    return `¡Hola! Soy tu Asistente Virtual de Calzado 👠.\n¿En qué modelo, color o talla estás buscando hoy? Por ejemplo: "¿Tienes el modelo 105 en talla 37?" o "¿Qué tienen en color Rojo?"`;
+  // 1. Preguntas sobre Tienda Física, Prueba o Ubicación
+  if (q.includes('tienda') || q.includes('local') || q.includes('direccion') || q.includes('donde') || q.includes('probar') || q.includes('ubicacion')) {
+    return {
+      text: `👠 *Modalidad de Nuestra Tienda:*\n\nSomos una tienda *100% online* con precios de remate y liquidación directa de bodega, por lo que *no contamos con tienda física abierta al público* para probarse.\n\n📍 *Entregas Presenciales:* Realizamos entregas en *Concepción y Penco* (a coordinar directamente con Carmen).\n📦 *Envíos a Todo Chile:* Enviamos por *Starken en modalidad Por Pagar*.\n\n¿Te gustaría revisar las opciones disponibles en tu talla?`,
+      modelosMencionados: []
+    };
   }
 
-  // Buscar por talla (ej: 35, 36, 37, 38, 39, 40)
+  // 2. Preguntas sobre Envíos o Entregas
+  if (q.includes('envio') || q.includes('starken') || q.includes('despacho') || q.includes('entrega') || q.includes('concepcion') || q.includes('penco')) {
+    return {
+      text: `🚚 *Opciones de Entrega y Envíos:*\n\n1. *Presencial (Sin costo de envío):* Entregas en *Concepción y Penco*, coordinando día y hora con Carmen.\n2. *A Todo Chile:* Envíos a domicilio o sucursal vía *Starken (Por Pagar)* con número de seguimiento.\n\n¿Quieres consultar la disponibilidad de algún modelo antes de reservar?`,
+      modelosMencionados: []
+    };
+  }
+
+  // 3. Saludos o menú inicial
+  if (q.includes('hola') || q.includes('buenas') || q.includes('inicio') || q.includes('menu')) {
+    return {
+      text: `¡Hola! Soy tu Asistente Virtual de Calzado 👠.\n\nNuestros modelos son 100% cuero genuino a precios de liquidación de bodega. ¿Qué modelo, talla o color estás buscando hoy? Por ejemplo:\n• "¿Tienen el modelo 105 en talla 37?"\n• "¿Qué modelos tienen en color Rojo?"\n• "¿Cómo funcionan los envíos?"`,
+      modelosMencionados: []
+    };
+  }
+
+  // 4. Buscar talla y coincidencias en catálogo
   const tallaMatch = q.match(/\b(3[4-9]|4[0-2])\b/);
   const tallaBuscada = tallaMatch ? tallaMatch[1] : null;
 
-  // Buscar coincidencia de modelo o color en el inventario cargado
+  // Detectar si el usuario preguntó por un modelo específico (ej: 105, 110, 114, AA0001, etc.)
+  const modeloMatch = productosLocales.find(p => q.includes(p.codigo_modelo?.toLowerCase()));
+
   const resultados = [];
+  const modelosMencionados = [];
 
   productosLocales.forEach(prod => {
     const codigoCoincide = q.includes(prod.codigo_modelo?.toLowerCase());
@@ -453,27 +606,79 @@ export async function consultarChatbot(mensaje, productosLocales = []) {
 
     if (variantesDisponibles.length > 0) {
       resultados.push({
-        modelo: prod.codigo_modelo,
+        codigo: prod.codigo_modelo,
         nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
         material: prod.material,
         variantes: variantesDisponibles
       });
+      if (!modelosMencionados.includes(prod.codigo_modelo)) {
+        modelosMencionados.push(prod.codigo_modelo);
+      }
     }
   });
 
+  // Si preguntó por un modelo específico que está agotado o no tiene esa talla:
+  if (modeloMatch && resultados.length === 0) {
+    // Buscar 2-3 alternativas disponibles en la talla buscada
+    const alternativas = [];
+    productosLocales.forEach(prod => {
+      if (prod.codigo_modelo === modeloMatch.codigo_modelo) return;
+      const vTalla = (prod.inventario_variantes || []).filter(v => 
+        v.stock_disponible > 0 && (tallaBuscada ? String(v.talla) === String(tallaBuscada) : true)
+      );
+      if (vTalla.length > 0) {
+        alternativas.push({
+          codigo: prod.codigo_modelo,
+          nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+          variantes: vTalla
+        });
+      }
+    });
+
+    let respuesta = `⚠️ *Ese modelo ${tallaBuscada ? `en talla ${tallaBuscada}` : ''} se encuentra agotado*, ya que son precios de remate de bodega y nos quedan las últimas unidades.\n\n`;
+    if (alternativas.length > 0) {
+      respuesta += `✨ *Te sugiero estas excelentes alternativas en stock${tallaBuscada ? ` para talla ${tallaBuscada}` : ''}:*\n\n`;
+      alternativas.slice(0, 3).forEach(alt => {
+        respuesta += `👟 *${alt.codigo} - ${alt.nombre}*\n`;
+        alt.variantes.slice(0, 2).forEach(v => {
+          respuesta += `   • Color ${v.color} | Talla ${v.talla} (${v.stock_disponible}p disp.) - $${Number(v.precio_vendedores).toLocaleString('es-CL')}\n`;
+        });
+      });
+      respuesta += `\n¿Te gustaría ver alguno en detalle o reservarlo con Carmen vía WhatsApp?`;
+      return {
+        text: respuesta,
+        modelosMencionados: alternativas.slice(0, 3).map(a => a.codigo)
+      };
+    }
+
+    return {
+      text: `⚠️ *Ese modelo se encuentra agotado*, ya que son precios de remate de bodega. Puedes explorar nuestro catálogo completo para descubrir más opciones en cuero genuino.`,
+      modelosMencionados: []
+    };
+  }
+
+  // Si hay resultados disponibles:
   if (resultados.length > 0) {
-    let respuesta = `✨ Encontré disponibilidad para ti:\n\n`;
+    let respuesta = `✨ *Disponibilidad encontrada en bodega:*\n\n`;
     resultados.slice(0, 3).forEach(r => {
-      respuesta += `👟 *${r.modelo} - ${r.nombre}* (${r.material || 'Cuero'})\n`;
-      r.variantes.slice(0, 4).forEach(v => {
+      respuesta += `👟 *${r.codigo} - ${r.nombre}* (${r.material || 'Cuero'})\n`;
+      r.variantes.slice(0, 3).forEach(v => {
         respuesta += `   • Color ${v.color} | Talla ${v.talla} (${v.stock_disponible} par${v.stock_disponible > 1 ? 'es' : ''}) - $${Number(v.precio_vendedores).toLocaleString('es-CL')}\n`;
       });
       respuesta += `\n`;
     });
-    respuesta += `¿Te gustaría reservar alguno de estos pares directamente a través de WhatsApp?`;
-    return respuesta;
+    respuesta += `💡 _Haz clic en los botones de abajo para ver la ficha del modelo o abre el botón de WhatsApp para reservar directamente con Carmen._`;
+
+    return {
+      text: respuesta,
+      modelosMencionados: modelosMencionados.slice(0, 4)
+    };
   }
 
-  return `No encontré disponibilidad exacta con esos filtros en este momento, pero tenemos más de 80 modelos en cuero genuino en nuestro catálogo. ¿Te gustaría que te comunique directamente con una asesora por WhatsApp?`;
+  return {
+    text: `No encontré disponibilidad exacta para esa combinación en este momento, ya que nos quedan las últimas unidades de remate. ¿Te gustaría consultar directamente con Carmen por WhatsApp para verificar si hay pares similares?`,
+    modelosMencionados: []
+  };
 }
+
 

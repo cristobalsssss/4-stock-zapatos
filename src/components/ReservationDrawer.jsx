@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { X, Trash2, ShoppingBag, Send, Sparkles, MapPin, User, MessageSquare } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Trash2, ShoppingBag, Send, Sparkles, MapPin, User, MessageSquare, Phone, Truck } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { getConfiguracion, guardarReserva } from '../lib/api';
 
 export default function ReservationDrawer({
   isOpen,
@@ -14,19 +15,42 @@ export default function ReservationDrawer({
 
   const [clientName, setClientName] = useState('');
   const [clientCity, setClientCity] = useState('');
+  const [clientPhone, setClientPhone] = useState('+56 9 ');
   const [clientNotes, setClientNotes] = useState('');
+  const [entregaPref, setEntregaPref] = useState('Presencial'); // 'Presencial' | 'Starken'
   const [errorMsg, setErrorMsg] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [config, setConfig] = useState({
+    telefono_whatsapp: '+56993125219',
+    nombre_duena: 'Carmen'
+  });
+
+  useEffect(() => {
+    getConfiguracion().then(c => setConfig(c));
+  }, []);
 
   const total = bagItems.reduce((acc, item) => acc + item.precio * item.quantity, 0);
   const totalPares = bagItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  const handleSendWhatsApp = () => {
+  const handlePhoneChange = (e) => {
+    let val = e.target.value;
+    if (!val.startsWith('+56 9 ')) {
+      val = '+56 9 ' + val.replace(/^\+56\s*9\s*/, '').replace(/[^0-9]/g, '');
+    }
+    setClientPhone(val);
+  };
+
+  const handleSendWhatsApp = async () => {
     if (!clientName.trim()) {
-      setErrorMsg('Por favor ingresa tu Nombre para la reserva.');
+      setErrorMsg('Por favor ingresa tu Nombre completo para la reserva.');
       return;
     }
     if (!clientCity.trim()) {
       setErrorMsg('Por favor ingresa tu Comuna o Ciudad de entrega.');
+      return;
+    }
+    if (clientPhone.trim().length < 12) {
+      setErrorMsg('Por favor ingresa un número de WhatsApp válido (+56 9 XXXX XXXX).');
       return;
     }
     if (bagItems.length === 0) {
@@ -35,37 +59,59 @@ export default function ReservationDrawer({
     }
 
     setErrorMsg('');
+    setIsSubmitting(true);
 
-    // Disparar confeti de celebración
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
+    try {
+      // Guardar reserva en base de datos / localStorage
+      await guardarReserva({
+        cliente_nombre: clientName.trim(),
+        cliente_whatsapp: clientPhone.trim(),
+        cliente_comuna: clientCity.trim(),
+        notas: `Modalidad: ${entregaPref}. ${clientNotes.trim()}`,
+        items: bagItems,
+        total: total
+      });
 
-    // Formatear mensaje para WhatsApp
-    let mensaje = `👠 *SOLICITUD DE RESERVA DE CALZADO*\n\n`;
-    mensaje += `Hola, quiero reservar los siguientes pares de su catálogo boutique:\n\n`;
+      // Disparar confeti de celebración
+      confetti({
+        particleCount: 90,
+        spread: 75,
+        origin: { y: 0.6 }
+      });
 
-    bagItems.forEach((item, index) => {
-      mensaje += `*${index + 1}. ${item.codigo_modelo}* - ${item.nombre_fantasia || ''}\n`;
-      mensaje += `   • *Color:* ${item.color} | *Talla:* ${item.talla}\n`;
-      mensaje += `   • *Cantidad:* ${item.quantity} par(es)\n`;
-      mensaje += `   • *Precio:* $${(item.precio * item.quantity).toLocaleString('es-CL')}\n\n`;
-    });
+      // Formatear mensaje para WhatsApp hacia el número oficial configurado
+      let mensaje = `👠 *SOLICITUD DE RESERVA DE CALZADO*\n\n`;
+      mensaje += `Hola ${config.nombre_duena || 'Carmen'}, quiero reservar los siguientes pares de su catálogo boutique:\n\n`;
 
-    mensaje += `💰 *TOTAL RESERVA:* $${total.toLocaleString('es-CL')} (${totalPares} ${totalPares === 1 ? 'par' : 'pares'})\n\n`;
-    mensaje += `👤 *Cliente:* ${clientName.trim()}\n`;
-    mensaje += `📍 *Comuna/Ciudad:* ${clientCity.trim()}\n`;
-    if (clientNotes.trim()) {
-      mensaje += `📝 *Notas:* ${clientNotes.trim()}\n`;
+      bagItems.forEach((item, index) => {
+        mensaje += `*${index + 1}. ${item.codigo_modelo}* - ${item.nombre_fantasia || ''}\n`;
+        mensaje += `   • *Color:* ${item.color} | *Talla:* ${item.talla}\n`;
+        mensaje += `   • *Cantidad:* ${item.quantity} par(es)\n`;
+        mensaje += `   • *Precio:* $${(item.precio * item.quantity).toLocaleString('es-CL')}\n\n`;
+      });
+
+      mensaje += `💰 *TOTAL RESERVA:* $${total.toLocaleString('es-CL')} (${totalPares} ${totalPares === 1 ? 'par' : 'pares'})\n\n`;
+      mensaje += `👤 *Cliente:* ${clientName.trim()}\n`;
+      mensaje += `📱 *WhatsApp Cliente:* ${clientPhone.trim()}\n`;
+      mensaje += `📍 *Comuna/Ciudad:* ${clientCity.trim()}\n`;
+      mensaje += `🚚 *Modalidad:* ${entregaPref === 'Presencial' ? 'Entrega Presencial (Concepción / Penco)' : 'Envío Starken (Por Pagar)'}\n`;
+      if (clientNotes.trim()) {
+        mensaje += `📝 *Notas:* ${clientNotes.trim()}\n`;
+      }
+      mensaje += `\n_Quedo atenta a la confirmación de disponibilidad y datos de pago._`;
+
+      const cleanPhone = (config.telefono_whatsapp || '56993125219').replace(/[^0-9]/g, '');
+      const encodedText = encodeURIComponent(mensaje);
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedText}`;
+
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      onClose();
+    } catch (err) {
+      console.error(err);
+      setErrorMsg('Ocurrió un inconveniente al registrar la reserva, pero puedes enviar el WhatsApp directamente.');
+    } finally {
+      setIsSubmitting(false);
     }
-    mensaje += `\n_Quedo atenta a la confirmación de disponibilidad y datos de pago._`;
-
-    const encodedText = encodeURIComponent(mensaje);
-    const whatsappUrl = `https://wa.me/?text=${encodedText}`;
-
-    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -150,14 +196,14 @@ export default function ReservationDrawer({
                     <div className="flex items-center border border-zinc-200 rounded-lg bg-white overflow-hidden text-xs">
                       <button
                         onClick={() => onUpdateQuantity(item.variante_id, Math.max(1, item.quantity - 1))}
-                        className="px-2 py-0.5 hover:bg-zinc-100 font-bold text-zinc-600"
+                        className="px-2 py-0.5 hover:bg-zinc-100 font-bold text-zinc-600 cursor-pointer"
                       >
                         -
                       </button>
                       <span className="px-2 py-0.5 font-bold text-zinc-800">{item.quantity}</span>
                       <button
                         onClick={() => onUpdateQuantity(item.variante_id, Math.min(item.stock_disponible, item.quantity + 1))}
-                        className="px-2 py-0.5 hover:bg-zinc-100 font-bold text-zinc-600"
+                        className="px-2 py-0.5 hover:bg-zinc-100 font-bold text-zinc-600 cursor-pointer"
                       >
                         +
                       </button>
@@ -171,7 +217,7 @@ export default function ReservationDrawer({
 
         {/* Formulario de Reserva y Checkout */}
         {bagItems.length > 0 && (
-          <div className="p-4 sm:p-5 border-t border-zinc-200 bg-zinc-50/90 space-y-4">
+          <div className="p-4 sm:p-5 border-t border-zinc-200 bg-zinc-50/90 space-y-3.5">
             {/* Total */}
             <div className="flex items-baseline justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">Total a Reservar:</span>
@@ -180,7 +226,7 @@ export default function ReservationDrawer({
               </span>
             </div>
 
-            {/* Inputs del Cliente */}
+            {/* Inputs del Cliente con Teléfono pre-llenado */}
             <div className="space-y-2 text-xs">
               <div className="relative">
                 <User className="w-3.5 h-3.5 absolute left-3 top-3 text-zinc-400" />
@@ -194,6 +240,17 @@ export default function ReservationDrawer({
               </div>
 
               <div className="relative">
+                <Phone className="w-3.5 h-3.5 absolute left-3 top-3 text-zinc-400" />
+                <input
+                  type="tel"
+                  placeholder="Teléfono WhatsApp (+56 9 XXXX XXXX) *"
+                  value={clientPhone}
+                  onChange={handlePhoneChange}
+                  className="w-full pl-9 pr-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs font-mono font-bold text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
+
+              <div className="relative">
                 <MapPin className="w-3.5 h-3.5 absolute left-3 top-3 text-zinc-400" />
                 <input
                   type="text"
@@ -202,6 +259,32 @@ export default function ReservationDrawer({
                   onChange={e => setClientCity(e.target.value)}
                   className="w-full pl-9 pr-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-brand-500 font-medium"
                 />
+              </div>
+
+              {/* Selector de Modalidad */}
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setEntregaPref('Presencial')}
+                  className={`py-2 px-2 rounded-xl text-[11px] font-bold border transition-all text-center ${
+                    entregaPref === 'Presencial'
+                      ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs'
+                      : 'bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100'
+                  }`}
+                >
+                  📍 Presencial (Concepción/Penco)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEntregaPref('Starken')}
+                  className={`py-2 px-2 rounded-xl text-[11px] font-bold border transition-all text-center ${
+                    entregaPref === 'Starken'
+                      ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs'
+                      : 'bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100'
+                  }`}
+                >
+                  📦 Envío Starken (Por Pagar)
+                </button>
               </div>
 
               <div className="relative">
@@ -226,15 +309,16 @@ export default function ReservationDrawer({
             {/* Botón WhatsApp */}
             <button
               onClick={handleSendWhatsApp}
-              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-98"
+              disabled={isSubmitting}
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
             >
               <Send className="w-4 h-4" />
-              <span>Enviar Reserva a WhatsApp Directo</span>
+              <span>{isSubmitting ? 'Registrando Reserva...' : `Enviar Reserva a ${config.nombre_duena || 'Carmen'} por WhatsApp`}</span>
             </button>
 
             <button
               onClick={onClearBag}
-              className="w-full text-center text-xs text-zinc-400 hover:text-zinc-600 font-medium"
+              className="w-full text-center text-xs text-zinc-400 hover:text-zinc-600 font-medium cursor-pointer"
             >
               Vaciar bolsa
             </button>
