@@ -57,6 +57,7 @@
 - [x] REVISIÓN #13: Motor Universal de Precios y Normalización de Expresiones
 - [x] REVISIÓN #13: Preview Visual de Calzado en Formulario de Reserva de Chat
 - [x] REVISIÓN #13: Generación de Código Amigable `#RES-XXXX` y Trazabilidad en /admin
+- [x] CREACIÓN DE TABLAS EN SUPABASE: Creación y verificación de tabla `reservas` (con código #RES-XXXX, variantes, índices y RLS) y tabla `configuracion` vía script Node.js con `DATABASE_URL`
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

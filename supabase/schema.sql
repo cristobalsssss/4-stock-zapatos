@@ -413,3 +413,80 @@ CREATE POLICY "Permitir actualizacion en productos bucket" ON storage.objects
 DROP POLICY IF EXISTS "Permitir borrado en productos bucket" ON storage.objects;
 CREATE POLICY "Permitir borrado en productos bucket" ON storage.objects
     FOR DELETE USING (bucket_id IN ('productos', 'productos-imagenes'));
+
+-- ==============================================================================
+-- 9. TABLA DE RESERVAS DE CLIENTES Y PARÁMETROS DINÁMICOS
+-- ==============================================================================
+
+-- TABLA: RESERVAS
+CREATE TABLE IF NOT EXISTS public.reservas (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    codigo_reserva TEXT NOT NULL DEFAULT ('RES-' || floor(1000 + random() * 9000)::text),
+    cliente_nombre TEXT NOT NULL,
+    cliente_whatsapp TEXT,
+    cliente_comuna TEXT,
+    tipo_entrega TEXT NOT NULL DEFAULT 'Envío Starken Por Pagar',
+    variante_id UUID REFERENCES public.inventario_variantes(id) ON DELETE SET NULL,
+    modelo_codigo TEXT,
+    modelo_nombre TEXT,
+    color TEXT,
+    talla TEXT,
+    cantidad INTEGER NOT NULL DEFAULT 1 CHECK (cantidad > 0),
+    precio_unitario NUMERIC(12, 2) NOT NULL DEFAULT 0 CHECK (precio_unitario >= 0),
+    estado TEXT NOT NULL DEFAULT 'Pendiente' CHECK (estado IN ('Pendiente', 'Completada', 'Cancelada')),
+    notas TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_reservas_codigo ON public.reservas(codigo_reserva);
+CREATE INDEX IF NOT EXISTS idx_reservas_estado ON public.reservas(estado);
+CREATE INDEX IF NOT EXISTS idx_reservas_created_at ON public.reservas(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_reservas_cliente_whatsapp ON public.reservas(cliente_whatsapp);
+
+-- TABLA: CONFIGURACION DINÁMICA
+CREATE TABLE IF NOT EXISTS public.configuracion (
+    id INTEGER PRIMARY KEY DEFAULT 1,
+    telefono_whatsapp TEXT DEFAULT '+56900000000',
+    nombre_vendedora TEXT DEFAULT 'Carmen',
+    modalidad_tienda TEXT DEFAULT 'Venta 100% online, sin tienda física abierta al público. Precios de remate y liquidación de bodega hasta agotar stock.',
+    entregas_locales TEXT DEFAULT 'Entregas presenciales en Concepción y Penco (a coordinar con Carmen).',
+    envios_nacionales TEXT DEFAULT 'Envíos por Starken a todo Chile en modalidad "Por Pagar".',
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+INSERT INTO public.configuracion (id, telefono_whatsapp, nombre_vendedora, modalidad_tienda, entregas_locales, envios_nacionales)
+VALUES (
+    1,
+    '+56900000000',
+    'Carmen',
+    'Venta 100% online, sin tienda física abierta al público. Precios de remate y liquidación de bodega hasta agotar stock.',
+    'Entregas presenciales en Concepción y Penco (a coordinar con Carmen).',
+    'Envíos por Starken a todo Chile en modalidad "Por Pagar".'
+)
+ON CONFLICT (id) DO NOTHING;
+
+-- RLS y Permisos para Reservas y Configuración
+ALTER TABLE public.reservas ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.configuracion ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Permitir lectura publica de reservas" ON public.reservas;
+CREATE POLICY "Permitir lectura publica de reservas" ON public.reservas FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Permitir insercion publica de reservas" ON public.reservas;
+CREATE POLICY "Permitir insercion publica de reservas" ON public.reservas FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Permitir actualizacion publica de reservas" ON public.reservas;
+CREATE POLICY "Permitir actualizacion publica de reservas" ON public.reservas FOR UPDATE USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Permitir eliminacion de reservas" ON public.reservas;
+CREATE POLICY "Permitir eliminacion de reservas" ON public.reservas FOR DELETE USING (true);
+
+DROP POLICY IF EXISTS "Permitir lectura publica de configuracion" ON public.configuracion;
+CREATE POLICY "Permitir lectura publica de configuracion" ON public.configuracion FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Permitir modificacion de configuracion" ON public.configuracion;
+CREATE POLICY "Permitir modificacion de configuracion" ON public.configuracion FOR ALL USING (true) WITH CHECK (true);
+
+GRANT ALL ON public.reservas TO anon, authenticated, service_role;
+GRANT ALL ON public.configuracion TO anon, authenticated, service_role;

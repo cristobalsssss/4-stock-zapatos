@@ -93,6 +93,34 @@
 - `notas` (text)
 - `created_at` (timestamptz, default: now())
 
+### Tabla 6: `reservas` (Gestión de Solicitudes y Pedidos de Clientes)
+- `id` (uuid, PK, default: gen_random_uuid())
+- `codigo_reserva` (text, ej: "RES-4821", código amigable autogenerado)
+- `cliente_nombre` (text, obligatorio)
+- `cliente_whatsapp` (text)
+- `cliente_comuna` (text)
+- `tipo_entrega` (text, default: 'Envío Starken Por Pagar')
+- `variante_id` (uuid, FK -> inventario_variantes.id ON DELETE SET NULL, nullable)
+- `modelo_codigo` (text)
+- `modelo_nombre` (text)
+- `color` (text)
+- `talla` (text)
+- `cantidad` (integer, default: 1, CHECK cantidad > 0)
+- `precio_unitario` (numeric, default: 0)
+- `estado` (text, default: 'Pendiente', CHECK IN ('Pendiente', 'Completada', 'Cancelada'))
+- `notas` (text)
+- `created_at` (timestamptz, default: timezone('utc', now()))
+- `updated_at` (timestamptz, default: timezone('utc', now()))
+
+### Tabla 7: `configuracion` (Parámetros Dinámicos y Contacto de Tienda)
+- `id` (integer, PK, default: 1)
+- `telefono_whatsapp` (text, ej: "+569XXXXXXXX", sin números hardcodeados)
+- `nombre_vendedora` (text, ej: "Carmen")
+- `modalidad_tienda` (text, descripción de venta 100% online y remate de bodega)
+- `entregas_locales` (text, detalles de entregas presenciales en Concepción y Penco)
+- `envios_nacionales` (text, detalles de envíos Starken Por Pagar a todo Chile)
+- `updated_at` (timestamptz, default: timezone('utc', now()))
+
 ## 6. FUNCIONALIDADES PROACTIVAS AÑADIDAS POR LA IA
 
 Como experto en arquitectura de software para E-commerce y Gestión de Inventarios de Calzado, se implementaron las siguientes adiciones incrementales y no destructivas:
