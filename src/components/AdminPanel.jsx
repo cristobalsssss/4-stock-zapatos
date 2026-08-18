@@ -232,8 +232,26 @@ export default function AdminPanel({ products, onDataChanged }) {
   const handleConvertirReservaAVenta = (reserva) => {
     // Cargar items de la reserva al tab de ventas
     const itemsCargados = [];
-    (reserva.items || []).forEach(it => {
-      const v = allVariants.find(vItem => vItem.id === it.variante_id);
+    if (reserva.items && reserva.items.length > 0) {
+      reserva.items.forEach(it => {
+        const v = allVariants.find(vItem => vItem.id === it.variante_id || (vItem.codigo_modelo === it.codigo_modelo && vItem.color === it.color && String(vItem.talla) === String(it.talla)));
+        if (v) {
+          itemsCargados.push({
+            variante_id: v.id,
+            codigo_modelo: v.codigo_modelo,
+            nombre_fantasia: v.nombre_fantasia,
+            color: v.color,
+            talla: v.talla,
+            sku: v.sku_variante,
+            stock_disponible: v.stock_disponible,
+            precio_unitario: Number(it.precio) || Number(v.precio_vendedores),
+            precio_interno: Number(v.precio_interno),
+            cantidad: it.quantity || 1
+          });
+        }
+      });
+    } else if (reserva.variante_id || reserva.modelo_codigo) {
+      const v = allVariants.find(vItem => vItem.id === reserva.variante_id || (vItem.codigo_modelo === reserva.modelo_codigo && (!reserva.color || vItem.color === reserva.color) && (!reserva.talla || String(vItem.talla) === String(reserva.talla))));
       if (v) {
         itemsCargados.push({
           variante_id: v.id,
@@ -243,17 +261,17 @@ export default function AdminPanel({ products, onDataChanged }) {
           talla: v.talla,
           sku: v.sku_variante,
           stock_disponible: v.stock_disponible,
-          precio_unitario: Number(it.precio) || Number(v.precio_vendedores),
+          precio_unitario: Number(reserva.precio_unitario) || Number(v.precio_vendedores),
           precio_interno: Number(v.precio_interno),
-          cantidad: it.quantity || 1
+          cantidad: Number(reserva.cantidad) || 1
         });
       }
-    });
+    }
 
     if (itemsCargados.length > 0) {
       setSaleItems(itemsCargados);
     }
-    setNotasVenta(`Reserva de ${reserva.cliente_nombre} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.notas || ''}`);
+    setNotasVenta(`Reserva de ${reserva.cliente_nombre} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.tipo_entrega || ''}. ${reserva.notas || ''}`);
     setActiveTab('ventas');
     handleCambiarEstadoReserva(reserva.id, 'Completada');
   };
@@ -1079,9 +1097,20 @@ export default function AdminPanel({ products, onDataChanged }) {
                                 • <strong className="text-zinc-900">{it.codigo_modelo}</strong> ({it.color}, T{it.talla}) x{it.quantity}
                               </div>
                             ))}
+                            <div className="text-[10px] text-zinc-400 font-medium">{res.tipo_entrega}</div>
+                          </div>
+                        ) : res.modelo_codigo && res.modelo_codigo !== 'Consulta General' ? (
+                          <div className="space-y-0.5">
+                            <div className="text-[11px] text-zinc-700">
+                              • <strong className="text-zinc-900">{res.modelo_codigo}</strong> {res.color ? `(${res.color}, T${res.talla})` : ''} x{res.cantidad || 1}
+                            </div>
+                            <div className="text-[10px] text-zinc-400 font-medium">{res.tipo_entrega}</div>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-zinc-500">{res.notas || 'Consulta general'}</span>
+                          <div className="space-y-0.5">
+                            <span className="text-[11px] text-zinc-700 font-medium">{res.notas || 'Consulta general'}</span>
+                            <div className="text-[10px] text-zinc-400">{res.tipo_entrega}</div>
+                          </div>
                         )}
                       </td>
                       <td className="p-3">
@@ -1657,15 +1686,15 @@ export default function AdminPanel({ products, onDataChanged }) {
 
               <div>
                 <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
-                  Nombre de la Dueña / Administradora *:
+                  Nombre de Vendedora de Contacto *:
                 </label>
                 <div className="relative">
                   <User className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
                   <input
                     type="text"
                     required
-                    value={configParams.nombre_duena}
-                    onChange={e => setConfigParams({ ...configParams, nombre_duena: e.target.value })}
+                    value={configParams.nombre_vendedora || configParams.nombre_duena || 'Carmen'}
+                    onChange={e => setConfigParams({ ...configParams, nombre_vendedora: e.target.value, nombre_duena: e.target.value })}
                     className="w-full pl-9 pr-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-bold text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-zinc-900"
                     placeholder="Carmen"
                   />

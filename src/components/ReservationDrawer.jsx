@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trash2, ShoppingBag, Send, Sparkles, MapPin, User, MessageSquare, Phone, Truck } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { getConfiguracion, guardarReserva } from '../lib/api';
+import { getConfiguracion, crearReserva } from '../lib/api';
 
 export default function ReservationDrawer({
   isOpen,
@@ -17,12 +17,12 @@ export default function ReservationDrawer({
   const [clientCity, setClientCity] = useState('');
   const [clientPhone, setClientPhone] = useState('+56 9 ');
   const [clientNotes, setClientNotes] = useState('');
-  const [entregaPref, setEntregaPref] = useState('Presencial'); // 'Presencial' | 'Starken'
+  const [entregaPref, setEntregaPref] = useState('Presencial Concepción/Penco');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [config, setConfig] = useState({
-    telefono_whatsapp: '+56993125219',
-    nombre_duena: 'Carmen'
+    telefono_whatsapp: '',
+    nombre_vendedora: 'Carmen'
   });
 
   useEffect(() => {
@@ -39,6 +39,8 @@ export default function ReservationDrawer({
     }
     setClientPhone(val);
   };
+
+  const vendedoraNombre = config.nombre_vendedora || config.nombre_duena || 'Carmen';
 
   const handleSendWhatsApp = async () => {
     if (!clientName.trim()) {
@@ -62,14 +64,21 @@ export default function ReservationDrawer({
     setIsSubmitting(true);
 
     try {
-      // Guardar reserva en base de datos / localStorage
-      await guardarReserva({
+      // 1. Guardar primero en Supabase de forma asíncrona
+      await crearReserva({
         cliente_nombre: clientName.trim(),
         cliente_whatsapp: clientPhone.trim(),
         cliente_comuna: clientCity.trim(),
+        tipo_entrega: entregaPref,
+        variante_id: bagItems[0]?.variante_id || null,
+        modelo_codigo: bagItems.map(i => i.codigo_modelo).join(', '),
+        modelo_nombre: bagItems.map(i => i.nombre_fantasia).join(', '),
+        color: bagItems.map(i => i.color).join(', '),
+        talla: bagItems.map(i => i.talla).join(', '),
+        cantidad: totalPares,
+        precio_unitario: bagItems[0]?.precio || 0,
         notas: `Modalidad: ${entregaPref}. ${clientNotes.trim()}`,
-        items: bagItems,
-        total: total
+        items: bagItems
       });
 
       // Disparar confeti de celebración
@@ -79,9 +88,9 @@ export default function ReservationDrawer({
         origin: { y: 0.6 }
       });
 
-      // Formatear mensaje para WhatsApp hacia el número oficial configurado
+      // 2. Formatear mensaje para WhatsApp hacia el número oficial configurado
       let mensaje = `👠 *SOLICITUD DE RESERVA DE CALZADO*\n\n`;
-      mensaje += `Hola ${config.nombre_duena || 'Carmen'}, quiero reservar los siguientes pares de su catálogo boutique:\n\n`;
+      mensaje += `Hola ${vendedoraNombre}, quiero reservar los siguientes pares de su catálogo boutique:\n\n`;
 
       bagItems.forEach((item, index) => {
         mensaje += `*${index + 1}. ${item.codigo_modelo}* - ${item.nombre_fantasia || ''}\n`;
@@ -94,13 +103,13 @@ export default function ReservationDrawer({
       mensaje += `👤 *Cliente:* ${clientName.trim()}\n`;
       mensaje += `📱 *WhatsApp Cliente:* ${clientPhone.trim()}\n`;
       mensaje += `📍 *Comuna/Ciudad:* ${clientCity.trim()}\n`;
-      mensaje += `🚚 *Modalidad:* ${entregaPref === 'Presencial' ? 'Entrega Presencial (Concepción / Penco)' : 'Envío Starken (Por Pagar)'}\n`;
+      mensaje += `🚚 *Modalidad:* ${entregaPref}\n`;
       if (clientNotes.trim()) {
         mensaje += `📝 *Notas:* ${clientNotes.trim()}\n`;
       }
       mensaje += `\n_Quedo atenta a la confirmación de disponibilidad y datos de pago._`;
 
-      const cleanPhone = (config.telefono_whatsapp || '56993125219').replace(/[^0-9]/g, '');
+      const cleanPhone = (config.telefono_whatsapp || '').replace(/[^0-9]/g, '') || '56993125219';
       const encodedText = encodeURIComponent(mensaje);
       const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedText}`;
 
@@ -130,7 +139,7 @@ export default function ReservationDrawer({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full hover:bg-zinc-200 text-zinc-500 hover:text-zinc-900 transition-colors"
+            className="p-1.5 rounded-full hover:bg-zinc-200 text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -173,7 +182,7 @@ export default function ReservationDrawer({
                     </span>
                     <button
                       onClick={() => onRemoveItem(item.variante_id)}
-                      className="text-zinc-400 hover:text-rose-600 transition-colors p-1"
+                      className="text-zinc-400 hover:text-rose-600 transition-colors p-1 cursor-pointer"
                       title="Eliminar de la bolsa"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -265,9 +274,9 @@ export default function ReservationDrawer({
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <button
                   type="button"
-                  onClick={() => setEntregaPref('Presencial')}
-                  className={`py-2 px-2 rounded-xl text-[11px] font-bold border transition-all text-center ${
-                    entregaPref === 'Presencial'
+                  onClick={() => setEntregaPref('Presencial Concepción/Penco')}
+                  className={`py-2 px-2 rounded-xl text-[10px] sm:text-[11px] font-bold border transition-all text-center cursor-pointer ${
+                    entregaPref === 'Presencial Concepción/Penco'
                       ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs'
                       : 'bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100'
                   }`}
@@ -276,9 +285,9 @@ export default function ReservationDrawer({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setEntregaPref('Starken')}
-                  className={`py-2 px-2 rounded-xl text-[11px] font-bold border transition-all text-center ${
-                    entregaPref === 'Starken'
+                  onClick={() => setEntregaPref('Envío Starken Por Pagar')}
+                  className={`py-2 px-2 rounded-xl text-[10px] sm:text-[11px] font-bold border transition-all text-center cursor-pointer ${
+                    entregaPref === 'Envío Starken Por Pagar'
                       ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs'
                       : 'bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100'
                   }`}
@@ -306,14 +315,14 @@ export default function ReservationDrawer({
               </p>
             )}
 
-            {/* Botón WhatsApp */}
+            {/* Botón WhatsApp Dinámico */}
             <button
               onClick={handleSendWhatsApp}
               disabled={isSubmitting}
               className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
             >
               <Send className="w-4 h-4" />
-              <span>{isSubmitting ? 'Registrando Reserva...' : `Enviar Reserva a ${config.nombre_duena || 'Carmen'} por WhatsApp`}</span>
+              <span>{isSubmitting ? 'Guardando Reserva...' : `Enviar Reserva a ${vendedoraNombre} por WhatsApp`}</span>
             </button>
 
             <button

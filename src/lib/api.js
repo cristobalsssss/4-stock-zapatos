@@ -69,7 +69,6 @@ export async function consultarStockN8N(filtros = {}) {
  */
 export async function registrarVenta({ variante_id, cantidad, vendedor, medio_pago, precio_aplicado, comision_vendedor, notas, fecha_venta }) {
   try {
-    // Intentar primero por n8n Skill 2
     const res = await fetch(`${N8N_URL}/webhook/registrar-venta`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -94,7 +93,6 @@ export async function registrarVenta({ variante_id, cantidad, vendedor, medio_pa
   }
 
   // Fallback transaccional directo a Supabase
-  // 1. Obtener variante
   const { data: variante, error: vErr } = await supabase
     .from('inventario_variantes')
     .select('*')
@@ -110,16 +108,16 @@ export async function registrarVenta({ variante_id, cantidad, vendedor, medio_pa
   const precioInterno = Number(variante.precio_interno) || 0;
   const comisionFinal = comision_vendedor !== undefined && comision_vendedor !== null
     ? comision_vendedor
-    : (vendedor?.toLowerCase().includes('admin') || vendedor?.toLowerCase().includes('dueño') ? 0 : Math.max(0, (precioFinal - precioInterno) * cantidad));
+    : (vendedor?.toLowerCase().includes('admin') || vendedor?.toLowerCase().includes('dueño') || vendedor?.toLowerCase().includes('carmen') ? 0 : Math.max(0, (precioFinal - precioInterno) * cantidad));
 
   const montoTotal = precioFinal * cantidad;
 
-  // 2. Insertar Venta
+  // Insertar Venta
   const { data: venta, error: ventaErr } = await supabase
     .from('ventas')
     .insert({
-      vendedor: vendedor || 'admin',
-      medio_pago: medio_pago || 'Efectivo',
+      vendedor: vendedor || 'admin_carmen',
+      medio_pago: medio_pago || 'Transferencia',
       tipo_operacion: 'Venta',
       monto_total: montoTotal,
       notas: notas || 'Venta desde Frontend',
@@ -130,7 +128,7 @@ export async function registrarVenta({ variante_id, cantidad, vendedor, medio_pa
 
   if (ventaErr) throw ventaErr;
 
-  // 3. Descontar Stock
+  // Descontar Stock
   const nuevoStock = variante.stock_disponible - cantidad;
   const { error: stockErr } = await supabase
     .from('inventario_variantes')
@@ -139,7 +137,7 @@ export async function registrarVenta({ variante_id, cantidad, vendedor, medio_pa
 
   if (stockErr) throw stockErr;
 
-  // 4. Registrar Movimiento Kardex
+  // Registrar Movimiento Kardex
   const { error: movErr } = await supabase
     .from('detalle_movimientos')
     .insert({
@@ -219,7 +217,7 @@ export async function registrarDevolucion({ variante_id, cantidad, motivo, venta
 }
 
 /**
- * Sube una imagen a Supabase Storage en el bucket 'productos-imagenes'
+ * Sube una imagen a Supabase Storage
  */
 export async function subirImagenStorage(file, folder = 'modelos') {
   const ext = file.name.split('.').pop();
@@ -234,7 +232,6 @@ export async function subirImagenStorage(file, folder = 'modelos') {
     });
 
   if (error) {
-    // Si falla productos-imagenes, probar con calzado-imagenes
     const { data: fallbackData, error: fbError } = await supabase.storage
       .from('calzado-imagenes')
       .upload(fileName, file, { cacheControl: '3600', upsert: true });
@@ -248,9 +245,6 @@ export async function subirImagenStorage(file, folder = 'modelos') {
   return publicUrlData.publicUrl;
 }
 
-/**
- * Actualiza la imagen por defecto de un modelo en la tabla 'productos'
- */
 export async function actualizarImagenModelo(productoId, url) {
   const { error } = await supabase
     .from('productos')
@@ -259,9 +253,6 @@ export async function actualizarImagenModelo(productoId, url) {
   if (error) throw error;
 }
 
-/**
- * Elimina la imagen por defecto de un modelo
- */
 export async function eliminarImagenModelo(productoId) {
   const { error } = await supabase
     .from('productos')
@@ -270,9 +261,6 @@ export async function eliminarImagenModelo(productoId) {
   if (error) throw error;
 }
 
-/**
- * Actualiza la imagen de portada para TODAS las variantes de un (producto_id, color)
- */
 export async function actualizarImagenColor(productoId, color, url) {
   const { error } = await supabase
     .from('inventario_variantes')
@@ -282,9 +270,6 @@ export async function actualizarImagenColor(productoId, color, url) {
   if (error) throw error;
 }
 
-/**
- * Elimina la imagen de portada para todas las variantes de un (producto_id, color)
- */
 export async function eliminarImagenColor(productoId, color) {
   const { error } = await supabase
     .from('inventario_variantes')
@@ -294,11 +279,7 @@ export async function eliminarImagenColor(productoId, color) {
   if (error) throw error;
 }
 
-/**
- * Añade una imagen a la Galería General de una variante o color
- */
 export async function agregarImagenGaleriaColor(productoId, color, url) {
-  // Obtener una variante de ese color para asociar la foto en la BD
   const { data: variante, error: vErr } = await supabase
     .from('inventario_variantes')
     .select('id')
@@ -308,7 +289,6 @@ export async function agregarImagenGaleriaColor(productoId, color, url) {
     .single();
 
   if (vErr || !variante) {
-    // Si no se encuentra variante específica, tomar cualquier variante del producto
     const { data: vFallback } = await supabase
       .from('inventario_variantes')
       .select('id')
@@ -341,9 +321,6 @@ export async function agregarImagenGaleriaColor(productoId, color, url) {
   if (error) throw error;
 }
 
-/**
- * Elimina una imagen de la galería por su ID
- */
 export async function eliminarImagenGaleria(imagenId) {
   const { error } = await supabase
     .from('imagenes_variante')
@@ -353,7 +330,7 @@ export async function eliminarImagenGaleria(imagenId) {
 }
 
 /**
- * Consulta el historial de movimientos de inventario (Kardex) con datos de ventas y variantes
+ * Consulta el historial de movimientos de inventario (Kardex)
  */
 export async function getDetalleMovimientos() {
   try {
@@ -402,17 +379,34 @@ export async function getDetalleMovimientos() {
 }
 
 /**
- * Configuración dinámica de la tienda y parámetros de contacto
+ * =========================================================================
+ * ⚙️ CONFIGURACIÓN DINÁMICA DE LA TIENDA Y PARÁMETROS DE CONTACTO
+ * =========================================================================
  */
 const DEFAULT_CONFIG = {
   telefono_whatsapp: '+56993125219',
-  nombre_duena: 'Carmen',
+  nombre_vendedora: 'Carmen',
   modalidad_tienda: 'Venta 100% online, sin tienda física abierta al público. Precios de remate y liquidación de bodega hasta agotar stock.',
   entregas_locales: 'Entregas presenciales en Concepción y Penco (a coordinar con Carmen).',
   envios_nacionales: 'Envíos por Starken a todo Chile en modalidad "Por Pagar".'
 };
 
 export async function getConfiguracion() {
+  try {
+    // Intentar leer de Supabase tabla configuracion si existe
+    const { data, error } = await supabase
+      .from('configuracion')
+      .select('*')
+      .limit(1)
+      .single();
+
+    if (!error && data) {
+      return { ...DEFAULT_CONFIG, ...data };
+    }
+  } catch (err) {
+    // Fallback a localStorage
+  }
+
   try {
     const local = localStorage.getItem('boutique_configuracion');
     if (local) return { ...DEFAULT_CONFIG, ...JSON.parse(local) };
@@ -423,22 +417,41 @@ export async function getConfiguracion() {
 }
 
 export async function guardarConfiguracion(nuevaConfig) {
+  const configCompleta = { ...DEFAULT_CONFIG, ...nuevaConfig };
+
   try {
-    const configCompleta = { ...DEFAULT_CONFIG, ...nuevaConfig };
-    localStorage.setItem('boutique_configuracion', JSON.stringify(configCompleta));
-    return configCompleta;
-  } catch (e) {
-    console.error('Error al guardar configuración:', e);
-    throw e;
+    // Intentar guardar en Supabase
+    await supabase
+      .from('configuracion')
+      .upsert({
+        id: 1,
+        telefono_whatsapp: configCompleta.telefono_whatsapp,
+        nombre_vendedora: configCompleta.nombre_vendedora || configCompleta.nombre_duena,
+        modalidad_tienda: configCompleta.modalidad_tienda,
+        entregas_locales: configCompleta.entregas_locales,
+        envios_nacionales: configCompleta.envios_nacionales,
+        updated_at: new Date().toISOString()
+      });
+  } catch (err) {
+    console.warn('Fallback a almacenamiento local para configuracion:', err);
   }
+
+  try {
+    localStorage.setItem('boutique_configuracion', JSON.stringify(configCompleta));
+  } catch (e) {
+    console.error('Error al guardar configuración localmente:', e);
+  }
+
+  return configCompleta;
 }
 
 /**
- * Gestión de Reservas de Clientes (Ciclo de Vida)
+ * =========================================================================
+ * 📋 GESTIÓN Y PERSISTENCIA REAL DE RESERVAS EN SUPABASE
+ * =========================================================================
  */
 export async function getReservas() {
   try {
-    // Intentar consultar tabla reservas en Supabase si existe
     const { data, error } = await supabase
       .from('reservas')
       .select('*')
@@ -449,7 +462,6 @@ export async function getReservas() {
     console.warn('Tabla reservas no disponible en Supabase, utilizando fallback persistente:', err);
   }
 
-  // Fallback persistente en localStorage
   try {
     const local = localStorage.getItem('boutique_reservas');
     return local ? JSON.parse(local) : [];
@@ -458,30 +470,61 @@ export async function getReservas() {
   }
 }
 
-export async function guardarReserva(reservaData) {
+/**
+ * Crea una reserva en Supabase con fallback a localStorage
+ */
+export async function crearReserva({
+  cliente_nombre,
+  cliente_whatsapp,
+  cliente_comuna,
+  tipo_entrega = 'Presencial',
+  variante_id = null,
+  modelo_codigo = '',
+  modelo_nombre = '',
+  color = '',
+  talla = '',
+  cantidad = 1,
+  precio_unitario = 0,
+  notas = '',
+  items = []
+}) {
   const nuevaReserva = {
     id: `res-${Date.now()}`,
-    created_at: new Date().toISOString(),
-    cliente_nombre: reservaData.cliente_nombre,
-    cliente_whatsapp: reservaData.cliente_whatsapp,
-    cliente_comuna: reservaData.cliente_comuna,
-    notas: reservaData.notas || '',
-    items: reservaData.items || [],
-    total: reservaData.total || 0,
-    estado: 'Pendiente' // 'Pendiente' | 'Completada' | 'Cancelada'
+    cliente_nombre: cliente_nombre?.trim(),
+    cliente_whatsapp: cliente_whatsapp?.trim(),
+    cliente_comuna: cliente_comuna?.trim(),
+    tipo_entrega: tipo_entrega?.trim() || 'Presencial Concepción/Penco',
+    variante_id: variante_id || items[0]?.variante_id || null,
+    modelo_codigo: modelo_codigo || items[0]?.codigo_modelo || 'N/A',
+    modelo_nombre: modelo_nombre || items[0]?.nombre_fantasia || '',
+    color: color || items[0]?.color || '',
+    talla: talla ? String(talla) : String(items[0]?.talla || ''),
+    cantidad: cantidad || items.reduce((acc, i) => acc + (i.quantity || 1), 0) || 1,
+    precio_unitario: Number(precio_unitario) || Number(items[0]?.precio || 0),
+    notas: notas?.trim() || '',
+    items: items || [],
+    total: Number(precio_unitario * (cantidad || 1)) || items.reduce((acc, i) => acc + (i.precio * i.quantity), 0) || 0,
+    estado: 'Pendiente',
+    created_at: new Date().toISOString()
   };
 
   try {
-    // Intentar insertar en Supabase
+    // Inserción en tabla reservas de Supabase
     const { data, error } = await supabase
       .from('reservas')
       .insert({
         cliente_nombre: nuevaReserva.cliente_nombre,
         cliente_whatsapp: nuevaReserva.cliente_whatsapp,
         cliente_comuna: nuevaReserva.cliente_comuna,
+        tipo_entrega: nuevaReserva.tipo_entrega,
+        variante_id: nuevaReserva.variante_id,
+        modelo_codigo: nuevaReserva.modelo_codigo,
+        modelo_nombre: nuevaReserva.modelo_nombre,
+        color: nuevaReserva.color,
+        talla: nuevaReserva.talla,
+        cantidad: nuevaReserva.cantidad,
+        precio_unitario: nuevaReserva.precio_unitario,
         notas: nuevaReserva.notas,
-        items: nuevaReserva.items,
-        total: nuevaReserva.total,
         estado: 'Pendiente'
       })
       .select()
@@ -494,7 +537,7 @@ export async function guardarReserva(reservaData) {
     console.warn('Fallback a almacenamiento local para reserva:', err);
   }
 
-  // Guardar en localStorage
+  // Guardar en localStorage para respaldo y sincronización inmediata
   try {
     const prev = await getReservas();
     const actualizadas = [nuevaReserva, ...prev.filter(r => r.id !== nuevaReserva.id)];
@@ -506,6 +549,8 @@ export async function guardarReserva(reservaData) {
   return nuevaReserva;
 }
 
+export const guardarReserva = crearReserva; // Alias para compatibilidad
+
 export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
   try {
     await supabase
@@ -516,7 +561,6 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
     console.warn('Fallo actualización en Supabase de reserva:', err);
   }
 
-  // Actualizar en localStorage
   try {
     const list = await getReservas();
     const actualizadas = list.map(r => r.id === reservaId ? { ...r, estado: nuevoEstado } : r);
@@ -529,7 +573,9 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
 }
 
 /**
- * Envía consulta al Chatbot Asistente vía n8n con fallback inteligente y contexto de negocio
+ * =========================================================================
+ * 👠 MOTOR INTELIGENTE DE RECOMENDACIONES EN CHATBOT (TARJETAS VISUALES)
+ * =========================================================================
  */
 export async function consultarChatbot(mensaje, productosLocales = []) {
   try {
@@ -544,7 +590,7 @@ export async function consultarChatbot(mensaje, productosLocales = []) {
       if (data && (data.respuesta || data.text || data.message)) {
         return {
           text: data.respuesta || data.text || data.message,
-          modelosMencionados: data.modelos || []
+          tarjetasSugeridas: data.tarjetas || []
         };
       }
     }
@@ -552,133 +598,165 @@ export async function consultarChatbot(mensaje, productosLocales = []) {
     console.warn('Chatbot n8n no disponible o en reposo, usando asistente local inteligente:', err);
   }
 
-  // Fallback Asistente Local Inteligente con Contexto de Negocio
+  // Fallback Asistente Local Inteligente
   const q = mensaje.toLowerCase().trim();
 
-  // 1. Preguntas sobre Tienda Física, Prueba o Ubicación
+  // 1. Preguntas sobre Tienda Física o Ubicación
   if (q.includes('tienda') || q.includes('local') || q.includes('direccion') || q.includes('donde') || q.includes('probar') || q.includes('ubicacion')) {
     return {
-      text: `👠 *Modalidad de Nuestra Tienda:*\n\nSomos una tienda *100% online* con precios de remate y liquidación directa de bodega, por lo que *no contamos con tienda física abierta al público* para probarse.\n\n📍 *Entregas Presenciales:* Realizamos entregas en *Concepción y Penco* (a coordinar directamente con Carmen).\n📦 *Envíos a Todo Chile:* Enviamos por *Starken en modalidad Por Pagar*.\n\n¿Te gustaría revisar las opciones disponibles en tu talla?`,
-      modelosMencionados: []
+      text: `👠 *Modalidad de Nuestra Tienda:*\n\nSomos una tienda *100% online* con precios de remate y liquidación directa de bodega, por lo que *no contamos con tienda física abierta al público* para probarse.\n\n📍 *Entregas Presenciales:* Realizamos entregas en *Concepción y Penco* (a coordinar directamente con nuestra vendedora).\n📦 *Envíos a Todo Chile:* Enviamos por *Starken en modalidad Por Pagar*.\n\n¿Te gustaría revisar las opciones disponibles en tu talla?`,
+      tarjetasSugeridas: []
     };
   }
 
   // 2. Preguntas sobre Envíos o Entregas
   if (q.includes('envio') || q.includes('starken') || q.includes('despacho') || q.includes('entrega') || q.includes('concepcion') || q.includes('penco')) {
     return {
-      text: `🚚 *Opciones de Entrega y Envíos:*\n\n1. *Presencial (Sin costo de envío):* Entregas en *Concepción y Penco*, coordinando día y hora con Carmen.\n2. *A Todo Chile:* Envíos a domicilio o sucursal vía *Starken (Por Pagar)* con número de seguimiento.\n\n¿Quieres consultar la disponibilidad de algún modelo antes de reservar?`,
-      modelosMencionados: []
+      text: `🚚 *Opciones de Entrega y Envíos:*\n\n1. *Presencial (Sin costo de envío):* Entregas en *Concepción y Penco*, coordinando día y hora con la vendedora.\n2. *A Todo Chile:* Envíos a domicilio o sucursal vía *Starken (Por Pagar)* con número de seguimiento.\n\n¿Quieres consultar la disponibilidad de algún modelo antes de reservar?`,
+      tarjetasSugeridas: []
     };
   }
 
-  // 3. Saludos o menú inicial
+  // 3. Saludos iniciales
   if (q.includes('hola') || q.includes('buenas') || q.includes('inicio') || q.includes('menu')) {
     return {
       text: `¡Hola! Soy tu Asistente Virtual de Calzado 👠.\n\nNuestros modelos son 100% cuero genuino a precios de liquidación de bodega. ¿Qué modelo, talla o color estás buscando hoy? Por ejemplo:\n• "¿Tienen el modelo 105 en talla 37?"\n• "¿Qué modelos tienen en color Rojo?"\n• "¿Cómo funcionan los envíos?"`,
-      modelosMencionados: []
+      tarjetasSugeridas: []
     };
   }
 
-  // 4. Buscar talla y coincidencias en catálogo
+  // 4. Extracción de filtros
   const tallaMatch = q.match(/\b(3[4-9]|4[0-2])\b/);
   const tallaBuscada = tallaMatch ? tallaMatch[1] : null;
-
-  // Detectar si el usuario preguntó por un modelo específico (ej: 105, 110, 114, AA0001, etc.)
   const modeloMatch = productosLocales.find(p => q.includes(p.codigo_modelo?.toLowerCase()));
 
-  const resultados = [];
-  const modelosMencionados = [];
+  // Colores detectados en la consulta
+  const colorBuscado = ['negro', 'rojo', 'suela', 'cafe', 'blanco', 'azul', 'camel', 'beige', 'nude', 'plata', 'oro'].find(c => q.includes(c));
+
+  // Buscar si hay stock exacto del modelo o variantes buscadas
+  const variantesDisponiblesExactas = [];
 
   productosLocales.forEach(prod => {
-    const codigoCoincide = q.includes(prod.codigo_modelo?.toLowerCase());
-    const nombreCoincide = prod.nombre_fantasia && q.includes(prod.nombre_fantasia.toLowerCase());
+    const matchCod = q.includes(prod.codigo_modelo?.toLowerCase());
+    const matchNom = prod.nombre_fantasia && q.includes(prod.nombre_fantasia.toLowerCase());
 
-    const variantesDisponibles = (prod.inventario_variantes || []).filter(v => {
-      if (v.stock_disponible <= 0) return false;
-      const colorMatch = q.includes(v.color.toLowerCase());
-      const tallaExacta = tallaBuscada ? String(v.talla) === String(tallaBuscada) : true;
+    (prod.inventario_variantes || []).forEach(v => {
+      if (v.stock_disponible <= 0) return;
+      const matchCol = colorBuscado ? v.color.toLowerCase().includes(colorBuscado) : true;
+      const matchTal = tallaBuscada ? String(v.talla) === String(tallaBuscada) : true;
 
-      if (codigoCoincide || nombreCoincide) {
-        return tallaBuscada ? tallaExacta : true;
-      }
-      return colorMatch && (tallaBuscada ? tallaExacta : true);
-    });
-
-    if (variantesDisponibles.length > 0) {
-      resultados.push({
-        codigo: prod.codigo_modelo,
-        nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
-        material: prod.material,
-        variantes: variantesDisponibles
-      });
-      if (!modelosMencionados.includes(prod.codigo_modelo)) {
-        modelosMencionados.push(prod.codigo_modelo);
-      }
-    }
-  });
-
-  // Si preguntó por un modelo específico que está agotado o no tiene esa talla:
-  if (modeloMatch && resultados.length === 0) {
-    // Buscar 2-3 alternativas disponibles en la talla buscada
-    const alternativas = [];
-    productosLocales.forEach(prod => {
-      if (prod.codigo_modelo === modeloMatch.codigo_modelo) return;
-      const vTalla = (prod.inventario_variantes || []).filter(v => 
-        v.stock_disponible > 0 && (tallaBuscada ? String(v.talla) === String(tallaBuscada) : true)
-      );
-      if (vTalla.length > 0) {
-        alternativas.push({
+      if ((matchCod || matchNom) && matchCol && matchTal) {
+        variantesDisponiblesExactas.push({
           codigo: prod.codigo_modelo,
           nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
-          variantes: vTalla
+          material: prod.material,
+          imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
+          color: v.color,
+          talla: v.talla,
+          precio: Number(v.precio_vendedores),
+          stock: v.stock_disponible,
+          variante_id: v.id,
+          producto_id: prod.id
+        });
+      }
+    });
+  });
+
+  // CASO 1: Si preguntó por un modelo específico pero no hay stock exacto en esa talla/color (QUIEBRE DE STOCK)
+  if (modeloMatch && variantesDisponiblesExactas.length === 0) {
+    // PRIORIDAD 1: Mismo modelo en otros colores con stock
+    const mismoModeloOtrosColores = [];
+    (modeloMatch.inventario_variantes || []).forEach(v => {
+      if (v.stock_disponible > 0 && (tallaBuscada ? String(v.talla) === String(tallaBuscada) : true)) {
+        mismoModeloOtrosColores.push({
+          codigo: modeloMatch.codigo_modelo,
+          nombre: modeloMatch.nombre_fantasia || `Modelo ${modeloMatch.codigo_modelo}`,
+          material: modeloMatch.material,
+          imagen_url: v.imagen_portada_variante || modeloMatch.imagen_defecto_url,
+          color: v.color,
+          talla: v.talla,
+          precio: Number(v.precio_vendedores),
+          stock: v.stock_disponible,
+          variante_id: v.id,
+          producto_id: modeloMatch.id
         });
       }
     });
 
-    let respuesta = `⚠️ *Ese modelo ${tallaBuscada ? `en talla ${tallaBuscada}` : ''} se encuentra agotado*, ya que son precios de remate de bodega y nos quedan las últimas unidades.\n\n`;
-    if (alternativas.length > 0) {
-      respuesta += `✨ *Te sugiero estas excelentes alternativas en stock${tallaBuscada ? ` para talla ${tallaBuscada}` : ''}:*\n\n`;
-      alternativas.slice(0, 3).forEach(alt => {
-        respuesta += `👟 *${alt.codigo} - ${alt.nombre}*\n`;
-        alt.variantes.slice(0, 2).forEach(v => {
-          respuesta += `   • Color ${v.color} | Talla ${v.talla} (${v.stock_disponible}p disp.) - $${Number(v.precio_vendedores).toLocaleString('es-CL')}\n`;
-        });
+    // PRIORIDAD 2: Otros modelos en la MISMA talla consultada y preferentemente mismo color
+    const otrosModelosMismaTalla = [];
+    productosLocales.forEach(prod => {
+      if (prod.codigo_modelo === modeloMatch.codigo_modelo) return;
+      (prod.inventario_variantes || []).forEach(v => {
+        if (v.stock_disponible > 0 && (tallaBuscada ? String(v.talla) === String(tallaBuscada) : true)) {
+          otrosModelosMismaTalla.push({
+            codigo: prod.codigo_modelo,
+            nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+            material: prod.material,
+            imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
+            color: v.color,
+            talla: v.talla,
+            precio: Number(v.precio_vendedores),
+            stock: v.stock_disponible,
+            variante_id: v.id,
+            producto_id: prod.id
+          });
+        }
       });
-      respuesta += `\n¿Te gustaría ver alguno en detalle o reservarlo con Carmen vía WhatsApp?`;
-      return {
-        text: respuesta,
-        modelosMencionados: alternativas.slice(0, 3).map(a => a.codigo)
-      };
-    }
+    });
+
+    const sugerencias = [...mismoModeloOtrosColores, ...otrosModelosMismaTalla].slice(0, 4);
+
+    const mensajeAgotado = `Lamentablemente el ${modeloMatch.codigo_modelo} ${tallaBuscada ? `en talla ${tallaBuscada}` : ''} ${colorBuscado ? `color ${colorBuscado}` : ''} está agotado por remate de bodega.\n\n✨ Te preparé estas excelentes alternativas disponibles en cuero genuino que te van a encantar:`;
 
     return {
-      text: `⚠️ *Ese modelo se encuentra agotado*, ya que son precios de remate de bodega. Puedes explorar nuestro catálogo completo para descubrir más opciones en cuero genuino.`,
-      modelosMencionados: []
+      text: mensajeAgotado,
+      tarjetasSugeridas: sugerencias
     };
   }
 
-  // Si hay resultados disponibles:
-  if (resultados.length > 0) {
-    let respuesta = `✨ *Disponibilidad encontrada en bodega:*\n\n`;
-    resultados.slice(0, 3).forEach(r => {
-      respuesta += `👟 *${r.codigo} - ${r.nombre}* (${r.material || 'Cuero'})\n`;
-      r.variantes.slice(0, 3).forEach(v => {
-        respuesta += `   • Color ${v.color} | Talla ${v.talla} (${v.stock_disponible} par${v.stock_disponible > 1 ? 'es' : ''}) - $${Number(v.precio_vendedores).toLocaleString('es-CL')}\n`;
-      });
-      respuesta += `\n`;
-    });
-    respuesta += `💡 _Haz clic en los botones de abajo para ver la ficha del modelo o abre el botón de WhatsApp para reservar directamente con Carmen._`;
-
+  // CASO 2: Si hay disponibilidad exacta
+  if (variantesDisponiblesExactas.length > 0) {
     return {
-      text: respuesta,
-      modelosMencionados: modelosMencionados.slice(0, 4)
+      text: `✨ ¡Buenas noticias! Tenemos disponibilidad en bodega para lo que buscas. Puedes ver la ficha en el catálogo o reservar directamente desde aquí:`,
+      tarjetasSugeridas: variantesDisponiblesExactas.slice(0, 4)
+    };
+  }
+
+  // CASO 3: Búsqueda general por talla o color (sin modelo específico)
+  const coincidenciasGenerales = [];
+  productosLocales.forEach(prod => {
+    (prod.inventario_variantes || []).forEach(v => {
+      if (v.stock_disponible <= 0) return;
+      const matchCol = colorBuscado ? v.color.toLowerCase().includes(colorBuscado) : true;
+      const matchTal = tallaBuscada ? String(v.talla) === String(tallaBuscada) : true;
+
+      if (matchCol && matchTal) {
+        coincidenciasGenerales.push({
+          codigo: prod.codigo_modelo,
+          nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+          material: prod.material,
+          imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
+          color: v.color,
+          talla: v.talla,
+          precio: Number(v.precio_vendedores),
+          stock: v.stock_disponible,
+          variante_id: v.id,
+          producto_id: prod.id
+        });
+      }
+    });
+  });
+
+  if (coincidenciasGenerales.length > 0) {
+    return {
+      text: `✨ Encontré estos modelos disponibles ${tallaBuscada ? `en talla ${tallaBuscada}` : ''} ${colorBuscado ? `color ${colorBuscado}` : ''}:`,
+      tarjetasSugeridas: coincidenciasGenerales.slice(0, 4)
     };
   }
 
   return {
-    text: `No encontré disponibilidad exacta para esa combinación en este momento, ya que nos quedan las últimas unidades de remate. ¿Te gustaría consultar directamente con Carmen por WhatsApp para verificar si hay pares similares?`,
-    modelosMencionados: []
+    text: `No encontré pares disponibles para esa combinación exacta en este momento debido al remate de bodega. Puedes consultar directamente por WhatsApp para verificar si hay opciones similares.`,
+    tarjetasSugeridas: []
   };
 }
-
-

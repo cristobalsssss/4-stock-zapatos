@@ -46,6 +46,9 @@
 - [x] REVISIÓN #10: Pestaña "⚙️ Parámetros" para WhatsApp y políticas de entrega configurables
 - [x] REVISIÓN #10: Pestaña "📋 Reservas" con ciclo de vida (Pendiente, Cancelada, Convertir a Venta)
 - [x] REVISIÓN #10: Formulario de Reserva con prefijo `+56 9 ` y Chatbot con badges interactivos y sugerencias por quiebre de stock
+- [x] REVISIÓN #11: Persistencia Real de Reservas en Supabase (`crearReserva`)
+- [x] REVISIÓN #11: Sincronización Centralizada de Parámetros (sin números hardcodeados y títulos dinámicos)
+- [x] REVISIÓN #11: Tarjetas Visuales Interactivas en Chatbot con Reserva Conversacional Embebida
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
