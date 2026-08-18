@@ -163,10 +163,12 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
      * **Móvil / Táctil (Pinch & Double-Tap):** Gesto de pinza nativo con 2 dedos (pinch-to-zoom continuo), doble toque (double-tap toggle) para zoom/reset rápido y arrastre suave con 1 dedo sobre imagen ampliada.
      * **Toolbar Flotante:** Controles independientes fuera del viewport de transformación para zoom in (+), zoom out (-), reset (1x), cerrar y flechas de navegación.
    - **Bolsa de Reserva & WhatsApp Directo:** Drawer de reserva donde el cliente añade pares seleccionados, ingresa su Nombre y Comuna/Ciudad, generando un enlace directo `https://wa.me/?text=...` con el pedido formal preformateado para la vendedora.
+   - **Widget de Chatbot Asistente (Revisión #9):** Chatbot flotante interactivo en la esquina inferior derecha (`/`), conectado vía webhook de n8n / fallback inteligente para consultar disponibilidad de modelos, tallas y colores, con flujo de cierre directo a WhatsApp incluyendo Nombre y Comuna del cliente.
 
 2. **Ruta Privada (`/admin`):**
    - **Acceso Protegido por PIN:** Autenticación por contraseña configurada en `VITE_ADMIN_PASSWORD` (por defecto `Tiny1234` / `Gaspi.123#2026`).
-   - **Módulo de Venta Multi-Producto:** Permite añadir múltiples pares a una misma venta, selector de vendedor, medio de pago, selector de fecha histórica o actual, campo de notas personalizadas y cálculo automático de comisiones en vivo.
+   - **Módulo de Venta Multi-Producto con Precio Libre (Revisión #9):** Permite añadir múltiples pares a una misma venta, seleccionar vendedor, medio de pago, selector de fecha histórica o actual, campo de notas y **campo editable de "Monto de Venta Real / Cobrado"** por calzado (para promociones, descuentos y liquidaciones) con recálculo dinámico de comisiones en vivo.
+   - **Pestaña "Detalle de Movimientos" - Kardex en Vivo (Revisión #9):** Auditoría visual y en tiempo real de la tabla `detalle_movimientos`, con fecha de operación, fecha/hora de registro en base de datos, badges por tipo de movimiento (Venta, Devolución, Ajuste), producto, cantidad, precio aplicado, comisión y notas con buscador y filtros.
    - **Módulo de Devoluciones:** Selector de variante y cantidad a reintegrar con registro obligatorio de motivo.
    - **Gestor de Fotos & Galería General:** Previsualización en grid de fotos existentes, eliminación con un clic y zona de Drag & Drop para subir y reemplazar imágenes por modelo y color.
    - **Panel Analítico y Alertas:** Monitor de stock crítico (<= 2 pares o agotados) y resumen de métricas generales.

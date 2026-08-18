@@ -351,3 +351,129 @@ export async function eliminarImagenGaleria(imagenId) {
     .eq('id', imagenId);
   if (error) throw error;
 }
+
+/**
+ * Consulta el historial de movimientos de inventario (Kardex) con datos de ventas y variantes
+ */
+export async function getDetalleMovimientos() {
+  try {
+    const { data, error } = await supabase
+      .from('detalle_movimientos')
+      .select(`
+        id,
+        tipo_movimiento,
+        cantidad,
+        precio_aplicado,
+        comision_vendedor,
+        notas,
+        created_at,
+        venta_id,
+        ventas (
+          id,
+          vendedor,
+          medio_pago,
+          fecha_venta,
+          monto_total,
+          notas
+        ),
+        inventario_variantes (
+          id,
+          sku_variante,
+          color,
+          talla,
+          precio_vendedores,
+          precio_interno,
+          productos (
+            id,
+            codigo_modelo,
+            nombre_fantasia,
+            material
+          )
+        )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.error('Error al obtener detalle de movimientos:', err);
+    throw err;
+  }
+}
+
+/**
+ * Envía consulta al Chatbot Asistente vía n8n con fallback inteligente local
+ */
+export async function consultarChatbot(mensaje, productosLocales = []) {
+  try {
+    const res = await fetch(`${N8N_URL}/webhook/chatbot-stock`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mensaje }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data && (data.respuesta || data.text || data.message)) {
+        return data.respuesta || data.text || data.message;
+      }
+    }
+  } catch (err) {
+    console.warn('Chatbot n8n no disponible o en reposo, usando asistente local inteligente:', err);
+  }
+
+  // Fallback Asistente Local Inteligente
+  const q = mensaje.toLowerCase().trim();
+
+  if (q.includes('hola') || q.includes('buenas') || q.includes('inicio') || q.includes('menu')) {
+    return `¡Hola! Soy tu Asistente Virtual de Calzado 👠.\n¿En qué modelo, color o talla estás buscando hoy? Por ejemplo: "¿Tienes el modelo 105 en talla 37?" o "¿Qué tienen en color Rojo?"`;
+  }
+
+  // Buscar por talla (ej: 35, 36, 37, 38, 39, 40)
+  const tallaMatch = q.match(/\b(3[4-9]|4[0-2])\b/);
+  const tallaBuscada = tallaMatch ? tallaMatch[1] : null;
+
+  // Buscar coincidencia de modelo o color en el inventario cargado
+  const resultados = [];
+
+  productosLocales.forEach(prod => {
+    const codigoCoincide = q.includes(prod.codigo_modelo?.toLowerCase());
+    const nombreCoincide = prod.nombre_fantasia && q.includes(prod.nombre_fantasia.toLowerCase());
+
+    const variantesDisponibles = (prod.inventario_variantes || []).filter(v => {
+      if (v.stock_disponible <= 0) return false;
+      const colorMatch = q.includes(v.color.toLowerCase());
+      const tallaExacta = tallaBuscada ? String(v.talla) === String(tallaBuscada) : true;
+
+      if (codigoCoincide || nombreCoincide) {
+        return tallaBuscada ? tallaExacta : true;
+      }
+      return colorMatch && (tallaBuscada ? tallaExacta : true);
+    });
+
+    if (variantesDisponibles.length > 0) {
+      resultados.push({
+        modelo: prod.codigo_modelo,
+        nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+        material: prod.material,
+        variantes: variantesDisponibles
+      });
+    }
+  });
+
+  if (resultados.length > 0) {
+    let respuesta = `✨ Encontré disponibilidad para ti:\n\n`;
+    resultados.slice(0, 3).forEach(r => {
+      respuesta += `👟 *${r.modelo} - ${r.nombre}* (${r.material || 'Cuero'})\n`;
+      r.variantes.slice(0, 4).forEach(v => {
+        respuesta += `   • Color ${v.color} | Talla ${v.talla} (${v.stock_disponible} par${v.stock_disponible > 1 ? 'es' : ''}) - $${Number(v.precio_vendedores).toLocaleString('es-CL')}\n`;
+      });
+      respuesta += `\n`;
+    });
+    respuesta += `¿Te gustaría reservar alguno de estos pares directamente a través de WhatsApp?`;
+    return respuesta;
+  }
+
+  return `No encontré disponibilidad exacta con esos filtros en este momento, pero tenemos más de 80 modelos en cuero genuino en nuestro catálogo. ¿Te gustaría que te comunique directamente con una asesora por WhatsApp?`;
+}
+

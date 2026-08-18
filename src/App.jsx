@@ -5,6 +5,7 @@ import GalleryModal from './components/GalleryModal';
 import ReservationDrawer from './components/ReservationDrawer';
 import AdminLoginModal from './components/AdminLoginModal';
 import AdminPanel from './components/AdminPanel';
+import ChatbotWidget from './components/ChatbotWidget';
 import Footer from './components/Footer';
 import { getCatalogFromSupabase } from './lib/api';
 import { supabase } from './lib/supabase';
@@ -398,6 +399,11 @@ export default function App() {
           setCurrentView('admin');
         }}
       />
+
+      {/* Widget Flotante de Chatbot Asistente */}
+      {currentView === 'catalog' && (
+        <ChatbotWidget products={products} />
+      )}
 
       {/* Pie de Página */}
       <Footer onOpenAdminLogin={() => setIsAdminLoginOpen(true)} />
