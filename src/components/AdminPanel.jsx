@@ -274,7 +274,8 @@ export default function AdminPanel({ products, onDataChanged }) {
     if (itemsCargados.length > 0) {
       setSaleItems(itemsCargados);
     }
-    setNotasVenta(`Reserva de ${reserva.cliente_nombre} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.tipo_entrega || ''}. ${reserva.notas || ''}`);
+    const codRes = reserva.codigo_reserva ? `#${reserva.codigo_reserva} ` : '';
+    setNotasVenta(`Reserva ${codRes}de ${reserva.cliente_nombre} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.tipo_entrega || ''}. ${reserva.notas || ''}`);
     setActiveTab('ventas');
     handleCambiarEstadoReserva(reserva.id, 'Completada');
   };
@@ -1042,9 +1043,10 @@ export default function AdminPanel({ products, onDataChanged }) {
 
           {/* Tabla de Reservas */}
           <div className="border border-zinc-200 rounded-2xl overflow-x-auto">
-            <table className="w-full text-left text-xs min-w-[800px]">
+            <table className="w-full text-left text-xs min-w-[850px]">
               <thead className="bg-zinc-50 text-zinc-500 font-bold uppercase text-[10px] tracking-wider border-b border-zinc-200">
                 <tr>
+                  <th className="p-3">Código</th>
                   <th className="p-3">Fecha / Hora</th>
                   <th className="p-3">Cliente</th>
                   <th className="p-3">WhatsApp</th>
@@ -1057,20 +1059,25 @@ export default function AdminPanel({ products, onDataChanged }) {
               <tbody className="divide-y divide-zinc-200">
                 {isLoadingReservas ? (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-zinc-400">
+                    <td colSpan={8} className="p-8 text-center text-zinc-400">
                       <RefreshCw className="w-6 h-6 animate-spin mx-auto text-brand-600 mb-2" />
                       <span>Cargando reservas...</span>
                     </td>
                   </tr>
                 ) : filteredReservas.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-zinc-400 font-medium">
+                    <td colSpan={8} className="p-8 text-center text-zinc-400 font-medium">
                       No hay solicitudes de reserva registradas con esos filtros.
                     </td>
                   </tr>
                 ) : (
                   filteredReservas.map(res => (
                     <tr key={res.id} className="hover:bg-zinc-50/70 transition-colors">
+                      <td className="p-3 whitespace-nowrap">
+                        <span className="font-mono font-extrabold text-[11px] bg-brand-50 text-brand-800 border border-brand-200 px-2 py-0.5 rounded-lg shadow-2xs">
+                          #{res.codigo_reserva || (String(res.id).startsWith('res-') ? 'RES-' + String(res.id).slice(-4).toUpperCase() : res.id)}
+                        </span>
+                      </td>
                       <td className="p-3 whitespace-nowrap font-medium text-zinc-600">
                         {new Date(res.created_at).toLocaleString('es-CL', {
                           day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
@@ -1665,6 +1672,14 @@ export default function AdminPanel({ products, onDataChanged }) {
               <p className="text-xs text-zinc-500">Configuración de contacto, WhatsApp oficial y modalidades de entrega.</p>
             </div>
           </div>
+
+          {/* Advertencia de Teléfono no configurado */}
+          {(!configParams.telefono_whatsapp || configParams.telefono_whatsapp.includes('00000000') || configParams.telefono_whatsapp.replace(/\D/g, '').length < 9) && (
+            <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold rounded-xl flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+              <span>⚠️ Configura un número de WhatsApp real (+569XXXXXXXX) para recibir las reservas y pedidos de clientes.</span>
+            </div>
+          )}
 
           <form onSubmit={handleSaveConfig} className="space-y-5">
             {/* Teléfono WhatsApp y Nombre */}

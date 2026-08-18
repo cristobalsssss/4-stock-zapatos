@@ -9,7 +9,10 @@ import {
   Eye, 
   Phone, 
   MapPin, 
-  ChevronDown
+  ChevronDown,
+  Sparkles,
+  Tag,
+  CheckCircle2
 } from 'lucide-react';
 import { consultarChatbot, crearReserva } from '../lib/api';
 import { useTiendaConfig } from '../lib/useTiendaConfig';
@@ -18,20 +21,21 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [conversationContext, setConversationContext] = useState({});
   const { config } = useTiendaConfig();
 
   const [messages, setMessages] = useState([
     {
       id: 1,
       sender: 'bot',
-      text: '¡Hola! 👠 Soy tu Asistente Virtual de Calzado.\nNuestros calzados son 100% cuero genuino a precios de liquidación de bodega. ¿Qué modelo, color o talla estás buscando hoy?',
+      text: '¡Hola! 👠 Soy tu Asistente Virtual de Calzado.\nNuestros modelos son 100% cuero genuino a precios de liquidación de bodega. ¿Qué modelo, color o talla estás buscando hoy?',
       tarjetas: [],
       visibleLimit: 4,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
 
-  // Formulario de Reserva Embebido en Chat
+  // Formulario de Reserva Embebido con Preview
   const [reservaActivaItem, setReservaActivaItem] = useState(null);
   const [showWaForm, setShowWaForm] = useState(false);
   const [waNombre, setWaNombre] = useState('');
@@ -78,7 +82,13 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
     setIsLoading(true);
 
     try {
-      const botResponse = await consultarChatbot(cleanText, products);
+      const botResponse = await consultarChatbot(cleanText, products, conversationContext);
+      
+      // Actualizar memoria conversacional contextual
+      if (botResponse.nuevoContexto) {
+        setConversationContext(botResponse.nuevoContexto);
+      }
+
       const botMsg = {
         id: Date.now() + 1,
         sender: 'bot',
@@ -90,12 +100,13 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
       setMessages(prev => [...prev, botMsg]);
     } catch (err) {
       console.error('Error en chatbot:', err);
+      const vendedora = config.nombre_vendedora || config.nombre_duena || 'Vendedora';
       setMessages(prev => [
         ...prev,
         {
           id: Date.now() + 1,
           sender: 'bot',
-          text: `Disculpa, tuve un inconveniente de conexión. Puedes contactar directamente a ${config.nombre_vendedora || 'nuestra vendedora'} por WhatsApp.`,
+          text: `Disculpa, tuve un inconveniente de conexión. Puedes contactar directamente a ${vendedora} por WhatsApp.`,
           tarjetas: [],
           visibleLimit: 4,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -143,10 +154,10 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
     setIsSubmittingReserva(true);
 
     try {
-      const vendedora = config.nombre_vendedora || 'Carmen';
+      const vendedora = config.nombre_vendedora || config.nombre_duena || 'Vendedora';
 
-      // 1. Guardar primero en BD / localStorage blindado
-      await crearReserva({
+      // 1. Guardar primero en BD y almacenamiento local generando #RES-XXXX
+      const reservaCreada = await crearReserva({
         cliente_nombre: waNombre.trim(),
         cliente_whatsapp: waPhone.trim(),
         cliente_comuna: waComuna.trim(),
@@ -161,8 +172,12 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
         notas: `Reserva desde Chatbot. Modalidad: ${waEntrega}`
       });
 
-      // 2. Construir mensaje estructurado para WhatsApp
-      let mensajeWhatsApp = `¡Hola ${vendedora}! Vengo del Asistente Virtual de la tienda online.\n\n`;
+      const codigoRes = reservaCreada.codigo_reserva || `RES-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      // 2. Construir mensaje estructurado para WhatsApp con Código de Reserva
+      let mensajeWhatsApp = `👠 *SOLICITUD DE RESERVA #${codigoRes}*\n\n`;
+      mensajeWhatsApp += `¡Hola ${vendedora}! Vengo del Asistente Virtual de la tienda online.\n\n`;
+      mensajeWhatsApp += `🔖 *Código Reserva:* #${codigoRes}\n`;
       mensajeWhatsApp += `👤 *Cliente:* ${waNombre.trim()}\n`;
       mensajeWhatsApp += `📱 *WhatsApp:* ${waPhone.trim()}\n`;
       mensajeWhatsApp += `📍 *Comuna/Ciudad:* ${waComuna.trim()}\n`;
@@ -174,7 +189,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
         mensajeWhatsApp += `   • Precio Remate: $${Number(reservaActivaItem.precio).toLocaleString('es-CL')}\n\n`;
       }
 
-      mensajeWhatsApp += `Quisiera confirmar la reserva y coordinar los detalles. ¡Muchas gracias!`;
+      mensajeWhatsApp += `Quisiera confirmar la reserva y coordinar la entrega. ¡Muchas gracias!`;
 
       const cleanPhone = (config.telefono_whatsapp || '').replace(/[^0-9]/g, '');
       const encodedText = encodeURIComponent(mensajeWhatsApp);
@@ -182,14 +197,14 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
 
       window.open(waUrl, '_blank', 'noopener,noreferrer');
 
-      // Agregar confirmación al chat
+      // 3. Confirmación en el chat con Código de Reserva
       setTimeout(() => {
         setMessages(prev => [
           ...prev,
           {
             id: Date.now() + 2,
             sender: 'bot',
-            text: `🎉 ¡Excelente, ${waNombre.trim()}! Tu solicitud de reserva para ${reservaActivaItem ? `${reservaActivaItem.codigo} (${reservaActivaItem.color} T${reservaActivaItem.talla})` : 'el calzado'} fue registrada en el sistema y enviada a ${vendedora} por WhatsApp.`,
+            text: `🎉 ¡Excelente, ${waNombre.trim()}! Tu solicitud de reserva #${codigoRes} para ${reservaActivaItem ? `${reservaActivaItem.codigo} (${reservaActivaItem.color} T${reservaActivaItem.talla})` : 'el calzado'} ha sido registrada en el sistema y enviada a ${vendedora} por WhatsApp.`,
             tarjetas: [],
             visibleLimit: 4,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -200,6 +215,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
         setWaNombre('');
         setWaPhone('+56 9 ');
         setWaComuna('');
+        setConversationContext({}); // Limpiar contexto post-reserva
       }, 1000);
 
     } catch (err) {
@@ -209,7 +225,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
     }
   };
 
-  const vendedoraNombre = config.nombre_vendedora || 'Carmen';
+  const vendedoraNombre = config.nombre_vendedora || config.nombre_duena || 'Vendedora';
 
   return (
     <>
@@ -259,7 +275,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
             </button>
           </div>
 
-          {/* Área de Mensajes y Tarjetas Visuales Paginadas */}
+          {/* Área de Mensajes y Tarjetas Visuales */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-zinc-50/50">
             {messages.map(msg => {
               const visibleCards = (msg.tarjetas || []).slice(0, msg.visibleLimit || 4);
@@ -292,7 +308,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
                     </div>
                   </div>
 
-                  {/* Render de Tarjetas Visuales Interactivas con Paginación */}
+                  {/* Render de Tarjetas Visuales con Paginación */}
                   {visibleCards.length > 0 && (
                     <div className="w-full pl-8 space-y-2 my-1">
                       <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
@@ -363,7 +379,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
                         ))}
                       </div>
 
-                      {/* Botón Ver Más Modelos */}
+                      {/* Botón Ver Más */}
                       {hasMoreCards && (
                         <button
                           type="button"
@@ -385,35 +401,42 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
                 <div className="w-2 h-2 rounded-full bg-brand-500 animate-bounce"></div>
                 <div className="w-2 h-2 rounded-full bg-brand-500 animate-bounce [animation-delay:0.2s]"></div>
                 <div className="w-2 h-2 rounded-full bg-brand-500 animate-bounce [animation-delay:0.4s]"></div>
-                <span className="text-[11px] font-medium ml-1">Buscando alternativas en bodega...</span>
+                <span className="text-[11px] font-medium ml-1">Buscando en bodega con memoria contextual...</span>
               </div>
             )}
 
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Chips de Sugerencia Rápida por Talla */}
+          {/* Chips Rápidos */}
           <div className="px-3 py-2 bg-white border-t border-zinc-100 flex items-center gap-1.5 overflow-x-auto text-[11px]">
             <button
               type="button"
-              onClick={() => handleSendMessage('Talla 36')}
+              onClick={() => handleSendMessage('35')}
               className="px-2.5 py-1 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold whitespace-nowrap transition-colors cursor-pointer"
             >
-              👠 Talla 36
+              👠 35
             </button>
             <button
               type="button"
-              onClick={() => handleSendMessage('Talla 37')}
+              onClick={() => handleSendMessage('36')}
               className="px-2.5 py-1 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold whitespace-nowrap transition-colors cursor-pointer"
             >
-              👠 Talla 37
+              👠 36
             </button>
             <button
               type="button"
-              onClick={() => handleSendMessage('Talla 38')}
+              onClick={() => handleSendMessage('37')}
               className="px-2.5 py-1 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold whitespace-nowrap transition-colors cursor-pointer"
             >
-              👠 Talla 38
+              👠 37
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSendMessage('38')}
+              className="px-2.5 py-1 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold whitespace-nowrap transition-colors cursor-pointer"
+            >
+              👠 38
             </button>
             <button
               type="button"
@@ -422,27 +445,15 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
             >
               🚚 Envíos
             </button>
-            <button
-              type="button"
-              onClick={() => {
-                setReservaActivaItem(null);
-                setShowWaForm(true);
-              }}
-              className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 whitespace-nowrap transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              💬 WhatsApp
-            </button>
           </div>
 
-          {/* Formulario Embebido de Reserva Directa */}
+          {/* Formulario Embebido de Reserva con PREVIEW VISUAL */}
           {showWaForm ? (
-            <form onSubmit={handleSendToWhatsApp} className="p-3.5 bg-emerald-50/95 border-t border-emerald-200 space-y-2.5">
+            <form onSubmit={handleSendToWhatsApp} className="p-3.5 bg-emerald-50/95 border-t border-emerald-200 space-y-2.5 max-h-[290px] overflow-y-auto">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-extrabold text-emerald-900 flex items-center gap-1">
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  <span>
-                    {reservaActivaItem ? `Reservar ${reservaActivaItem.codigo} (${reservaActivaItem.color} T${reservaActivaItem.talla})` : `Reservar con ${vendedoraNombre}`}
-                  </span>
+                  <ShoppingBag className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Confirmar Solicitud de Reserva</span>
                 </span>
                 <button
                   type="button"
@@ -455,6 +466,39 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
                   ✕
                 </button>
               </div>
+
+              {/* Mini Preview Visual de Calzado */}
+              {reservaActivaItem && (
+                <div className="bg-white p-2 rounded-xl border border-emerald-300/80 flex items-center gap-2.5 shadow-xs">
+                  <div className="w-11 h-11 rounded-lg bg-zinc-100 overflow-hidden flex-shrink-0">
+                    {reservaActivaItem.imagen_url ? (
+                      <img src={reservaActivaItem.imagen_url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[9px] font-bold text-zinc-400">
+                        {reservaActivaItem.codigo}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="flex items-center justify-between">
+                      <strong className="text-xs text-zinc-900 truncate">
+                        {reservaActivaItem.codigo} {reservaActivaItem.nombre ? `- ${reservaActivaItem.nombre}` : ''}
+                      </strong>
+                      <span className="text-xs font-extrabold text-emerald-800">
+                        ${Number(reservaActivaItem.precio).toLocaleString('es-CL')}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-zinc-600">
+                      <span className="bg-zinc-100 px-1.5 py-0.2 rounded font-semibold text-zinc-800">
+                        {reservaActivaItem.color}
+                      </span>
+                      <span className="bg-brand-50 text-brand-700 px-1.5 py-0.2 rounded font-bold">
+                        Talla {reservaActivaItem.talla}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-2">
                 <input
@@ -508,7 +552,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
             <form onSubmit={e => { e.preventDefault(); handleSendMessage(); }} className="p-3 bg-white border-t border-zinc-200 flex items-center gap-2">
               <input
                 type="text"
-                placeholder="Pregunta por talla, modelo o presupuesto..."
+                placeholder="Ej: 'Zapatos negros', '35', 'Menos de 40 mil'..."
                 value={inputMessage}
                 onChange={e => setInputMessage(e.target.value)}
                 disabled={isLoading}

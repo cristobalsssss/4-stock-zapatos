@@ -59,7 +59,7 @@ export default function ReservationDrawer({
 
     try {
       // 1. Guardar primero en BD y almacenamiento blindado
-      await crearReserva({
+      const reservaCreada = await crearReserva({
         cliente_nombre: clientName.trim(),
         cliente_whatsapp: clientPhone.trim(),
         cliente_comuna: clientCity.trim(),
@@ -75,6 +75,8 @@ export default function ReservationDrawer({
         items: bagItems
       });
 
+      const codigoRes = reservaCreada?.codigo_reserva || `RES-${Math.floor(1000 + Math.random() * 9000)}`;
+
       // Disparar confeti de celebración
       confetti({
         particleCount: 90,
@@ -83,8 +85,9 @@ export default function ReservationDrawer({
       });
 
       // 2. Formatear mensaje para WhatsApp hacia el número oficial configurado
-      let mensaje = `👠 *SOLICITUD DE RESERVA DE CALZADO*\n\n`;
+      let mensaje = `👠 *SOLICITUD DE RESERVA #${codigoRes}*\n\n`;
       mensaje += `Hola ${vendedoraNombre}, quiero reservar los siguientes pares de su catálogo boutique:\n\n`;
+      mensaje += `🔖 *Código de Reserva:* #${codigoRes}\n\n`;
 
       bagItems.forEach((item, index) => {
         mensaje += `*${index + 1}. ${item.codigo_modelo}* - ${item.nombre_fantasia || ''}\n`;

@@ -53,6 +53,10 @@
 - [x] REVISIÓN #12: Auditoría y Eliminación Total de Contacto Hardcodeado con Custom Hook `useTiendaConfig`
 - [x] REVISIÓN #12: Intención Guiada en Chatbot (Preguntar Talla Primero) y Parser de Precios Exacto
 - [x] REVISIÓN #12: Paginación Interactiva en Chatbot ("Ver más modelos")
+- [x] REVISIÓN #13: Memoria Conversacional Acumulativa y Slot Filling en Chatbot
+- [x] REVISIÓN #13: Motor Universal de Precios y Normalización de Expresiones
+- [x] REVISIÓN #13: Preview Visual de Calzado en Formulario de Reserva de Chat
+- [x] REVISIÓN #13: Generación de Código Amigable `#RES-XXXX` y Trazabilidad en /admin
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

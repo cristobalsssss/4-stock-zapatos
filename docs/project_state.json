@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "2.6.0",
-    "last_updated": "2026-08-18 00:40:00",
+    "version": "2.7.0",
+    "last_updated": "2026-08-18 01:10:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #12 APLICADA)",
-    "last_completed_task": "REVISIÓN #12: Persistencia híbrida y blindada de reservas, eliminación de contacto hardcodeado con useTiendaConfig, intención guiada en chatbot por talla, filtro de precios exacto y paginación",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #13 APLICADA)",
+    "last_completed_task": "REVISIÓN #13: Memoria conversacional contextual (slot filling), parser universal de precios, preview visual de reserva en chat, código #RES-XXXX y sincronización estricta de contacto",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",
