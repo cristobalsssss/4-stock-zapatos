@@ -49,6 +49,10 @@
 - [x] REVISIÓN #11: Persistencia Real de Reservas en Supabase (`crearReserva`)
 - [x] REVISIÓN #11: Sincronización Centralizada de Parámetros (sin números hardcodeados y títulos dinámicos)
 - [x] REVISIÓN #11: Tarjetas Visuales Interactivas en Chatbot con Reserva Conversacional Embebida
+- [x] REVISIÓN #12: Persistencia Híbrida y Blindada de Reservas en BD y Almacenamiento Local Sincronizado
+- [x] REVISIÓN #12: Auditoría y Eliminación Total de Contacto Hardcodeado con Custom Hook `useTiendaConfig`
+- [x] REVISIÓN #12: Intención Guiada en Chatbot (Preguntar Talla Primero) y Parser de Precios Exacto
+- [x] REVISIÓN #12: Paginación Interactiva en Chatbot ("Ver más modelos")
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

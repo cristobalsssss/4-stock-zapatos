@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Trash2, ShoppingBag, Send, Sparkles, MapPin, User, MessageSquare, Phone, Truck } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { getConfiguracion, crearReserva } from '../lib/api';
+import { crearReserva } from '../lib/api';
+import { useTiendaConfig } from '../lib/useTiendaConfig';
 
 export default function ReservationDrawer({
   isOpen,
@@ -20,14 +21,7 @@ export default function ReservationDrawer({
   const [entregaPref, setEntregaPref] = useState('Presencial Concepción/Penco');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [config, setConfig] = useState({
-    telefono_whatsapp: '',
-    nombre_vendedora: 'Carmen'
-  });
-
-  useEffect(() => {
-    getConfiguracion().then(c => setConfig(c));
-  }, []);
+  const { config } = useTiendaConfig();
 
   const total = bagItems.reduce((acc, item) => acc + item.precio * item.quantity, 0);
   const totalPares = bagItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -64,7 +58,7 @@ export default function ReservationDrawer({
     setIsSubmitting(true);
 
     try {
-      // 1. Guardar primero en Supabase de forma asíncrona
+      // 1. Guardar primero en BD y almacenamiento blindado
       await crearReserva({
         cliente_nombre: clientName.trim(),
         cliente_whatsapp: clientPhone.trim(),
@@ -109,9 +103,9 @@ export default function ReservationDrawer({
       }
       mensaje += `\n_Quedo atenta a la confirmación de disponibilidad y datos de pago._`;
 
-      const cleanPhone = (config.telefono_whatsapp || '').replace(/[^0-9]/g, '') || '56993125219';
+      const cleanPhone = (config.telefono_whatsapp || '').replace(/[^0-9]/g, '');
       const encodedText = encodeURIComponent(mensaje);
-      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedText}`;
+      const whatsappUrl = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encodedText}` : `https://wa.me/?text=${encodedText}`;
 
       window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
       onClose();

@@ -218,6 +218,9 @@ export default function AdminPanel({ products, onDataChanged }) {
 
   useEffect(() => {
     loadReservas();
+    const handleReservasEvent = () => loadReservas();
+    window.addEventListener('reservas_updated', handleReservasEvent);
+    return () => window.removeEventListener('reservas_updated', handleReservasEvent);
   }, []);
 
   const handleCambiarEstadoReserva = async (reservaId, nuevoEstado) => {
@@ -539,8 +542,8 @@ export default function AdminPanel({ products, onDataChanged }) {
   // ESTADO PARA TAB 6: ⚙️ PARÁMETROS DINÁMICOS Y CONFIGURACIÓN
   // =========================================================================
   const [configParams, setConfigParams] = useState({
-    telefono_whatsapp: '+56993125219',
-    nombre_duena: 'Carmen',
+    telefono_whatsapp: '+56900000000',
+    nombre_vendedora: 'Carmen',
     modalidad_tienda: 'Venta 100% online, sin tienda física abierta al público. Precios de remate y liquidación de bodega hasta agotar stock.',
     entregas_locales: 'Entregas presenciales en Concepción y Penco (a coordinar con Carmen).',
     envios_nacionales: 'Envíos por Starken a todo Chile en modalidad "Por Pagar".'
