@@ -80,6 +80,7 @@
 - [x] REVISIÓN #17: Auto-Polling cada 20s, bypass de caché y botón destacado `🔄 Actualizar Datos`
 - [x] HOTFIX #3.3.1: Aislamiento y blindaje de Login en AdminPanel contra pantalla blanca
 - [x] HOTFIX #3.3.2: Restauración de estados de movimientos, loadMovimientos y filteredReservas
+- [x] HOTFIX #3.3.4: Implementación de handlePurgarDatosPrueba y restauración pestaña parámetros
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

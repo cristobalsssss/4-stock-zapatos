@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "3.3.2",
-    "last_updated": "2026-08-18 23:25:00",
+    "version": "3.3.3",
+    "last_updated": "2026-08-18 23:32:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (HOTFIX MOVIMIENTOS - V3.3.2)",
-    "last_completed_task": "HOTFIX #3.3.2: Declaración y restauración completa de estados de movimientos, loadMovimientos y filteredReservas en AdminPanel",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (HOTFIX PURGAR & PARÁMETROS - V3.3.4)",
+    "last_completed_task": "HOTFIX #3.3.3: Implementación de handlePurgarDatosPrueba, restauración pestaña parámetros y alias handleSaveParametros",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",

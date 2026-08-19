@@ -33,7 +33,10 @@ import {
   Lock,
   KeyRound,
   ShieldAlert,
-  Eye
+  Eye,
+  Sliders,
+  Database,
+  Save
 } from 'lucide-react';
 import { 
   registrarVenta, 
@@ -246,6 +249,30 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
       });
     } finally {
       setIsProcessingSale(false);
+    }
+  };
+
+  // =========================================================================
+  // DEPÙRACIÓN Y PURGA DE DATOS DE PRUEBA
+  // =========================================================================
+  const handlePurgarDatosPrueba = async () => {
+    const confirmar = window.confirm(
+      "⚠️ ¿Estás seguro de que deseas PURGAR todos los datos de prueba?\n\nEsto eliminará las ventas, reservas y movimientos de prueba registrados, dejando el sistema limpio para producción.\n\nEl catálogo base de productos, variantes y configuración se mantendrá 100% blindado e intacto."
+    );
+    if (!confirmar) return;
+
+    setIsPurgingData(true);
+    setPurgeStatusMsg(null);
+    try {
+      const res = await purgarDatosPruebaFrontend();
+      setPurgeStatusMsg(res?.message || '✅ Datos de prueba purgados exitosamente.');
+      await refreshAllAdminData();
+      setTimeout(() => setPurgeStatusMsg(null), 5000);
+    } catch (error) {
+      console.error('Error al purgar datos de prueba:', error);
+      setPurgeStatusMsg('❌ Error al purgar datos: ' + (error.message || 'Error desconocido'));
+    } finally {
+      setIsPurgingData(false);
     }
   };
 
@@ -884,6 +911,8 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
       setIsSavingConfig(false);
     }
   };
+
+  const handleSaveParametros = handleSaveConfig;
 
   // ==========================================
   // TAB 7: BÚSQUEDA EN ALERTAS
