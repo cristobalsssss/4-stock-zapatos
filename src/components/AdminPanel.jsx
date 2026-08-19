@@ -286,6 +286,39 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
     }
   };
 
+  const filteredReservas = useMemo(() => {
+    return reservas.filter(r => {
+      if (reservaFilterEstado !== 'todos' && r.estado !== reservaFilterEstado) return false;
+      if (!reservaSearch.trim()) return true;
+      const q = reservaSearch.toLowerCase();
+      const nom = (r.cliente_nombre || '').toLowerCase();
+      const com = (r.cliente_comuna || '').toLowerCase();
+      const tel = (r.cliente_whatsapp || '').toLowerCase();
+      const not = (r.notas || '').toLowerCase();
+      return nom.includes(q) || com.includes(q) || tel.includes(q) || not.includes(q);
+    });
+  }, [reservas, reservaFilterEstado, reservaSearch]);
+
+  // =========================================================================
+  // ESTADO PARA TAB 3: DETALLE DE MOVIMIENTOS KARDEX
+  // =========================================================================
+  const [movimientos, setMovimientos] = useState([]);
+  const [isLoadingMovimientos, setIsLoadingMovimientos] = useState(false);
+  const [movSearch, setMovSearch] = useState('');
+  const [movFilterTipo, setMovFilterTipo] = useState('todos');
+
+  const loadMovimientos = async () => {
+    setIsLoadingMovimientos(true);
+    try {
+      const data = await getDetalleMovimientos();
+      setMovimientos(data || []);
+    } catch (err) {
+      console.error('Error al cargar movimientos:', err);
+    } finally {
+      setIsLoadingMovimientos(false);
+    }
+  };
+
   // Helper para obtener el nombre comercial / fantasía del modelo
   const getModelName = (codigo, fallback = '') => {
     if (fallback && fallback !== 'Calzado' && fallback !== 'Consulta General' && fallback !== 'SIN-CODIGO') {
