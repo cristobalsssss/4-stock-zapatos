@@ -78,6 +78,7 @@
 - [x] REVISIÓN #17: Reparar flujo "Convertir a Venta" en Reservas con precarga completa de calzados y precio
 - [x] REVISIÓN #17: Parser Universal Blindado para "Pares / Detalles" en Reservas (`renderDetalleReserva`)
 - [x] REVISIÓN #17: Auto-Polling cada 20s, bypass de caché y botón destacado `🔄 Actualizar Datos`
+- [x] HOTFIX #3.3.1: Aislamiento y blindaje de Login en AdminPanel contra pantalla blanca
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

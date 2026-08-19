@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "3.3.0",
-    "last_updated": "2026-08-18 23:05:00",
+    "version": "3.3.1",
+    "last_updated": "2026-08-18 23:15:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #17 APLICADA - V3.3.0)",
-    "last_completed_task": "REVISIÓN #17: Flujo infalible Convertir a Venta, Parser Universal de Reservas (renderDetalleReserva), Auto-Polling 20s y botón destacado Actualizar Datos",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (HOTFIX PANTALLA BLANCA - V3.3.1)",
+    "last_completed_task": "HOTFIX #3.3.1: Aislamiento total de Login en AdminPanel, blindaje contra nulos y guards en useEffects",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",

@@ -74,6 +74,17 @@ export default function App() {
   useEffect(() => {
     loadCatalog();
 
+    const handleRoute = () => {
+      const path = (window.location.pathname || '').toLowerCase();
+      const hash = (window.location.hash || '').toLowerCase();
+      if (path === '/admin' || hash === '#admin' || hash === '#/admin') {
+        setCurrentView('admin');
+      }
+    };
+    handleRoute();
+    window.addEventListener('popstate', handleRoute);
+    window.addEventListener('hashchange', handleRoute);
+
     // Suscripción Realtime a cambios en inventario_variantes
     const channel = supabase
       .channel('inventario-realtime')
@@ -88,6 +99,8 @@ export default function App() {
       .subscribe();
 
     return () => {
+      window.removeEventListener('popstate', handleRoute);
+      window.removeEventListener('hashchange', handleRoute);
       supabase.removeChannel(channel);
     };
   }, [loadCatalog]);

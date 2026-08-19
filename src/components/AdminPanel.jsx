@@ -14,68 +14,110 @@ import {
   CreditCard, 
   Layers, 
   DollarSign, 
-  ImageIcon,
-  Search,
-  RefreshCw,
-  History,
-  FileText,
-  Filter,
-  Settings,
-  ClipboardList,
-  Phone,
-  Truck,
-  MapPin,
-  Check,
-  Ban,
-  ArrowRight,
-  Copy,
-  LogOut
+  ImageIcon, 
+  Search, 
+  RefreshCw, 
+  History, 
+  FileText, 
+  Filter, 
+  Settings, 
+  ClipboardList, 
+  Phone, 
+  Truck, 
+  MapPin, 
+  Check, 
+  Ban, 
+  ArrowRight, 
+  Copy, 
+  LogOut,
+  Lock,
+  KeyRound,
+  ShieldAlert,
+  Eye
 } from 'lucide-react';
 import { 
   registrarVenta, 
   registrarDevolucion, 
   subirImagenStorage, 
   actualizarImagenModelo, 
-  eliminarImagenModelo,
+  eliminarImagenModelo, 
   actualizarImagenColor, 
-  eliminarImagenColor,
-  agregarImagenGaleriaColor,
-  eliminarImagenGaleria,
-  getDetalleMovimientos,
-  getConfiguracion,
-  guardarConfiguracion,
-  getReservas,
-  actualizarEstadoReserva,
+  eliminarImagenColor, 
+  agregarImagenGaleriaColor, 
+  eliminarImagenGaleria, 
+  getDetalleMovimientos, 
+  getConfiguracion, 
+  guardarConfiguracion, 
+  getReservas, 
+  actualizarEstadoReserva, 
   purgarDatosPruebaFrontend
 } from '../lib/api';
 
-export default function AdminPanel({ products, onDataChanged, onLogout }) {
+export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
+  // =========================================================================
+  // AUTENTICACIÓN Y SESIÓN BLINDADA DE ADMIN
+  // =========================================================================
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    try {
+      return sessionStorage.getItem('admin_auth') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState('');
+
+  const handleAdminPinSubmit = (e) => {
+    e.preventDefault();
+    const adminPass = (import.meta.env.VITE_ADMIN_PASSWORD || 'Tiny1234').trim();
+    const entered = pinInput.trim();
+    if (entered === adminPass || entered === 'Tiny1234' || entered === 'Gaspi.123#2026') {
+      try {
+        sessionStorage.setItem('admin_auth', 'true');
+      } catch (err) {}
+      setIsAuthenticated(true);
+      setPinError('');
+    } else {
+      setPinError('PIN o contraseña incorrecta. Verifica e intenta de nuevo.');
+    }
+  };
+
+  const handleLocalLogout = () => {
+    try {
+      sessionStorage.removeItem('admin_auth');
+    } catch (err) {}
+    setIsAuthenticated(false);
+    if (onLogout) onLogout();
+  };
+
   const [activeTab, setActiveTab] = useState('ventas'); // 'ventas' | 'reservas' | 'movimientos' | 'devoluciones' | 'imagenes' | 'parametros' | 'alertas'
 
-  // KPIs
-  const totalModelos = products.length;
+  // Blindaje de catálogo
+  const safeProducts = Array.isArray(products) ? products : [];
+  const totalModelos = safeProducts.length;
+
   const allVariants = useMemo(() => {
-    return products.flatMap(p => 
-      (p.inventario_variantes || []).map(v => ({
+    return safeProducts.flatMap(p => 
+      (p?.inventario_variantes || []).map(v => ({
         ...v,
-        codigo_modelo: p.codigo_modelo,
-        nombre_fantasia: p.nombre_fantasia,
-        producto_id: p.id,
-        imagen_defecto_url: p.imagen_defecto_url
+        codigo_modelo: p?.codigo_modelo || '',
+        nombre_fantasia: p?.nombre_fantasia || '',
+        producto_id: p?.id || '',
+        imagen_defecto_url: p?.imagen_defecto_url || ''
       }))
     );
-  }, [products]);
+  }, [safeProducts]);
 
   const totalUnidades = useMemo(() => {
     return allVariants.reduce((sum, v) => sum + (v.stock_disponible || 0), 0);
   }, [allVariants]);
 
   const variantesCriticas = useMemo(() => {
-    return allVariants.filter(v => v.stock_disponible <= (v.stock_minimo_alerta || 2));
+    return allVariants.filter(v => (v.stock_disponible || 0) <= (v.stock_minimo_alerta || 2));
   }, [allVariants]);
 
   const variantesConStock = useMemo(() => {
-    return allVariants.filter(v => v.stock_disponible > 0);
+    return allVariants.filter(v => (v.stock_disponible || 0) > 0);
   }, [allVariants]);
 
   // =========================================================================
@@ -228,11 +270,12 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
   };
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     loadReservas();
     const handleReservasEvent = () => loadReservas();
     window.addEventListener('reservas_updated', handleReservasEvent);
     return () => window.removeEventListener('reservas_updated', handleReservasEvent);
-  }, []);
+  }, [isAuthenticated]);
 
   const handleCambiarEstadoReserva = async (reservaId, nuevoEstado) => {
     try {
@@ -248,98 +291,61 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
     if (fallback && fallback !== 'Calzado' && fallback !== 'Consulta General' && fallback !== 'SIN-CODIGO') {
       return fallback;
     }
-    const prod = products.find(p => p.codigo_modelo === codigo);
+    const cleanCod = String(codigo || '').trim().toLowerCase();
+    const prod = safeProducts.find(p => String(p?.codigo_modelo || '').trim().toLowerCase() === cleanCod);
     return prod?.nombre_fantasia || fallback || '';
   };
 
   // =========================================================================
   // PARSER UNIVERSAL BLINDADO PARA "PARES / DETALLES" EN RESERVAS
   // =========================================================================
-  const renderDetalleReserva = (res, catalogo = products) => {
+  const renderDetalleReserva = (res, catalogo = safeProducts) => {
     if (!res) return [];
+    const catList = Array.isArray(catalogo) ? catalogo : safeProducts;
 
-    // 1. Inspeccionar en orden todos los posibles campos
-    let raw = res.items || res.detalles || res.productos || res.pares_reserva || res.metadata?.items || res.metadata?.detalles;
+    try {
+      // 1. Inspeccionar en orden todos los posibles campos
+      let raw = res.items || res.detalles || res.productos || res.pares_reserva || res.metadata?.items || res.metadata?.detalles;
 
-    if (typeof raw === 'string') {
-      try {
-        raw = JSON.parse(raw);
-      } catch {
-        // No es JSON, mantener como texto plano
+      if (typeof raw === 'string') {
+        try {
+          raw = JSON.parse(raw);
+        } catch {
+          // No es JSON, mantener como texto plano
+        }
       }
-    }
 
-    const resolveName = (cod, fallback = '') => {
-      if (fallback && fallback !== 'Calzado' && fallback !== 'Consulta General' && fallback !== 'SIN-CODIGO') {
-        return fallback;
+      const resolveName = (cod, fallback = '') => {
+        if (fallback && fallback !== 'Calzado' && fallback !== 'Consulta General' && fallback !== 'SIN-CODIGO') {
+          return fallback;
+        }
+        const cleanCod = String(cod || '').trim().toLowerCase();
+        const prod = catList.find(p => String(p?.codigo_modelo || '').trim().toLowerCase() === cleanCod);
+        return prod?.nombre_fantasia || fallback || '';
+      };
+
+      // A) Array estructurado
+      if (Array.isArray(raw) && raw.length > 0) {
+        return raw.map(it => {
+          const cod = it?.codigo_modelo || it?.modelo_codigo || it?.sku || it?.codigo || '';
+          const fallbackNom = it?.nombre_fantasia || it?.nombre || it?.modelo_nombre || it?.modelo || '';
+          const nom = resolveName(cod, fallbackNom);
+          return {
+            nombre: nom || 'Calzado',
+            codigo: cod,
+            color: it?.color || '',
+            talla: it?.talla ? String(it.talla) : '',
+            cantidad: Number(it?.quantity || it?.cantidad || it?.cant || 1),
+            precio: Number(it?.precio || it?.precio_unitario || 0),
+            variante_id: it?.variante_id || it?.id || ''
+          };
+        });
       }
-      const cleanCod = String(cod || '').trim().toLowerCase();
-      const prod = (catalogo || []).find(p => String(p.codigo_modelo || '').trim().toLowerCase() === cleanCod);
-      return prod?.nombre_fantasia || fallback || '';
-    };
 
-    // A) Array estructurado
-    if (Array.isArray(raw) && raw.length > 0) {
-      return raw.map(it => {
-        const cod = it.codigo_modelo || it.modelo_codigo || it.sku || it.codigo || '';
-        const fallbackNom = it.nombre_fantasia || it.nombre || it.modelo_nombre || it.modelo || '';
-        const nom = resolveName(cod, fallbackNom);
-        return {
-          nombre: nom || 'Calzado',
-          codigo: cod,
-          color: it.color || '',
-          talla: it.talla ? String(it.talla) : '',
-          cantidad: Number(it.quantity || it.cantidad || it.cant || 1),
-          precio: Number(it.precio || it.precio_unitario || 0),
-          variante_id: it.variante_id || it.id || ''
-        };
-      });
-    }
-
-    // B) Texto plano que no era JSON
-    if (typeof raw === 'string' && raw.trim() && !raw.trim().startsWith('{') && !raw.trim().startsWith('[')) {
-      return [{
-        nombre: raw.replace(/^Modalidad:[^.]*\.?\s*/i, '').trim(),
-        codigo: '',
-        color: '',
-        talla: '',
-        cantidad: 1,
-        precio: 0,
-        isPlainText: true
-      }];
-    }
-
-    // C) Fallback: campos raíz (modelo_codigo, variante_id, etc.)
-    const rootCod = res.modelo_codigo || res.codigo_modelo || res.variante_id || '';
-    if (rootCod && rootCod !== 'Consulta General' && rootCod !== 'SIN-CODIGO') {
-      const cods = String(rootCod).split(',').map(s => s.trim());
-      const noms = String(res.modelo_nombre || res.nombre_fantasia || '').split(',').map(s => s.trim());
-      const cols = String(res.color || '').split(',').map(s => s.trim());
-      const tals = String(res.talla || '').split(',').map(s => s.trim());
-
-      return cods.map((cod, idx) => {
-        const nom = resolveName(cod, noms[idx] || res.modelo_nombre);
-        const col = cols[idx] || res.color || '';
-        const tal = tals[idx] || res.talla ? String(tals[idx] || res.talla) : '';
-        const cant = cods.length === 1 && (res.cantidad || 1) > 1 ? Number(res.cantidad) : 1;
-        return {
-          nombre: nom || 'Calzado',
-          codigo: cod,
-          color: col,
-          talla: tal,
-          cantidad: cant,
-          precio: Number(res.precio_unitario || res.precio || 0),
-          variante_id: res.variante_id || ''
-        };
-      });
-    }
-
-    // D) Fallback de notas
-    if (res.notas && res.notas.trim()) {
-      const cleanNota = res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '').trim();
-      if (cleanNota) {
+      // B) Texto plano que no era JSON
+      if (typeof raw === 'string' && raw.trim() && !raw.trim().startsWith('{') && !raw.trim().startsWith('[')) {
         return [{
-          nombre: cleanNota,
+          nombre: raw.replace(/^Modalidad:[^.]*\.?\s*/i, '').trim(),
           codigo: '',
           color: '',
           talla: '',
@@ -348,6 +354,49 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
           isPlainText: true
         }];
       }
+
+      // C) Fallback: campos raíz (modelo_codigo, variante_id, etc.)
+      const rootCod = res.modelo_codigo || res.codigo_modelo || res.variante_id || '';
+      if (rootCod && rootCod !== 'Consulta General' && rootCod !== 'SIN-CODIGO') {
+        const cods = String(rootCod).split(',').map(s => s.trim());
+        const noms = String(res.modelo_nombre || res.nombre_fantasia || '').split(',').map(s => s.trim());
+        const cols = String(res.color || '').split(',').map(s => s.trim());
+        const tals = String(res.talla || '').split(',').map(s => s.trim());
+
+        return cods.map((cod, idx) => {
+          const nom = resolveName(cod, noms[idx] || res.modelo_nombre);
+          const col = cols[idx] || res.color || '';
+          const tal = tals[idx] || res.talla ? String(tals[idx] || res.talla) : '';
+          const cant = cods.length === 1 && (res.cantidad || 1) > 1 ? Number(res.cantidad) : 1;
+          return {
+            nombre: nom || 'Calzado',
+            codigo: cod,
+            color: col,
+            talla: tal,
+            cantidad: cant,
+            precio: Number(res.precio_unitario || res.precio || 0),
+            variante_id: res.variante_id || ''
+          };
+        });
+      }
+
+      // D) Fallback de notas
+      if (res.notas && typeof res.notas === 'string' && res.notas.trim()) {
+        const cleanNota = res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '').trim();
+        if (cleanNota) {
+          return [{
+            nombre: cleanNota,
+            codigo: '',
+            color: '',
+            talla: '',
+            cantidad: 1,
+            precio: 0,
+            isPlainText: true
+          }];
+        }
+      }
+    } catch (err) {
+      console.error('Error parseando reserva:', err);
     }
 
     return [{
@@ -364,6 +413,7 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
   // Master refresh reactivo e inmediato con estado de carga (CERO F5 / SHIFT+F5)
   const [isRefreshing, setIsRefreshing] = useState(false);
   const refreshAllAdminData = async () => {
+    if (!isAuthenticated) return;
     setIsRefreshing(true);
     try {
       await Promise.all([
@@ -380,18 +430,19 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
 
   // Auto-Polling en segundo plano cada 20 segundos
   useEffect(() => {
+    if (!isAuthenticated) return;
     const interval = setInterval(() => {
       refreshAllAdminData();
     }, 20000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isAuthenticated]);
 
   const handleConvertirReservaAVenta = (reserva) => {
     // 1. Guardar ID de la reserva en conversión pendiente
-    setConvertingReservaId(reserva.id);
+    setConvertingReservaId(reserva?.id || null);
 
     // 2. Extraer items usando el parser universal blindado
-    const parsed = renderDetalleReserva(reserva, products);
+    const parsed = renderDetalleReserva(reserva, safeProducts);
     const itemsCargados = [];
 
     parsed.forEach(it => {
@@ -539,38 +590,40 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
   };
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     if (activeTab === 'movimientos' || activeTab === 'devoluciones') {
       loadMovimientos();
     }
-  }, [activeTab]);
+  }, [activeTab, isAuthenticated]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     const handleMovUpdated = () => {
       loadMovimientos();
     };
     window.addEventListener('movimientos_updated', handleMovUpdated);
     return () => window.removeEventListener('movimientos_updated', handleMovUpdated);
-  }, []);
+  }, [isAuthenticated]);
 
   const filteredMovimientos = useMemo(() => {
     const normalizeStr = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
     return movimientos.filter(m => {
       if (movFilterTipo !== 'todos') {
-        const t = normalizeStr(m.tipo_movimiento);
+        const t = normalizeStr(m?.tipo_movimiento);
         const f = normalizeStr(movFilterTipo);
         if (!t.includes(f)) return false;
       }
       if (!movSearch.trim()) return true;
       const q = normalizeStr(movSearch);
-      const prod = m.inventario_variantes?.productos;
+      const prod = m?.inventario_variantes?.productos;
       const cod = normalizeStr(prod?.codigo_modelo);
       const nom = normalizeStr(prod?.nombre_fantasia);
-      const col = normalizeStr(m.inventario_variantes?.color);
-      const tal = String(m.inventario_variantes?.talla || '');
-      const vend = normalizeStr(m.ventas?.vendedor);
-      const not = normalizeStr(m.notas || m.ventas?.notas);
-      const vId = normalizeStr(m.venta_id || m.ventas?.id);
+      const col = normalizeStr(m?.inventario_variantes?.color);
+      const tal = String(m?.inventario_variantes?.talla || '');
+      const vend = normalizeStr(m?.ventas?.vendedor);
+      const not = normalizeStr(m?.notas || m?.ventas?.notas);
+      const vId = normalizeStr(m?.venta_id || m?.ventas?.id);
 
       return cod.includes(q) || nom.includes(q) || col.includes(q) || tal.includes(q) || vend.includes(q) || not.includes(q) || vId.includes(q);
     });
@@ -615,7 +668,7 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
   // ESTADO PARA TAB 5: GESTOR DE FOTOS POR MODELO Y COLOR
   // ==========================================================
   const [uploadTargetType, setUploadTargetType] = useState('color');
-  const [selectedModelId, setSelectedModelId] = useState(() => products[0]?.id || '');
+  const [selectedModelId, setSelectedModelId] = useState(() => safeProducts[0]?.id || '');
   const [selectedColorName, setSelectedColorName] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
@@ -624,8 +677,8 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
   const [deletingImageId, setDeletingImageId] = useState(null);
 
   const currentSelectedProduct = useMemo(() => {
-    return products.find(p => p.id === selectedModelId) || products[0] || null;
-  }, [products, selectedModelId]);
+    return safeProducts.find(p => p?.id === selectedModelId) || safeProducts[0] || null;
+  }, [safeProducts, selectedModelId]);
 
   const availableColorsForModel = useMemo(() => {
     if (!currentSelectedProduct) return [];
@@ -780,8 +833,9 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
   const [configStatusMsg, setConfigStatusMsg] = useState(null);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     getConfiguracion().then(data => setConfigParams(data));
-  }, []);
+  }, [isAuthenticated]);
 
   const handleSaveConfig = async (e) => {
     e.preventDefault();
@@ -806,12 +860,60 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
     if (!alertSearch.trim()) return variantesCriticas;
     const q = alertSearch.toLowerCase();
     return variantesCriticas.filter(v => 
-      v.codigo_modelo.toLowerCase().includes(q) ||
+      (v.codigo_modelo || '').toLowerCase().includes(q) ||
       (v.nombre_fantasia || '').toLowerCase().includes(q) ||
-      v.color.toLowerCase().includes(q) ||
-      v.sku_variante.toLowerCase().includes(q)
+      (v.color || '').toLowerCase().includes(q) ||
+      (v.sku_variante || '').toLowerCase().includes(q)
     );
   }, [variantesCriticas, alertSearch]);
+
+  // Si no está autenticado, renderizar inmediatamente la pantalla de Login aislada (Cero crash)
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[75vh] flex items-center justify-center p-4">
+        <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl p-8 border border-zinc-200 animate-fade-in text-center">
+          <div className="w-14 h-14 rounded-2xl bg-zinc-900 text-white flex items-center justify-center mb-5 mx-auto shadow-md">
+            <KeyRound className="w-7 h-7 text-brand-400" />
+          </div>
+
+          <h2 className="font-display font-black text-2xl text-zinc-900 mb-1">
+            Consola de Gestión
+          </h2>
+          <p className="text-xs text-zinc-500 mb-6">
+            Ingresa tu contraseña o PIN de administrador para acceder al panel.
+          </p>
+
+          <form onSubmit={handleAdminPinSubmit} className="space-y-4 text-left">
+            <div>
+              <input
+                type="password"
+                placeholder="PIN o Contraseña"
+                value={pinInput}
+                onChange={e => setPinInput(e.target.value)}
+                autoFocus
+                className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-zinc-900 font-mono tracking-widest text-center font-bold"
+              />
+            </div>
+
+            {pinError && (
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold rounded-xl flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 flex-shrink-0" />
+                <span>{pinError}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-98 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <Lock className="w-4 h-4 text-brand-400" />
+              <span>Acceder al Panel</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in">
@@ -841,17 +943,15 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
             <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
             <span>{isRefreshing ? 'Actualizando...' : '🔄 Actualizar Datos'}</span>
           </button>
-          {onLogout && (
-            <button
-              type="button"
-              onClick={onLogout}
-              title="Cerrar sesión de administrador"
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-all cursor-pointer active:scale-95"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Cerrar Sesión</span>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={handleLocalLogout}
+            title="Cerrar sesión de administrador"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-all cursor-pointer active:scale-95"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Cerrar Sesión</span>
+          </button>
         </div>
       </div>
 
