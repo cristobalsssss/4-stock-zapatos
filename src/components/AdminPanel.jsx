@@ -357,21 +357,20 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
   };
 
   // =========================================================================
-  // PARSER UNIVERSAL BLINDADO PARA "PARES / DETALLES" EN RESERVAS
+  // EXTRACTOR Y PARSER DE CALZADOS ESTRUCTURADOS EN RESERVAS
   // =========================================================================
   const renderDetalleReserva = (res, catalogo = safeProducts) => {
     if (!res) return [];
     const catList = Array.isArray(catalogo) ? catalogo : safeProducts;
 
     try {
-      // 1. Inspeccionar en orden todos los posibles campos
-      let raw = res.items || res.detalles || res.productos || res.pares_reserva || res.metadata?.items || res.metadata?.detalles;
+      let raw = res.items || res.items_reserva || res.productos || res.detalles;
 
       if (typeof raw === 'string') {
         try {
           raw = JSON.parse(raw);
         } catch {
-          // No es JSON, mantener como texto plano
+          raw = null;
         }
       }
 
@@ -384,40 +383,29 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
         return prod?.nombre_fantasia || fallback || '';
       };
 
-      // A) Array estructurado
+      // A) Array estructurado (Fuente canónica)
       if (Array.isArray(raw) && raw.length > 0) {
-        return raw.map(it => {
-          const cod = it?.codigo_modelo || it?.modelo_codigo || it?.sku || it?.codigo || '';
-          const fallbackNom = it?.nombre_fantasia || it?.nombre || it?.modelo_nombre || it?.modelo || '';
-          const nom = resolveName(cod, fallbackNom);
-          return {
-            nombre: nom || 'Calzado',
-            codigo: cod,
-            color: it?.color || '',
-            talla: it?.talla ? String(it.talla) : '',
-            cantidad: Number(it?.quantity || it?.cantidad || it?.cant || 1),
-            precio: Number(it?.precio || it?.precio_unitario || 0),
-            variante_id: it?.variante_id || it?.id || ''
-          };
-        });
+        return raw
+          .filter(it => it && (it.codigo_modelo || it.modelo_codigo || it.variante_id || it.nombre_fantasia || it.nombre))
+          .map(it => {
+            const cod = it.codigo_modelo || it.modelo_codigo || it.sku || it.codigo || '';
+            const fallbackNom = it.nombre_fantasia || it.nombre || it.modelo_nombre || it.modelo || '';
+            const nom = resolveName(cod, fallbackNom);
+            return {
+              variante_id: it.variante_id || it.id || '',
+              codigo_modelo: cod,
+              nombre_fantasia: nom || 'Calzado',
+              color: it.color || '',
+              talla: it.talla ? String(it.talla) : '',
+              cantidad: Number(it.cantidad || it.quantity || it.cant || 1),
+              precio: Number(it.precio || it.precio_unitario || 0)
+            };
+          });
       }
 
-      // B) Texto plano que no era JSON
-      if (typeof raw === 'string' && raw.trim() && !raw.trim().startsWith('{') && !raw.trim().startsWith('[')) {
-        return [{
-          nombre: raw.replace(/^Modalidad:[^.]*\.?\s*/i, '').trim(),
-          codigo: '',
-          color: '',
-          talla: '',
-          cantidad: 1,
-          precio: 0,
-          isPlainText: true
-        }];
-      }
-
-      // C) Fallback: campos raíz (modelo_codigo, variante_id, etc.)
-      const rootCod = res.modelo_codigo || res.codigo_modelo || res.variante_id || '';
-      if (rootCod && rootCod !== 'Consulta General' && rootCod !== 'SIN-CODIGO') {
+      // B) Fallback: campos raíz (modelo_codigo, variante_id, etc.) solo si no son texto genérico
+      const rootCod = res.modelo_codigo || res.codigo_modelo;
+      if (rootCod && rootCod !== 'Consulta General' && rootCod !== 'SIN-CODIGO' && rootCod !== 'N/A') {
         const cods = String(rootCod).split(',').map(s => s.trim());
         const noms = String(res.modelo_nombre || res.nombre_fantasia || '').split(',').map(s => s.trim());
         const cols = String(res.color || '').split(',').map(s => s.trim());
@@ -429,45 +417,21 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
           const tal = tals[idx] || res.talla ? String(tals[idx] || res.talla) : '';
           const cant = cods.length === 1 && (res.cantidad || 1) > 1 ? Number(res.cantidad) : 1;
           return {
-            nombre: nom || 'Calzado',
-            codigo: cod,
+            variante_id: res.variante_id || '',
+            codigo_modelo: cod,
+            nombre_fantasia: nom || 'Calzado',
             color: col,
             talla: tal,
             cantidad: cant,
-            precio: Number(res.precio_unitario || res.precio || 0),
-            variante_id: res.variante_id || ''
+            precio: Number(res.precio_unitario || res.precio || 0)
           };
         });
       }
-
-      // D) Fallback de notas
-      if (res.notas && typeof res.notas === 'string' && res.notas.trim()) {
-        const cleanNota = res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '').trim();
-        if (cleanNota) {
-          return [{
-            nombre: cleanNota,
-            codigo: '',
-            color: '',
-            talla: '',
-            cantidad: 1,
-            precio: 0,
-            isPlainText: true
-          }];
-        }
-      }
     } catch (err) {
-      console.error('Error parseando reserva:', err);
+      console.error('Error parseando calzados de reserva:', err);
     }
 
-    return [{
-      nombre: 'Reserva General',
-      codigo: '',
-      color: '',
-      talla: '',
-      cantidad: 1,
-      precio: 0,
-      isPlainText: true
-    }];
+    return [];
   };
 
   // Master refresh reactivo e inmediato con estado de carga (CERO F5 / SHIFT+F5)
@@ -498,39 +462,36 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
   }, [isAuthenticated]);
 
   const handleConvertirReservaAVenta = (reserva) => {
-    // 1. Guardar ID de la reserva en conversión pendiente
-    setConvertingReservaId(reserva?.id || null);
+    // 1. Extraer los calzados reales estructurados
+    const shoes = renderDetalleReserva(reserva, safeProducts);
 
-    // 2. Extraer items usando el parser universal blindado
-    const parsed = renderDetalleReserva(reserva, safeProducts);
+    if (!shoes || shoes.length === 0) {
+      alert("⚠️ Esta reserva no contiene items estructurados para precarga automática. Por favor selecciona el calzado manualmente en el formulario de venta.");
+      setActiveTab('ventas');
+      return;
+    }
+
     const itemsCargados = [];
 
-    parsed.forEach(it => {
-      if (it.isPlainText) return;
+    shoes.forEach(it => {
+      const itVarId = it.variante_id ? String(it.variante_id).trim() : '';
+      const itCod = String(it.codigo_modelo || '').trim().toLowerCase();
+      const itCol = String(it.color || '').trim().toLowerCase();
+      const itTal = String(it.talla || '').trim();
 
-      // Buscar variante en catálogo
+      // Buscar coincidencia EXACTA
       let matchedVariant = null;
 
-      if (it.variante_id) {
-        matchedVariant = allVariants.find(v => v.id === it.variante_id);
+      if (itVarId) {
+        matchedVariant = allVariants.find(v => String(v.id).trim() === itVarId);
       }
 
-      if (!matchedVariant && it.codigo) {
-        const codClean = String(it.codigo).trim().toLowerCase();
-        const colClean = String(it.color || '').trim().toLowerCase();
-        const talClean = String(it.talla || '').trim();
-
+      if (!matchedVariant && itCod) {
         matchedVariant = allVariants.find(v => 
-          String(v.codigo_modelo || '').trim().toLowerCase() === codClean &&
-          (!colClean || String(v.color || '').trim().toLowerCase() === colClean) &&
-          (!talClean || String(v.talla || '').trim() === talClean)
+          String(v.codigo_modelo || '').trim().toLowerCase() === itCod &&
+          (!itCol || String(v.color || '').trim().toLowerCase() === itCol) &&
+          (!itTal || String(v.talla || '').trim() === itTal)
         );
-
-        if (!matchedVariant) {
-          matchedVariant = allVariants.find(v => 
-            String(v.codigo_modelo || '').trim().toLowerCase() === codClean
-          );
-        }
       }
 
       if (matchedVariant) {
@@ -538,7 +499,7 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
         itemsCargados.push({
           variante_id: matchedVariant.id,
           codigo_modelo: matchedVariant.codigo_modelo,
-          nombre_fantasia: matchedVariant.nombre_fantasia || it.nombre,
+          nombre_fantasia: matchedVariant.nombre_fantasia || it.nombre_fantasia,
           color: matchedVariant.color || it.color,
           talla: matchedVariant.talla || it.talla,
           sku: matchedVariant.sku_variante,
@@ -547,43 +508,23 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
           precio_interno: Number(matchedVariant.precio_interno || 0),
           cantidad: Math.max(1, Number(it.cantidad) || 1)
         });
-      } else if (allVariants.length > 0) {
-        const fallbackVar = allVariants[0];
-        const precioUnitario = Number(it.precio) > 0 ? Number(it.precio) : Number(fallbackVar.precio_vendedores);
-        itemsCargados.push({
-          variante_id: fallbackVar.id,
-          codigo_modelo: it.codigo || fallbackVar.codigo_modelo,
-          nombre_fantasia: it.nombre || fallbackVar.nombre_fantasia,
-          color: it.color || fallbackVar.color,
-          talla: it.talla || fallbackVar.talla,
-          sku: fallbackVar.sku_variante,
-          stock_disponible: fallbackVar.stock_disponible,
-          precio_unitario: precioUnitario,
-          precio_interno: Number(fallbackVar.precio_interno || 0),
-          cantidad: Math.max(1, Number(it.cantidad) || 1)
-        });
       }
     });
 
-    if (itemsCargados.length === 0 && allVariants.length > 0) {
-      const v = allVariants[0];
-      itemsCargados.push({
-        variante_id: v.id,
-        codigo_modelo: v.codigo_modelo,
-        nombre_fantasia: v.nombre_fantasia,
-        color: v.color,
-        talla: v.talla,
-        sku: v.sku_variante,
-        stock_disponible: v.stock_disponible,
-        precio_unitario: Number(v.precio_vendedores),
-        precio_interno: Number(v.precio_interno),
-        cantidad: 1
-      });
+    if (itemsCargados.length === 0) {
+      alert("⚠️ No se encontró la variante exacta en el inventario para los calzados de esta reserva. Por favor selecciona el calzado en el formulario.");
+      setActiveTab('ventas');
+      return;
     }
 
+    // 2. Guardar ID de la reserva en conversión pendiente
+    setConvertingReservaId(reserva?.id || null);
     setSaleItems(itemsCargados);
+
+    // 3. Precargar cliente y notas con código de reserva
     const codRes = reserva.codigo_reserva ? `#${reserva.codigo_reserva} ` : '';
-    setNotasVenta(`Reserva ${codRes}de ${reserva.cliente_nombre || 'Cliente'} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.tipo_entrega || ''}. ${reserva.cliente_whatsapp ? `Tel: ${reserva.cliente_whatsapp}` : ''}`);
+    const cleanNotas = (reserva.notas || '').replace(/^Modalidad:[^.]*\.?\s*/i, '').trim();
+    setNotasVenta(`Reserva ${codRes}de ${reserva.cliente_nombre || 'Cliente'} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.tipo_entrega || ''}. ${reserva.cliente_whatsapp ? `Tel: ${reserva.cliente_whatsapp}` : ''}${cleanNotas && cleanNotas !== 'Reserva vía Asistente Virtual' ? ` - Nota: ${cleanNotas}` : ''}`);
     setActiveTab('ventas');
   };
 
@@ -1529,35 +1470,33 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
                       </td>
                       <td className="p-3 max-w-xs">
                         {(() => {
-                          const parsedItems = renderDetalleReserva(res, products);
+                          const shoes = renderDetalleReserva(res, safeProducts);
+                          const rawNotas = (res.notas || '').trim();
+                          const isGenericNote = rawNotas.toLowerCase().startsWith('modalidad') || rawNotas === 'Reserva vía Asistente Virtual' || rawNotas === 'Reserva general';
+                          const cleanNotas = !isGenericNote ? rawNotas.replace(/^Modalidad:[^.]*\.?\s*/i, '').trim() : '';
+
                           return (
-                            <div className="space-y-1">
-                              {parsedItems.length > 0 ? (
-                                parsedItems.map((it, idx) => (
+                            <div className="space-y-1.5">
+                              {shoes.length > 0 ? (
+                                shoes.map((it, idx) => (
                                   <div key={idx} className="text-[11px] text-zinc-800 font-medium">
-                                    {it.isPlainText ? (
-                                      <span>• {it.nombre}</span>
-                                    ) : (
-                                      <span>
-                                        • <strong className="text-zinc-900">{it.nombre}</strong> {it.codigo ? <span className="text-zinc-500 font-medium">({it.codigo})</span> : null} {it.color || it.talla ? `- ${it.color ? it.color : ''}${it.talla ? `, T${it.talla}` : ''}` : ''} x {it.cantidad}
-                                      </span>
-                                    )}
+                                    • <strong className="text-zinc-900">{it.nombre_fantasia || 'Calzado'}</strong> {it.codigo_modelo ? <span className="text-zinc-500 font-medium">({it.codigo_modelo})</span> : null} {it.color || it.talla ? `- ${it.color ? it.color : ''}${it.talla ? `, T${it.talla}` : ''}` : ''} x {it.cantidad}
                                   </div>
                                 ))
                               ) : (
-                                <div className="text-[11px] text-zinc-700 font-medium">
-                                  • {res.notas ? res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '') || 'Reserva general' : 'Calzado Reserva'}
+                                <div className="text-[11px] text-zinc-400 italic">
+                                  Sin calzados estructurados
                                 </div>
                               )}
 
-                              {/* Badge sutil de modalidad de entrega sin duplicar textos */}
-                              <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                              {/* Badges independientes: Modalidad de entrega y Notas de cliente */}
+                              <div className="pt-0.5 flex flex-wrap items-center gap-1.5">
                                 <span className="inline-flex items-center gap-1 text-[10px] text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-md font-semibold">
-                                  📍 {res.tipo_entrega || res.cliente_comuna || 'Presencial'}
+                                  📍 {res.tipo_entrega || res.modalidad_entrega || res.cliente_comuna || 'Presencial'}
                                 </span>
-                                {res.notas && !res.notas.toLowerCase().startsWith('modalidad') && (
-                                  <span className="text-[10px] text-zinc-400 italic">
-                                    📝 {res.notas}
+                                {cleanNotas && (
+                                  <span className="inline-flex items-center gap-1 text-[10px] text-amber-900 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md font-semibold">
+                                    📝 Nota: {cleanNotas}
                                   </span>
                                 )}
                               </div>

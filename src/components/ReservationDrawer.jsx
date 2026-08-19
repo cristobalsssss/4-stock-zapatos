@@ -73,13 +73,13 @@ export default function ReservationDrawer({
         precio_unitario: bagItems[0]?.precio || 0,
         notas: clientNotes.trim(),
         items: bagItems.map(i => ({
-          variante_id: i.variante_id,
-          codigo_modelo: i.codigo_modelo,
-          nombre_fantasia: i.nombre_fantasia,
-          color: i.color,
-          talla: i.talla,
-          quantity: i.quantity || 1,
-          precio: i.precio
+          variante_id: i.variante_id || i.id || '',
+          codigo_modelo: i.codigo_modelo || '',
+          nombre_fantasia: i.nombre_fantasia || '',
+          color: i.color || '',
+          talla: i.talla ? String(i.talla) : '',
+          cantidad: Number(i.quantity || i.cantidad || 1),
+          precio: Number(i.precio || 0)
         }))
       });
 

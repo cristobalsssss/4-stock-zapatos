@@ -560,13 +560,21 @@ export async function crearReserva({
     cantidad: cantidad || items.reduce((acc, i) => acc + (i.quantity || 1), 0) || 1,
     precio_unitario: Number(precio_unitario) || Number(items[0]?.precio || 0),
     notas: notas?.trim() || '',
-    items: items || []
+    items: (Array.isArray(items) ? items : []).map(i => ({
+      variante_id: i.variante_id || i.id || '',
+      codigo_modelo: i.codigo_modelo || i.codigo || '',
+      nombre_fantasia: i.nombre_fantasia || i.nombre || '',
+      color: i.color || '',
+      talla: i.talla ? String(i.talla) : '',
+      cantidad: Number(i.cantidad || i.quantity || 1),
+      precio: Number(i.precio || i.precio_unitario || 0)
+    }))
   };
 
   let nuevaReserva = {
     id: `res-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
     ...reservaPayload,
-    total: Number(reservaPayload.precio_unitario * (reservaPayload.cantidad || 1)) || items.reduce((acc, i) => acc + (i.precio * i.quantity), 0) || 0,
+    total: Number(reservaPayload.precio_unitario * (reservaPayload.cantidad || 1)) || (Array.isArray(items) ? items.reduce((acc, i) => acc + (Number(i.precio || 0) * Number(i.cantidad || i.quantity || 1)), 0) : 0),
     estado: 'Pendiente',
     created_at: new Date().toISOString()
   };
