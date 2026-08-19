@@ -169,7 +169,16 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
         talla: reservaActivaItem?.talla || '',
         cantidad: 1,
         precio_unitario: reservaActivaItem?.precio || 0,
-        notas: `Reserva desde Chatbot. Modalidad: ${waEntrega}`
+        notas: 'Reserva vía Asistente Virtual',
+        items: reservaActivaItem ? [{
+          variante_id: reservaActivaItem.variante_id,
+          codigo_modelo: reservaActivaItem.codigo,
+          nombre_fantasia: reservaActivaItem.nombre,
+          color: reservaActivaItem.color,
+          talla: reservaActivaItem.talla,
+          quantity: 1,
+          precio: reservaActivaItem.precio
+        }] : []
       });
 
       const codigoRes = reservaCreada.codigo_reserva || `RES-${Math.floor(1000 + Math.random() * 9000)}`;

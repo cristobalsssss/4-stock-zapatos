@@ -106,9 +106,10 @@ export async function registrarVenta({ variante_id, cantidad, vendedor, medio_pa
 
   const precioFinal = precio_aplicado || Number(variante.precio_vendedores);
   const precioInterno = Number(variante.precio_interno) || 0;
+  const isInterna = (vendedor || '').toLowerCase().includes('interna') || (vendedor || '').toLowerCase().includes('admin') || (vendedor || '').toLowerCase().includes('dueñ');
   const comisionFinal = comision_vendedor !== undefined && comision_vendedor !== null
     ? comision_vendedor
-    : (vendedor?.toLowerCase().includes('admin') || vendedor?.toLowerCase().includes('dueño') || vendedor?.toLowerCase().includes('carmen') ? 0 : Math.max(0, (precioFinal - precioInterno) * cantidad));
+    : (isInterna ? 0 : Math.max(0, (precioFinal - precioInterno) * cantidad));
 
   const montoTotal = precioFinal * cantidad;
 
@@ -116,7 +117,7 @@ export async function registrarVenta({ variante_id, cantidad, vendedor, medio_pa
   const { data: venta, error: ventaErr } = await supabase
     .from('ventas')
     .insert({
-      vendedor: vendedor || 'admin_carmen',
+      vendedor: vendedor || 'Camila',
       medio_pago: medio_pago || 'Transferencia',
       tipo_operacion: 'Venta',
       monto_total: montoTotal,
@@ -147,10 +148,14 @@ export async function registrarVenta({ variante_id, cantidad, vendedor, medio_pa
       cantidad: cantidad,
       precio_aplicado: precioFinal,
       comision_vendedor: comisionFinal,
-      notas: notas || 'Venta directa'
+      notas: notas || `Venta (${vendedor || 'Camila'})`
     });
 
   if (movErr) console.warn('Error al registrar detalle movimiento:', movErr);
+
+  try {
+    window.dispatchEvent(new Event('movimientos_updated'));
+  } catch (e) {}
 
   return {
     success: true,
@@ -174,7 +179,11 @@ export async function registrarDevolucion({ variante_id, cantidad, motivo, venta
     });
 
     if (res.ok) {
-      return await res.json();
+      const data = await res.json();
+      try {
+        window.dispatchEvent(new Event('movimientos_updated'));
+      } catch (e) {}
+      return data;
     }
   } catch (err) {
     console.warn('Fallo n8n Skill 3, procesando en Supabase:', err);
@@ -207,6 +216,10 @@ export async function registrarDevolucion({ variante_id, cantidad, motivo, venta
       comision_vendedor: 0,
       notas: motivo || 'Devolución de cliente'
     });
+
+  try {
+    window.dispatchEvent(new Event('movimientos_updated'));
+  } catch (e) {}
 
   return {
     success: true,
@@ -778,6 +791,57 @@ function parsearMontoUniversal(str) {
 }
 
 export async function consultarChatbot(mensaje, productosLocales = [], contextoPrevio = {}) {
+  const normalizeText = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const qNorm = normalizeText(mensaje);
+
+  // 1. FAQ PRIORITARIA: Envíos, Despachos y Entregas
+  if (
+    qNorm.includes('envio') || 
+    qNorm.includes('despacho') || 
+    qNorm.includes('starken') || 
+    qNorm.includes('chilexpress') || 
+    qNorm.includes('entrega') || 
+    qNorm.includes('flete') ||
+    qNorm.includes('delivery') ||
+    qNorm === '🚚 envios' ||
+    qNorm === 'envios' ||
+    qNorm === 'despachos'
+  ) {
+    return {
+      text: `📦 **Información de Entregas y Envíos:**\n\n• 📍 **Entrega Presencial:** Entregas coordinadas en Concepción Centro y Penco (sin costo adicional).\n• 🚚 **Envíos a Todo Chile:** Despachos por pagar mediante Starken o Chilexpress a domicilio o agencia.\n• ⏱️ **Tiempos de Despacho:** Los envíos se preparan y despachan en 24 a 48 hrs hábiles tras confirmada tu reserva/compra.`,
+      tarjetasSugeridas: [],
+      nuevoContexto: contextoPrevio
+    };
+  }
+
+  // 2. FAQ PRIORITARIA: Modalidad de Tienda Online / Tienda Física
+  if (
+    qNorm.includes('tienda') || 
+    qNorm.includes('local') || 
+    qNorm.includes('direccion') || 
+    qNorm.includes('donde') || 
+    qNorm.includes('probar') || 
+    qNorm.includes('ubicacion') ||
+    qNorm === '👠 tienda online' ||
+    qNorm === 'tienda online'
+  ) {
+    return {
+      text: `👠 **Modalidad de Nuestra Tienda:**\n\nSomos una tienda **100% online** con precios de remate y liquidación directa de bodega, por lo que **no contamos con tienda física abierta al público** para probarse.\n\n📍 **Entregas Presenciales:** Realizamos entregas en **Concepción Centro y Penco** (sin costo adicional).\n📦 **Envíos a Todo Chile:** Despachos por pagar mediante Starken o Chilexpress a todo el país.\n\n¿Qué modelo, talla o color estás buscando hoy?`,
+      tarjetasSugeridas: [],
+      nuevoContexto: contextoPrevio
+    };
+  }
+
+  // 3. Reset de contexto explícito
+  if (qNorm.includes('reiniciar') || qNorm.includes('borrar') || qNorm.includes('nuevo')) {
+    return {
+      text: `¡Listo! He reiniciado nuestra conversación. ¿Qué modelo, talla o color estás buscando hoy?`,
+      tarjetasSugeridas: [],
+      nuevoContexto: {}
+    };
+  }
+
+  // 4. Consulta a Skill de n8n si no fue una FAQ estática
   try {
     const res = await fetch(`${N8N_URL}/webhook/chatbot-stock`, {
       method: 'POST',
@@ -801,34 +865,7 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
 
   const q = mensaje.toLowerCase().trim();
 
-  // Reset de contexto explícito
-  if (q.includes('reiniciar') || q.includes('borrar') || q.includes('nuevo')) {
-    return {
-      text: `¡Listo! He reiniciado nuestra conversación. ¿Qué modelo, talla o color estás buscando hoy?`,
-      tarjetasSugeridas: [],
-      nuevoContexto: {}
-    };
-  }
-
-  // 1. Preguntas sobre Tienda Física o Ubicación
-  if (q.includes('tienda') || q.includes('local') || q.includes('direccion') || q.includes('donde') || q.includes('probar') || q.includes('ubicacion')) {
-    return {
-      text: `👠 *Modalidad de Nuestra Tienda:*\n\nSomos una tienda *100% online* con precios de remate y liquidación directa de bodega, por lo que *no contamos con tienda física abierta al público* para probarse.\n\n📍 *Entregas Presenciales:* Realizamos entregas en *Concepción y Penco* (a coordinar directamente con nuestra vendedora).\n📦 *Envíos a Todo Chile:* Enviamos por *Starken en modalidad Por Pagar*.\n\n¿Qué talla buscas para revisar las opciones disponibles en bodega?`,
-      tarjetasSugeridas: [],
-      nuevoContexto: contextoPrevio
-    };
-  }
-
-  // 2. Preguntas sobre Envíos o Entregas
-  if (q.includes('envio') || q.includes('starken') || q.includes('despacho') || q.includes('entrega') || q.includes('concepcion') || q.includes('penco')) {
-    return {
-      text: `🚚 *Opciones de Entrega y Envíos:*\n\n1. *Presencial (Sin costo de envío):* Entregas en *Concepción y Penco*, coordinando día y hora con la vendedora.\n2. *A Todo Chile:* Envíos a domicilio o sucursal vía *Starken (Por Pagar)* con número de seguimiento.\n\n¿Quieres consultar la disponibilidad de algún modelo antes de reservar?`,
-      tarjetasSugeridas: [],
-      nuevoContexto: contextoPrevio
-    };
-  }
-
-  // 3. Saludos iniciales
+  // 5. Saludos iniciales
   if (q.includes('hola') || q.includes('buenas') || q.includes('inicio') || q.includes('menu')) {
     return {
       text: `¡Hola! Soy tu Asistente Virtual de Calzado 👠.\n\nNuestros modelos son 100% cuero genuino a precios de liquidación de bodega. ¿Qué modelo, talla o color estás buscando hoy? Por ejemplo:\n• "Zapatos negros"\n• "¿Tienen el modelo 105 en talla 37?"\n• "Zapatos de menos de 40 mil"`,

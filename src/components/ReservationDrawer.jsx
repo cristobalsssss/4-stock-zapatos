@@ -71,8 +71,16 @@ export default function ReservationDrawer({
         talla: bagItems.map(i => i.talla).join(', '),
         cantidad: totalPares,
         precio_unitario: bagItems[0]?.precio || 0,
-        notas: `Modalidad: ${entregaPref}. ${clientNotes.trim()}`,
-        items: bagItems
+        notas: clientNotes.trim(),
+        items: bagItems.map(i => ({
+          variante_id: i.variante_id,
+          codigo_modelo: i.codigo_modelo,
+          nombre_fantasia: i.nombre_fantasia,
+          color: i.color,
+          talla: i.talla,
+          quantity: i.quantity || 1,
+          precio: i.precio
+        }))
       });
 
       const codigoRes = reservaCreada?.codigo_reserva || `RES-${Math.floor(1000 + Math.random() * 9000)}`;

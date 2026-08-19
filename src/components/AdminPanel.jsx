@@ -78,9 +78,9 @@ export default function AdminPanel({ products, onDataChanged }) {
   }, [allVariants]);
 
   // =========================================================================
-  // ESTADO PARA TAB 1: VENTA MULTI-PRODUCTO (DUEÑA: CARMEN)
+  // ESTADO PARA TAB 1: VENTA MULTI-PRODUCTO (CAMILA / VENTA INTERNA)
   // =========================================================================
-  const [vendedor, setVendedor] = useState('Carmen (Dueña Directa)');
+  const [vendedor, setVendedor] = useState('Camila');
   const [medioPago, setMedioPago] = useState('Transferencia');
   const [fechaVenta, setFechaVenta] = useState(new Date().toISOString().split('T')[0]);
   const [notasVenta, setNotasVenta] = useState('');
@@ -149,9 +149,11 @@ export default function AdminPanel({ products, onDataChanged }) {
     setSaleItems(prev => prev.filter(item => item.variante_id !== varId));
   };
 
+  const isVentaInterna = (vendedor || '').toLowerCase().includes('interna') || (vendedor || '').toLowerCase().includes('admin') || (vendedor || '').toLowerCase().includes('dueñ');
+
   const totalMontoVenta = saleItems.reduce((acc, item) => acc + (item.precio_unitario * item.cantidad), 0);
   const totalComisionVenta = saleItems.reduce((acc, item) => {
-    if (vendedor.toLowerCase().includes('admin') || vendedor.toLowerCase().includes('dueño') || vendedor.toLowerCase().includes('carmen')) {
+    if (isVentaInterna) {
       return acc + 0;
     }
     const delta = Math.max(0, item.precio_unitario - item.precio_interno);
@@ -165,7 +167,7 @@ export default function AdminPanel({ products, onDataChanged }) {
 
     try {
       for (const item of saleItems) {
-        const comisionItem = (vendedor.toLowerCase().includes('admin') || vendedor.toLowerCase().includes('dueño') || vendedor.toLowerCase().includes('carmen'))
+        const comisionItem = isVentaInterna
           ? 0
           : Math.max(0, (item.precio_unitario - item.precio_interno) * item.cantidad);
 
@@ -384,23 +386,35 @@ export default function AdminPanel({ products, onDataChanged }) {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    const handleMovUpdated = () => {
+      loadMovimientos();
+    };
+    window.addEventListener('movimientos_updated', handleMovUpdated);
+    return () => window.removeEventListener('movimientos_updated', handleMovUpdated);
+  }, []);
+
   const filteredMovimientos = useMemo(() => {
+    const normalizeStr = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
     return movimientos.filter(m => {
       if (movFilterTipo !== 'todos') {
-        const t = (m.tipo_movimiento || '').toLowerCase();
-        if (!t.includes(movFilterTipo.toLowerCase())) return false;
+        const t = normalizeStr(m.tipo_movimiento);
+        const f = normalizeStr(movFilterTipo);
+        if (!t.includes(f)) return false;
       }
       if (!movSearch.trim()) return true;
-      const q = movSearch.toLowerCase();
+      const q = normalizeStr(movSearch);
       const prod = m.inventario_variantes?.productos;
-      const cod = (prod?.codigo_modelo || '').toLowerCase();
-      const nom = (prod?.nombre_fantasia || '').toLowerCase();
-      const col = (m.inventario_variantes?.color || '').toLowerCase();
+      const cod = normalizeStr(prod?.codigo_modelo);
+      const nom = normalizeStr(prod?.nombre_fantasia);
+      const col = normalizeStr(m.inventario_variantes?.color);
       const tal = String(m.inventario_variantes?.talla || '');
-      const vend = (m.ventas?.vendedor || '').toLowerCase();
-      const not = (m.notas || '').toLowerCase();
+      const vend = normalizeStr(m.ventas?.vendedor);
+      const not = normalizeStr(m.notas || m.ventas?.notas);
+      const vId = normalizeStr(m.venta_id || m.ventas?.id);
 
-      return cod.includes(q) || nom.includes(q) || col.includes(q) || tal.includes(q) || vend.includes(q) || not.includes(q);
+      return cod.includes(q) || nom.includes(q) || col.includes(q) || tal.includes(q) || vend.includes(q) || not.includes(q) || vId.includes(q);
     });
   }, [movimientos, movFilterTipo, movSearch]);
 
@@ -970,7 +984,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                 </div>
               </div>
 
-              {/* Vendedor (Nombre Dueña: Carmen) */}
+              {/* Vendedor / Canal (Exclusivamente Camila y Venta Interna) */}
               <div>
                 <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
                   Vendedor / Canal:
@@ -982,10 +996,8 @@ export default function AdminPanel({ products, onDataChanged }) {
                     onChange={e => setVendedor(e.target.value)}
                     className="w-full pl-9 pr-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-semibold text-zinc-800"
                   >
-                    <option value="admin_carmen">Carmen (Dueña / Venta Directa $0 Com)</option>
-                    <option value="camila">Camila (Vendedora Externa)</option>
-                    <option value="valentina">Valentina (Vendedora Externa)</option>
-                    <option value="catalina">Catalina (Vendedora Externa)</option>
+                    <option value="Camila">Camila (Vendedora Externa)</option>
+                    <option value="Venta Interna">Venta Interna ($0 Comisión)</option>
                   </select>
                 </div>
               </div>
@@ -1181,38 +1193,56 @@ export default function AdminPanel({ products, onDataChanged }) {
                         {res.cliente_comuna || 'Concepción'}
                       </td>
                       <td className="p-3 max-w-xs">
-                        {res.items && res.items.length > 0 ? (
+                        {res.items && Array.isArray(res.items) && res.items.length > 0 ? (
                           <div className="space-y-1">
                             {res.items.map((it, idx) => {
                               const nomFantasia = getModelName(it.codigo_modelo, it.nombre_fantasia);
                               return (
-                                <div key={idx} className="text-[11px] text-zinc-700">
+                                <div key={idx} className="text-[11px] text-zinc-800">
                                   • {nomFantasia ? <strong className="text-zinc-900">{nomFantasia} </strong> : null}
-                                  <span className="text-zinc-600">({it.codigo_modelo})</span> - {it.color}, T{it.talla} x {it.quantity || 1}
+                                  <span className="text-zinc-600 font-medium">({it.codigo_modelo})</span> - {it.color}, T{it.talla} x {it.quantity || it.cantidad || 1}
                                 </div>
                               );
                             })}
-                            <div className="text-[10px] text-zinc-400 font-medium">{res.tipo_entrega}</div>
                           </div>
                         ) : res.modelo_codigo && res.modelo_codigo !== 'Consulta General' && res.modelo_codigo !== 'SIN-CODIGO' ? (
-                          <div className="space-y-0.5">
+                          <div className="space-y-1">
                             {(() => {
-                              const nomFantasia = getModelName(res.modelo_codigo, res.modelo_nombre);
-                              return (
-                                <div className="text-[11px] text-zinc-700">
-                                  • {nomFantasia ? <strong className="text-zinc-900">{nomFantasia} </strong> : null}
-                                  <span className="text-zinc-600">({res.modelo_codigo})</span> {res.color ? `- ${res.color}, T${res.talla}` : ''} x {res.cantidad || 1}
-                                </div>
-                              );
+                              const cods = String(res.modelo_codigo).split(',').map(s => s.trim());
+                              const noms = String(res.modelo_nombre || '').split(',').map(s => s.trim());
+                              const cols = String(res.color || '').split(',').map(s => s.trim());
+                              const tals = String(res.talla || '').split(',').map(s => s.trim());
+                              
+                              return cods.map((cod, idx) => {
+                                const nomFantasia = getModelName(cod, noms[idx] || res.modelo_nombre);
+                                const c = cols[idx] || res.color;
+                                const t = tals[idx] || res.talla;
+                                return (
+                                  <div key={idx} className="text-[11px] text-zinc-800">
+                                    • {nomFantasia ? <strong className="text-zinc-900">{nomFantasia} </strong> : null}
+                                    <span className="text-zinc-600 font-medium">({cod})</span> {c ? `- ${c}, T${t}` : ''} {cods.length === 1 && (res.cantidad || 1) > 1 ? `x ${res.cantidad}` : 'x 1'}
+                                  </div>
+                                );
+                              });
                             })()}
-                            <div className="text-[10px] text-zinc-400 font-medium">{res.tipo_entrega}</div>
                           </div>
                         ) : (
-                          <div className="space-y-0.5">
-                            <span className="text-[11px] text-zinc-700 font-medium">{res.notas || 'Consulta general'}</span>
-                            <div className="text-[10px] text-zinc-400">{res.tipo_entrega}</div>
+                          <div className="text-[11px] text-zinc-700 font-medium">
+                            {res.notas ? res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '') || 'Reserva general' : 'Consulta general'}
                           </div>
                         )}
+
+                        {/* Badge sutil de modalidad de entrega sin duplicar textos */}
+                        <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                          <span className="inline-flex items-center gap-1 text-[10px] text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-md font-semibold">
+                            📍 {res.tipo_entrega || res.cliente_comuna || 'Presencial'}
+                          </span>
+                          {res.notas && !res.notas.toLowerCase().startsWith('modalidad') && (
+                            <span className="text-[10px] text-zinc-400 italic">
+                              📝 {res.notas}
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="p-3">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${
@@ -1406,10 +1436,10 @@ export default function AdminPanel({ products, onDataChanged }) {
                             isVenta
                               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                               : isDev
-                              ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                              ? 'bg-blue-50 text-blue-700 border border-blue-200'
                               : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                           }`}>
-                            {mov.tipo_movimiento}
+                            {isVenta ? 'VENTA' : isDev ? 'DEVOLUCIÓN' : mov.tipo_movimiento}
                           </span>
                         </td>
                         <td className="p-3">
@@ -1421,7 +1451,11 @@ export default function AdminPanel({ products, onDataChanged }) {
                           </div>
                         </td>
                         <td className="p-3 text-center font-extrabold text-sm">
-                          {isVenta ? `-${mov.cantidad}` : `+${mov.cantidad}`}
+                          {isVenta ? (
+                            <span className="text-zinc-900 font-extrabold">-{mov.cantidad}</span>
+                          ) : (
+                            <span className="text-blue-700 font-extrabold">+{mov.cantidad}</span>
+                          )}
                         </td>
                         <td className="p-3 font-bold text-zinc-900 whitespace-nowrap">
                           ${mov.precio_aplicado ? Number(mov.precio_aplicado).toLocaleString('es-CL') : '0'}
@@ -1430,8 +1464,8 @@ export default function AdminPanel({ products, onDataChanged }) {
                           ${mov.comision_vendedor ? Number(mov.comision_vendedor).toLocaleString('es-CL') : '0'}
                         </td>
                         <td className="p-3 text-zinc-700 whitespace-nowrap">
-                          <div className="font-semibold text-zinc-800">{mov.ventas?.vendedor || 'Carmen'}</div>
-                          <div className="text-[11px] text-zinc-400">{mov.ventas?.medio_pago || 'N/A'}</div>
+                          <div className="font-semibold text-zinc-800">{mov.ventas?.vendedor || (isDev ? 'Devolución' : 'Venta Interna')}</div>
+                          <div className="text-[11px] text-zinc-400">{mov.ventas?.medio_pago || (isDev ? 'Reintegro' : 'N/A')}</div>
                         </td>
                         <td className="p-3 font-mono text-[10px] text-zinc-400 whitespace-nowrap">
                           {fechaRegistro}

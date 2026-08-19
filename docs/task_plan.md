@@ -67,6 +67,10 @@
 - [x] REVISIÓN #15: Nombre comercial / fantasía en detalles de reserva ("• Viena (AA0005) - Negro, T37 x 1")
 - [x] REVISIÓN #15: Columna ID Venta con botón de 1 clic para copiar en Kardex/Movimientos
 - [x] REVISIÓN #15: Acción rápida "🔄 Devolver" en Kardex con precarga automática en Devoluciones
+- [x] REVISIÓN #16: Estandarización de items en Reservas y badge de entrega sin duplicar modalidad
+- [x] REVISIÓN #16: Kardex integral con badges 🟢 VENTA y 🔵 DEVOLUCIÓN y refresco automático reactivo
+- [x] REVISIÓN #16: Lista acotada y exclusiva de vendedores: Camila y Venta Interna
+- [x] REVISIÓN #16: FAQ contextual prioritario de envíos y tienda física en Chatbot antes de búsquedas
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
