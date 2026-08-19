@@ -111,6 +111,17 @@ export default function ReservationDrawer({
       const whatsappUrl = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encodedText}` : `https://wa.me/?text=${encodedText}`;
 
       window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+
+      // Limpieza total e inmediata de la bolsa de reserva
+      if (onClearBag) {
+        onClearBag();
+      }
+      try {
+        localStorage.removeItem('boutique_bag_items');
+      } catch (e) {
+        console.error(e);
+      }
+
       onClose();
     } catch (err) {
       console.error(err);

@@ -60,6 +60,9 @@
 - [x] REVISIÓN #13: Preview Visual de Calzado en Formulario de Reserva de Chat
 - [x] REVISIÓN #13: Generación de Código Amigable `#RES-XXXX` y Trazabilidad en /admin
 - [x] CREACIÓN DE TABLAS EN SUPABASE: Creación y verificación de tabla `reservas` (con código #RES-XXXX, variantes, índices y RLS) y tabla `configuracion` vía script Node.js con `DATABASE_URL`
+- [x] REVISIÓN #14: Limpieza total e inmediata de la bolsa de reserva tras confirmar (React state y localStorage)
+- [x] REVISIÓN #14: Flujo seguro y atómico de "Convertir a Venta" (reserva se completa solo tras confirmar venta en BD)
+- [x] REVISIÓN #14: Script y función de purga de transacciones de prueba (`scripts/limpiar_transacciones_test.js` y botón UI en Admin)
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

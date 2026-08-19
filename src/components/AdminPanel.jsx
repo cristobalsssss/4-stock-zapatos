@@ -43,7 +43,8 @@ import {
   getConfiguracion,
   guardarConfiguracion,
   getReservas,
-  actualizarEstadoReserva
+  actualizarEstadoReserva,
+  purgarDatosPruebaFrontend
 } from '../lib/api';
 
 export default function AdminPanel({ products, onDataChanged }) {
@@ -78,14 +79,17 @@ export default function AdminPanel({ products, onDataChanged }) {
   // =========================================================================
   // ESTADO PARA TAB 1: VENTA MULTI-PRODUCTO (DUEÑA: CARMEN)
   // =========================================================================
-  const [fechaVenta, setFechaVenta] = useState(() => new Date().toISOString().split('T')[0]);
-  const [vendedor, setVendedor] = useState('admin_carmen');
+  const [vendedor, setVendedor] = useState('Carmen (Dueña Directa)');
   const [medioPago, setMedioPago] = useState('Transferencia');
+  const [fechaVenta, setFechaVenta] = useState(new Date().toISOString().split('T')[0]);
   const [notasVenta, setNotasVenta] = useState('');
-  const [saleItems, setSaleItems] = useState([]);
   const [selectedVariantToAdd, setSelectedVariantToAdd] = useState('');
+  const [saleItems, setSaleItems] = useState([]);
   const [isProcessingSale, setIsProcessingSale] = useState(false);
   const [saleResult, setSaleResult] = useState(null);
+  const [convertingReservaId, setConvertingReservaId] = useState(null);
+  const [isPurgingData, setIsPurgingData] = useState(false);
+  const [purgeStatusMsg, setPurgeStatusMsg] = useState(null);
 
   const handleAddVariantToSale = () => {
     if (!selectedVariantToAdd) return;
@@ -176,6 +180,12 @@ export default function AdminPanel({ products, onDataChanged }) {
         });
       }
 
+      // Si la venta provenía de una reserva activa, marcarla como Completada de forma atómica
+      if (convertingReservaId) {
+        await actualizarEstadoReserva(convertingReservaId, 'Completada');
+        setConvertingReservaId(null);
+      }
+
       setSaleResult({
         success: true,
         message: `¡Venta de ${saleItems.length} producto(s) procesada con éxito y stock actualizado!`
@@ -233,7 +243,10 @@ export default function AdminPanel({ products, onDataChanged }) {
   };
 
   const handleConvertirReservaAVenta = (reserva) => {
-    // Cargar items de la reserva al tab de ventas
+    // 1. Guardar ID de la reserva en conversión pendiente (se completará SOLO al confirmar la venta)
+    setConvertingReservaId(reserva.id);
+
+    // 2. Cargar items de la reserva al tab de ventas
     const itemsCargados = [];
     if (reserva.items && reserva.items.length > 0) {
       reserva.items.forEach(it => {
@@ -277,7 +290,29 @@ export default function AdminPanel({ products, onDataChanged }) {
     const codRes = reserva.codigo_reserva ? `#${reserva.codigo_reserva} ` : '';
     setNotasVenta(`Reserva ${codRes}de ${reserva.cliente_nombre} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.tipo_entrega || ''}. ${reserva.notas || ''}`);
     setActiveTab('ventas');
-    handleCambiarEstadoReserva(reserva.id, 'Completada');
+  };
+
+  const handlePurgarDatosPrueba = async () => {
+    const confirm = window.confirm(
+      "⚠️ ¿Estás seguro de purgar todos los datos de prueba de Reservas, Ventas y Movimientos?\n\nEl catálogo base de productos, variantes y configuración se mantendrá 100% blindado e intacto."
+    );
+    if (!confirm) return;
+
+    setIsPurgingData(true);
+    setPurgeStatusMsg(null);
+    try {
+      const res = await purgarDatosPruebaFrontend();
+      setPurgeStatusMsg(res.message);
+      loadReservas();
+      loadMovimientos();
+      if (onDataChanged) onDataChanged();
+      setTimeout(() => setPurgeStatusMsg(null), 5000);
+    } catch (err) {
+      console.error(err);
+      setPurgeStatusMsg('Error al purgar datos: ' + err.message);
+    } finally {
+      setIsPurgingData(false);
+    }
   };
 
   const filteredReservas = useMemo(() => {
@@ -751,6 +786,22 @@ export default function AdminPanel({ products, onDataChanged }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
           {/* Columna Izquierda: Configuración de la Venta */}
           <div className="lg:col-span-2 space-y-6">
+            {convertingReservaId && (
+              <div className="p-3.5 bg-brand-50 border border-brand-200 rounded-2xl flex items-center justify-between text-xs text-brand-900 font-medium animate-fade-in shadow-2xs">
+                <span className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-brand-600 flex-shrink-0" />
+                  <span>Convirtiendo Solicitud de Reserva activa. Al confirmar la venta, la reserva pasará a <strong>Completada</strong>.</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setConvertingReservaId(null)}
+                  className="text-xs font-bold text-brand-700 hover:text-brand-900 underline ml-2 cursor-pointer whitespace-nowrap"
+                >
+                  Desvincular
+                </button>
+              </div>
+            )}
+
             <div className="bg-white p-5 sm:p-6 rounded-3xl border border-zinc-200 shadow-xs space-y-5">
               <h3 className="font-display font-bold text-lg text-zinc-900 flex items-center gap-2">
                 <Plus className="w-5 h-5 text-brand-600" />
@@ -1779,6 +1830,40 @@ export default function AdminPanel({ products, onDataChanged }) {
               {isSavingConfig ? 'Guardando Parámetros...' : 'Guardar Parámetros de la Tienda'}
             </button>
           </form>
+
+          {/* Zona de Peligro: Purgar Datos de Prueba */}
+          <div className="pt-6 mt-6 border-t border-rose-200/80">
+            <div className="bg-rose-50/70 border border-rose-200 rounded-2xl p-4 sm:p-5 space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <AlertTriangle className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-sm text-rose-900">Zona de Depuración & Mantenimiento</h4>
+                  <p className="text-xs text-rose-700 leading-relaxed">
+                    Elimina todas las transacciones de prueba registradas en <strong>Reservas</strong>, <strong>Ventas</strong> y <strong>Kardex de Movimientos</strong>. El catálogo base de productos, variantes y configuración se mantiene 100% blindado e intacto.
+                  </p>
+                </div>
+              </div>
+
+              {purgeStatusMsg && (
+                <div className="p-3 bg-white border border-rose-200 text-rose-800 text-xs font-bold rounded-xl flex items-center gap-2 animate-fade-in">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>{purgeStatusMsg}</span>
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={handlePurgarDatosPrueba}
+                disabled={isPurgingData}
+                className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer active:scale-95"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{isPurgingData ? 'Purgando Datos de Prueba...' : '🧹 Purgar Datos de Prueba (Reservas y Ventas)'}</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

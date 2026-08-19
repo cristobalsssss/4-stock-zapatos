@@ -679,6 +679,57 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado, motivo) {
 }
 
 /**
+ * Purga de datos transaccionales de prueba (detalle_movimientos, ventas, reservas)
+ * NO toca productos, inventario_variantes ni configuracion.
+ */
+export async function purgarDatosPruebaFrontend() {
+  const errores = [];
+
+  // 1. Limpiar detalle_movimientos en Supabase
+  try {
+    const { error: errDet } = await supabase.from('detalle_movimientos').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    if (errDet) console.warn('Aviso limpiando detalle_movimientos:', errDet);
+  } catch (e) {
+    errores.push(e.message);
+  }
+
+  // 2. Limpiar ventas en Supabase
+  try {
+    const { error: errVen } = await supabase.from('ventas').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    if (errVen) console.warn('Aviso limpiando ventas:', errVen);
+  } catch (e) {
+    errores.push(e.message);
+  }
+
+  // 3. Limpiar reservas en Supabase
+  try {
+    const { error: errRes } = await supabase.from('reservas').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    if (errRes) console.warn('Aviso limpiando reservas:', errRes);
+  } catch (e) {
+    errores.push(e.message);
+  }
+
+  // 4. Limpiar almacenamiento local
+  try {
+    localStorage.removeItem(RESERVAS_STORAGE_KEY);
+    localStorage.removeItem('stock_zapatos_sales');
+    localStorage.removeItem('stock_zapatos_kardex');
+    localStorage.removeItem('boutique_bag_items');
+  } catch (e) {
+    console.error(e);
+  }
+
+  // 5. Notificar a componentes reactivos
+  window.dispatchEvent(new Event('reservas_updated'));
+  window.dispatchEvent(new Event('ventas_updated'));
+
+  return {
+    success: true,
+    message: 'Datos de prueba transaccionales purgados con éxito.'
+  };
+}
+
+/**
  * =========================================================================
  * 👠 MOTOR UNIVERSAL DE PRECIOS Y MEMORIA CONVERSACIONAL EN CHATBOT
  * =========================================================================
