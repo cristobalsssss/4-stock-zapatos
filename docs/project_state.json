@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "3.1.0",
-    "last_updated": "2026-08-18 22:15:00",
+    "version": "3.2.0",
+    "last_updated": "2026-08-18 22:40:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #16 APLICADA - V3.1.0)",
-    "last_completed_task": "REVISIÓN #16: Estandarización de items en reservas, Kardex integral (🟢 Venta / 🔵 Devolución), vendedores acotados (Camila y Venta Interna), FAQ prioritaria de envíos en bot",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #17 APLICADA - V3.2.0)",
+    "last_completed_task": "REVISIÓN #17: Persistencia de sesión admin (sessionStorage) con logout, reactividad inmediata (Cero F5), blindaje universal en Reservas y selector dual en Devoluciones",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",

@@ -28,7 +28,8 @@ import {
   Check,
   Ban,
   ArrowRight,
-  Copy
+  Copy,
+  LogOut
 } from 'lucide-react';
 import { 
   registrarVenta, 
@@ -48,7 +49,7 @@ import {
   purgarDatosPruebaFrontend
 } from '../lib/api';
 
-export default function AdminPanel({ products, onDataChanged }) {
+export default function AdminPanel({ products, onDataChanged, onLogout }) {
   const [activeTab, setActiveTab] = useState('ventas'); // 'ventas' | 'reservas' | 'movimientos' | 'devoluciones' | 'imagenes' | 'parametros' | 'alertas'
 
   // KPIs
@@ -182,7 +183,6 @@ export default function AdminPanel({ products, onDataChanged }) {
           fecha_venta: new Date(fechaVenta).toISOString()
         });
       }
-
       // Si la venta provenía de una reserva activa, marcarla como Completada de forma atómica
       if (convertingReservaId) {
         await actualizarEstadoReserva(convertingReservaId, 'Completada');
@@ -195,9 +195,7 @@ export default function AdminPanel({ products, onDataChanged }) {
       });
       setSaleItems([]);
       setNotasVenta('');
-      if (onDataChanged) onDataChanged();
-      loadMovimientos();
-      loadReservas();
+      await refreshAllAdminData();
     } catch (err) {
       console.error(err);
       setSaleResult({
@@ -223,7 +221,7 @@ export default function AdminPanel({ products, onDataChanged }) {
       const data = await getReservas();
       setReservas(data || []);
     } catch (err) {
-      console.error('Error al cargar reservas:', err);
+      console.error(err);
     } finally {
       setIsLoadingReservas(false);
     }
@@ -239,7 +237,7 @@ export default function AdminPanel({ products, onDataChanged }) {
   const handleCambiarEstadoReserva = async (reservaId, nuevoEstado) => {
     try {
       await actualizarEstadoReserva(reservaId, nuevoEstado);
-      loadReservas();
+      await refreshAllAdminData();
     } catch (err) {
       console.error(err);
     }
@@ -249,11 +247,18 @@ export default function AdminPanel({ products, onDataChanged }) {
     // 1. Guardar ID de la reserva en conversión pendiente (se completará SOLO al confirmar la venta)
     setConvertingReservaId(reserva.id);
 
-    // 2. Cargar items de la reserva al tab de ventas
+    // 2. Cargar items de la reserva al tab de ventas usando el parser blindado
+    const parsed = parseReservaItems(reserva);
     const itemsCargados = [];
-    if (reserva.items && reserva.items.length > 0) {
-      reserva.items.forEach(it => {
-        const v = allVariants.find(vItem => vItem.id === it.variante_id || (vItem.codigo_modelo === it.codigo_modelo && vItem.color === it.color && String(vItem.talla) === String(it.talla)));
+
+    if (parsed.length > 0) {
+      parsed.forEach(it => {
+        const v = allVariants.find(vItem => 
+          (it.variante_id && vItem.id === it.variante_id) ||
+          ((vItem.codigo_modelo === it.codigo || vItem.codigo_modelo === it.codigo_modelo) &&
+           (!it.color || vItem.color.toLowerCase() === it.color.toLowerCase()) &&
+           (!it.talla || String(vItem.talla) === String(it.talla)))
+        );
         if (v) {
           itemsCargados.push({
             variante_id: v.id,
@@ -265,26 +270,10 @@ export default function AdminPanel({ products, onDataChanged }) {
             stock_disponible: v.stock_disponible,
             precio_unitario: Number(it.precio) || Number(v.precio_vendedores),
             precio_interno: Number(v.precio_interno),
-            cantidad: it.quantity || 1
+            cantidad: Number(it.cantidad) || 1
           });
         }
       });
-    } else if (reserva.variante_id || reserva.modelo_codigo) {
-      const v = allVariants.find(vItem => vItem.id === reserva.variante_id || (vItem.codigo_modelo === reserva.modelo_codigo && (!reserva.color || vItem.color === reserva.color) && (!reserva.talla || String(vItem.talla) === String(reserva.talla))));
-      if (v) {
-        itemsCargados.push({
-          variante_id: v.id,
-          codigo_modelo: v.codigo_modelo,
-          nombre_fantasia: v.nombre_fantasia,
-          color: v.color,
-          talla: v.talla,
-          sku: v.sku_variante,
-          stock_disponible: v.stock_disponible,
-          precio_unitario: Number(reserva.precio_unitario) || Number(v.precio_vendedores),
-          precio_interno: Number(v.precio_interno),
-          cantidad: Number(reserva.cantidad) || 1
-        });
-      }
     }
 
     if (itemsCargados.length > 0) {
@@ -306,9 +295,7 @@ export default function AdminPanel({ products, onDataChanged }) {
     try {
       const res = await purgarDatosPruebaFrontend();
       setPurgeStatusMsg(res.message);
-      loadReservas();
-      loadMovimientos();
-      if (onDataChanged) onDataChanged();
+      await refreshAllAdminData();
       setTimeout(() => setPurgeStatusMsg(null), 5000);
     } catch (err) {
       console.error(err);
@@ -360,6 +347,70 @@ export default function AdminPanel({ products, onDataChanged }) {
     return prod?.nombre_fantasia || fallback || '';
   };
 
+  // Helper blindado universal para procesar items de reservas (JSON, array o texto plano)
+  const parseReservaItems = (res) => {
+    if (!res) return [];
+    let raw = res.items || res.detalles;
+    if (typeof raw === 'string') {
+      try {
+        raw = JSON.parse(raw);
+      } catch (e) {
+        raw = null;
+      }
+    }
+    if (Array.isArray(raw) && raw.length > 0) {
+      return raw.map(it => {
+        const cod = it.codigo_modelo || it.modelo_codigo || it.sku || '';
+        const nom = it.nombre_fantasia || it.nombre || getModelName(cod, it.nombre_fantasia);
+        return {
+          nombre: nom || 'Calzado',
+          codigo: cod,
+          color: it.color || '',
+          talla: it.talla || '',
+          cantidad: it.quantity || it.cantidad || 1,
+          precio: it.precio || it.precio_unitario || 0
+        };
+      });
+    }
+
+    if (res.modelo_codigo && res.modelo_codigo !== 'Consulta General' && res.modelo_codigo !== 'SIN-CODIGO') {
+      const cods = String(res.modelo_codigo).split(',').map(s => s.trim());
+      const noms = String(res.modelo_nombre || '').split(',').map(s => s.trim());
+      const cols = String(res.color || '').split(',').map(s => s.trim());
+      const tals = String(res.talla || '').split(',').map(s => s.trim());
+
+      return cods.map((cod, idx) => {
+        const nom = getModelName(cod, noms[idx] || res.modelo_nombre);
+        const col = cols[idx] || res.color || '';
+        const tal = tals[idx] || res.talla || '';
+        const cant = cods.length === 1 && (res.cantidad || 1) > 1 ? res.cantidad : 1;
+        return {
+          nombre: nom || 'Calzado',
+          codigo: cod,
+          color: col,
+          talla: tal,
+          cantidad: cant,
+          precio: res.precio_unitario || 0
+        };
+      });
+    }
+
+    return [];
+  };
+
+  // Master refresh reactivo e inmediato (CERO F5)
+  const refreshAllAdminData = async () => {
+    try {
+      await Promise.all([
+        loadReservas(),
+        loadMovimientos(),
+        onDataChanged ? onDataChanged() : Promise.resolve()
+      ]);
+    } catch (err) {
+      console.error('Error al sincronizar datos admin:', err);
+    }
+  };
+
   const [copiedVentaId, setCopiedVentaId] = useState(null);
   const handleCopyVentaId = (id) => {
     if (!id) return;
@@ -368,9 +419,51 @@ export default function AdminPanel({ products, onDataChanged }) {
     setTimeout(() => setCopiedVentaId(null), 2000);
   };
 
+  // ==========================================
+  // ESTADO PARA TAB 4: DEVOLUCIONES DUAL CRITERIA
+  // ==========================================
+  const [devCriterio, setDevCriterio] = useState('venta'); // 'venta' | 'manual'
+  const [selectedVentaDevId, setSelectedVentaDevId] = useState('');
+  const [devVariantId, setDevVariantId] = useState('');
+  const [devCantidad, setDevCantidad] = useState(1);
+  const [devMotivo, setDevMotivo] = useState('Cambio de talla');
+  const [devVentaId, setDevVentaId] = useState('');
+  const [isProcessingDev, setIsProcessingDev] = useState(false);
+  const [devResult, setDevResult] = useState(null);
+
+  // Ventas completadas para el combo de Devoluciones (ordenadas de más reciente a más antigua)
+  const ventasRecientes = useMemo(() => {
+    return movimientos
+      .filter(m => (m.tipo_movimiento || '').toLowerCase().includes('venta'))
+      .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+  }, [movimientos]);
+
+  const handleSelectVentaDevolucion = (movId) => {
+    setSelectedVentaDevId(movId);
+    if (!movId) {
+      setDevVariantId('');
+      setDevCantidad(1);
+      setDevVentaId('');
+      setDevMotivo('Cambio de talla');
+      return;
+    }
+    const selectedMov = ventasRecientes.find(m => m.id === movId);
+    if (selectedMov) {
+      const prod = selectedMov.inventario_variantes?.productos;
+      setDevVariantId(selectedMov.variante_id || selectedMov.inventario_variantes?.id || '');
+      setDevCantidad(selectedMov.cantidad || 1);
+      const idVentaRef = selectedMov.venta_id || selectedMov.ventas?.id || selectedMov.id || '';
+      setDevVentaId(idVentaRef);
+      const shortCod = idVentaRef ? `#VTA-${idVentaRef.slice(-6).toUpperCase()}` : '';
+      setDevMotivo(`Devolución de venta ${shortCod} (${prod?.codigo_modelo || 'Calzado'} ${selectedMov.inventario_variantes?.color || ''} T${selectedMov.inventario_variantes?.talla || ''})`);
+    }
+  };
+
   const handleIniciarDevolucionDesdeVenta = (mov) => {
     const prod = mov.inventario_variantes?.productos;
     const vId = mov.variante_id || mov.inventario_variantes?.id || '';
+    setDevCriterio('venta');
+    setSelectedVentaDevId(mov.id || '');
     setDevVariantId(vId);
     setDevCantidad(mov.cantidad || 1);
     const idVentaRef = mov.venta_id || mov.ventas?.id || mov.id || '';
@@ -381,7 +474,7 @@ export default function AdminPanel({ products, onDataChanged }) {
   };
 
   useEffect(() => {
-    if (activeTab === 'movimientos') {
+    if (activeTab === 'movimientos' || activeTab === 'devoluciones') {
       loadMovimientos();
     }
   }, [activeTab]);
@@ -418,16 +511,6 @@ export default function AdminPanel({ products, onDataChanged }) {
     });
   }, [movimientos, movFilterTipo, movSearch]);
 
-  // ==========================================
-  // ESTADO PARA TAB 4: DEVOLUCIONES
-  // ==========================================
-  const [devVariantId, setDevVariantId] = useState('');
-  const [devCantidad, setDevCantidad] = useState(1);
-  const [devMotivo, setDevMotivo] = useState('Cambio de talla');
-  const [devVentaId, setDevVentaId] = useState('');
-  const [isProcessingDev, setIsProcessingDev] = useState(false);
-  const [devResult, setDevResult] = useState(null);
-
   const handleExecuteDevolucion = async (e) => {
     e.preventDefault();
     if (!devVariantId) return;
@@ -447,11 +530,11 @@ export default function AdminPanel({ products, onDataChanged }) {
         message: `Devolución exitosa. Nuevo stock disponible: ${res.stock_disponible}`
       });
       setDevVariantId('');
+      setSelectedVentaDevId('');
       setDevCantidad(1);
       setDevMotivo('Cambio de talla');
       setDevVentaId('');
-      if (onDataChanged) onDataChanged();
-      loadMovimientos();
+      await refreshAllAdminData();
     } catch (err) {
       console.error(err);
       setDevResult({
@@ -679,6 +762,30 @@ export default function AdminPanel({ products, onDataChanged }) {
           <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
             Gestión de ventas, reservas de clientes, kardex de movimientos, parámetros y fotografías.
           </p>
+        </div>
+
+        {/* Acciones de Cabecera: Refresco y Cerrar Sesión */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={refreshAllAdminData}
+            title="Sincronizar todos los datos en tiempo real"
+            className="flex items-center gap-1.5 px-3 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-xl text-xs font-bold transition-all cursor-pointer active:scale-95"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Sincronizar</span>
+          </button>
+          {onLogout && (
+            <button
+              type="button"
+              onClick={onLogout}
+              title="Cerrar sesión de administrador"
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-all cursor-pointer active:scale-95"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Cerrar Sesión</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -1193,56 +1300,36 @@ export default function AdminPanel({ products, onDataChanged }) {
                         {res.cliente_comuna || 'Concepción'}
                       </td>
                       <td className="p-3 max-w-xs">
-                        {res.items && Array.isArray(res.items) && res.items.length > 0 ? (
-                          <div className="space-y-1">
-                            {res.items.map((it, idx) => {
-                              const nomFantasia = getModelName(it.codigo_modelo, it.nombre_fantasia);
-                              return (
-                                <div key={idx} className="text-[11px] text-zinc-800">
-                                  • {nomFantasia ? <strong className="text-zinc-900">{nomFantasia} </strong> : null}
-                                  <span className="text-zinc-600 font-medium">({it.codigo_modelo})</span> - {it.color}, T{it.talla} x {it.quantity || it.cantidad || 1}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ) : res.modelo_codigo && res.modelo_codigo !== 'Consulta General' && res.modelo_codigo !== 'SIN-CODIGO' ? (
-                          <div className="space-y-1">
-                            {(() => {
-                              const cods = String(res.modelo_codigo).split(',').map(s => s.trim());
-                              const noms = String(res.modelo_nombre || '').split(',').map(s => s.trim());
-                              const cols = String(res.color || '').split(',').map(s => s.trim());
-                              const tals = String(res.talla || '').split(',').map(s => s.trim());
-                              
-                              return cods.map((cod, idx) => {
-                                const nomFantasia = getModelName(cod, noms[idx] || res.modelo_nombre);
-                                const c = cols[idx] || res.color;
-                                const t = tals[idx] || res.talla;
-                                return (
+                        {(() => {
+                          const parsedItems = parseReservaItems(res);
+                          return (
+                            <div className="space-y-1">
+                              {parsedItems.length > 0 ? (
+                                parsedItems.map((it, idx) => (
                                   <div key={idx} className="text-[11px] text-zinc-800">
-                                    • {nomFantasia ? <strong className="text-zinc-900">{nomFantasia} </strong> : null}
-                                    <span className="text-zinc-600 font-medium">({cod})</span> {c ? `- ${c}, T${t}` : ''} {cods.length === 1 && (res.cantidad || 1) > 1 ? `x ${res.cantidad}` : 'x 1'}
+                                    • <strong className="text-zinc-900">{it.nombre}</strong> {it.codigo ? <span className="text-zinc-500 font-medium">({it.codigo})</span> : null} {it.color || it.talla ? `- ${it.color ? it.color : ''}${it.talla ? `, T${it.talla}` : ''}` : ''} x {it.cantidad}
                                   </div>
-                                );
-                              });
-                            })()}
-                          </div>
-                        ) : (
-                          <div className="text-[11px] text-zinc-700 font-medium">
-                            {res.notas ? res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '') || 'Reserva general' : 'Consulta general'}
-                          </div>
-                        )}
+                                ))
+                              ) : (
+                                <div className="text-[11px] text-zinc-700 font-medium">
+                                  {res.notas ? res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '') || 'Reserva general' : 'Consulta general'}
+                                </div>
+                              )}
 
-                        {/* Badge sutil de modalidad de entrega sin duplicar textos */}
-                        <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                          <span className="inline-flex items-center gap-1 text-[10px] text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-md font-semibold">
-                            📍 {res.tipo_entrega || res.cliente_comuna || 'Presencial'}
-                          </span>
-                          {res.notas && !res.notas.toLowerCase().startsWith('modalidad') && (
-                            <span className="text-[10px] text-zinc-400 italic">
-                              📝 {res.notas}
-                            </span>
-                          )}
-                        </div>
+                              {/* Badge sutil de modalidad de entrega sin duplicar textos */}
+                              <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                                <span className="inline-flex items-center gap-1 text-[10px] text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-md font-semibold">
+                                  📍 {res.tipo_entrega || res.cliente_comuna || 'Presencial'}
+                                </span>
+                                {res.notas && !res.notas.toLowerCase().startsWith('modalidad') && (
+                                  <span className="text-[10px] text-zinc-400 italic">
+                                    📝 {res.notas}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td className="p-3">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${
@@ -1511,44 +1598,122 @@ export default function AdminPanel({ products, onDataChanged }) {
             </div>
           </div>
 
+          {/* Selector Dual de Criterio (Tabs) */}
+          <div className="flex p-1 bg-zinc-100 rounded-2xl gap-1 border border-zinc-200">
+            <button
+              type="button"
+              onClick={() => {
+                setDevCriterio('venta');
+                setSelectedVentaDevId('');
+                setDevVariantId('');
+                setDevVentaId('');
+              }}
+              className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                devCriterio === 'venta'
+                  ? 'bg-white text-zinc-900 shadow-xs border border-zinc-200/80'
+                  : 'text-zinc-500 hover:text-zinc-800'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5 text-indigo-600" />
+              <span>📋 Desde Venta Registrada (Recomendado)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setDevCriterio('manual');
+                setSelectedVentaDevId('');
+                setDevVentaId('');
+              }}
+              className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                devCriterio === 'manual'
+                  ? 'bg-white text-zinc-900 shadow-xs border border-zinc-200/80'
+                  : 'text-zinc-500 hover:text-zinc-800'
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5 text-amber-600" />
+              <span>👟 Por Variante / Catálogo Directo (Manual)</span>
+            </button>
+          </div>
+
           {devVentaId && (
             <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold rounded-2xl flex items-center justify-between animate-fade-in shadow-2xs">
               <span className="flex items-center gap-2">
                 <RotateCcw className="w-4 h-4 text-amber-600 flex-shrink-0" />
-                <span>Devolución precargada desde la Venta <strong>#{devVentaId.slice(-6).toUpperCase()}</strong></span>
+                <span>Venta Asociada: <strong>#{devVentaId.slice(-6).toUpperCase()}</strong></span>
               </span>
               <button
                 type="button"
                 onClick={() => {
                   setDevVentaId('');
+                  setSelectedVentaDevId('');
                   setDevMotivo('Cambio de talla');
                 }}
                 className="text-amber-700 hover:text-amber-900 text-xs font-bold underline cursor-pointer"
               >
-                Limpiar
+                Limpiar Venta
               </button>
             </div>
           )}
 
           <form onSubmit={handleExecuteDevolucion} className="space-y-4">
-            <div>
-              <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
-                Variante de Calzado a Reintegrar *:
-              </label>
-              <select
-                required
-                value={devVariantId}
-                onChange={e => setDevVariantId(e.target.value)}
-                className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-semibold text-zinc-900"
-              >
-                <option value="">-- Seleccionar Calzado --</option>
-                {allVariants.map(v => (
-                  <option key={v.id} value={v.id}>
-                    {v.codigo_modelo} - {v.nombre_fantasia} | {v.color} | Talla {v.talla} (Stock Actual: {v.stock_disponible}p)
-                  </option>
-                ))}
-              </select>
-            </div>
+            {devCriterio === 'venta' ? (
+              <div>
+                <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
+                  Seleccionar Venta Completada *:
+                </label>
+                <select
+                  required
+                  value={selectedVentaDevId}
+                  onChange={e => handleSelectVentaDevolucion(e.target.value)}
+                  className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-semibold text-zinc-900 focus:bg-white transition-all"
+                >
+                  <option value="">-- Seleccionar Venta Registrada ({ventasRecientes.length} disponibles) --</option>
+                  {ventasRecientes.map(m => {
+                    const vtaId = m.venta_id || m.ventas?.id || m.id;
+                    const shortId = `#VTA-${vtaId.slice(-6).toUpperCase()}`;
+                    const fecha = m.ventas?.fecha_venta 
+                      ? new Date(m.ventas.fecha_venta).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                      : new Date(m.created_at).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    const vend = m.ventas?.vendedor || 'Venta Interna';
+                    const prod = m.inventario_variantes?.productos;
+                    const mod = `${prod?.codigo_modelo || 'Calzado'}${prod?.nombre_fantasia ? ` - ${prod.nombre_fantasia}` : ''}`;
+                    const col = m.inventario_variantes?.color || '';
+                    const tal = m.inventario_variantes?.talla ? `T${m.inventario_variantes.talla}` : '';
+                    const monto = m.precio_aplicado ? `$${Number(m.precio_aplicado).toLocaleString('es-CL')}` : '';
+
+                    return (
+                      <option key={m.id} value={m.id}>
+                        {shortId} • {fecha} • {vend} • {mod} ({col} {tal}) {monto}
+                      </option>
+                    );
+                  })}
+                </select>
+                {selectedVentaDevId && devVariantId && (
+                  <p className="text-[11px] text-emerald-700 font-medium mt-1">
+                    ✓ Calzado y datos de venta precargados automáticamente.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div>
+                <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
+                  Variante de Calzado a Reintegrar *:
+                </label>
+                <select
+                  required
+                  value={devVariantId}
+                  onChange={e => setDevVariantId(e.target.value)}
+                  className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-xs sm:text-sm font-semibold text-zinc-900"
+                >
+                  <option value="">-- Seleccionar Calzado del Catálogo --</option>
+                  {allVariants.map(v => (
+                    <option key={v.id} value={v.id}>
+                      {v.codigo_modelo} - {v.nombre_fantasia} | {v.color} | Talla {v.talla} (Stock Actual: {v.stock_disponible}p)
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -1584,14 +1749,14 @@ export default function AdminPanel({ products, onDataChanged }) {
 
             <div>
               <label className="text-xs font-bold text-zinc-500 block mb-1 uppercase tracking-wider">
-                ID de Venta Original (Opcional):
+                Referencia ID Venta (UUID o Código):
               </label>
               <input
                 type="text"
-                placeholder="UUID de la venta en Supabase (si existe)"
+                placeholder="UUID de la venta en Supabase (ej: #VTA-XXXX)"
                 value={devVentaId}
                 onChange={e => setDevVentaId(e.target.value)}
-                className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900"
+                className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs font-mono text-zinc-900"
               />
             </div>
 

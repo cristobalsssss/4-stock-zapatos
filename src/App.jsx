@@ -18,7 +18,13 @@ export default function App() {
 
   // Vistas y Modales
   const [currentView, setCurrentView] = useState('catalog'); // 'catalog' | 'admin'
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    try {
+      return sessionStorage.getItem('admin_auth') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [isBagOpen, setIsBagOpen] = useState(false);
   
@@ -364,6 +370,13 @@ export default function App() {
         <AdminPanel
           products={products}
           onDataChanged={loadCatalog}
+          onLogout={() => {
+            try {
+              sessionStorage.removeItem('admin_auth');
+            } catch (e) {}
+            setIsAdminAuthenticated(false);
+            setCurrentView('catalog');
+          }}
         />
       )}
 
@@ -395,6 +408,9 @@ export default function App() {
         isOpen={isAdminLoginOpen}
         onClose={() => setIsAdminLoginOpen(false)}
         onLoginSuccess={() => {
+          try {
+            sessionStorage.setItem('admin_auth', 'true');
+          } catch (e) {}
           setIsAdminAuthenticated(true);
           setCurrentView('admin');
         }}

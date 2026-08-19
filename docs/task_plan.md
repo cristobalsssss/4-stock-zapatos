@@ -71,6 +71,10 @@
 - [x] REVISIÓN #16: Kardex integral con badges 🟢 VENTA y 🔵 DEVOLUCIÓN y refresco automático reactivo
 - [x] REVISIÓN #16: Lista acotada y exclusiva de vendedores: Camila y Venta Interna
 - [x] REVISIÓN #16: FAQ contextual prioritario de envíos y tienda física en Chatbot antes de búsquedas
+- [x] REVISIÓN #16.1: Persistencia de sesión admin en sessionStorage y botón visible de Cerrar Sesión
+- [x] REVISIÓN #16.1: Reactividad inmediata atómica (Cero F5) en ventas, devoluciones y reservas
+- [x] REVISIÓN #16.1: Blindaje universal de pares / detalles en Reservas (`parseReservaItems`)
+- [x] REVISIÓN #16.1: Selector dual de criterio en Devoluciones (📋 Desde Venta Registrada vs 👟 Por Catálogo)
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
