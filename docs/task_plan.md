@@ -17,6 +17,8 @@
 - [x] Crear Workflow/Skill 1: `ConsultarStock` (Endpoint REST para obtener disponibilidad por modelo/color/talla)
 - [x] Crear Workflow/Skill 2: `RegistrarVentaYDescontarStock` (Registra en `ventas` y `detalle_movimientos`, resta stock y calcula comisión)
 - [x] Crear Workflow/Skill 3: `RegistrarDevolucion` (Revierte transacción y suma stock)
+- [x] Crear Workflow/Skill 4: `CrearReserva` (Endpoint REST para registro de reservas multi-item con código #RES-XXXX y persistencia)
+- [x] Crear Workflow/Skill 5: `CancelarReserva` (Endpoint REST para cancelación y liberación de reservas)
 
 ## FASE 4: VIBE CODING DEL FRONTEND EN VERCEL
 - [x] Generar estructura inicial del Frontend Web (Catálogo + Admin) en React + Vite + Tailwind CSS

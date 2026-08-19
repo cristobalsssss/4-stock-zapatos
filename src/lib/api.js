@@ -493,7 +493,7 @@ export async function getReservas() {
 }
 
 /**
- * Crea una reserva con identificador amigable #RES-XXXX
+ * Crea una reserva conectando a n8n Skill 4 con fallback directo a Supabase
  */
 export async function crearReserva({
   cliente_nombre,
@@ -510,11 +510,10 @@ export async function crearReserva({
   notas = '',
   items = []
 }) {
-  const codigoReserva = `RES-${Math.floor(1000 + Math.random() * 9000)}`;
+  const codigoGenerado = `RES-${Math.floor(1000 + Math.random() * 9000)}`;
 
-  const nuevaReserva = {
-    id: `res-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-    codigo_reserva: codigoReserva,
+  const reservaPayload = {
+    codigo_reserva: codigoGenerado,
     cliente_nombre: cliente_nombre?.trim() || 'Cliente Web',
     cliente_whatsapp: cliente_whatsapp?.trim() || '',
     cliente_comuna: cliente_comuna?.trim() || 'Concepción',
@@ -527,52 +526,80 @@ export async function crearReserva({
     cantidad: cantidad || items.reduce((acc, i) => acc + (i.quantity || 1), 0) || 1,
     precio_unitario: Number(precio_unitario) || Number(items[0]?.precio || 0),
     notas: notas?.trim() || '',
-    items: items || [],
-    total: Number(precio_unitario * (cantidad || 1)) || items.reduce((acc, i) => acc + (i.precio * i.quantity), 0) || 0,
+    items: items || []
+  };
+
+  let nuevaReserva = {
+    id: `res-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+    ...reservaPayload,
+    total: Number(reservaPayload.precio_unitario * (reservaPayload.cantidad || 1)) || items.reduce((acc, i) => acc + (i.precio * i.quantity), 0) || 0,
     estado: 'Pendiente',
     created_at: new Date().toISOString()
   };
 
-  // 1. Guardar en Supabase
+  // 1. Intentar registrar vía n8n Skill 4 (Webhook: /webhook/crear-reserva)
   try {
-    const { data, error } = await supabase
-      .from('reservas')
-      .insert({
-        codigo_reserva: nuevaReserva.codigo_reserva,
-        cliente_nombre: nuevaReserva.cliente_nombre,
-        cliente_whatsapp: nuevaReserva.cliente_whatsapp,
-        cliente_comuna: nuevaReserva.cliente_comuna,
-        tipo_entrega: nuevaReserva.tipo_entrega,
-        variante_id: nuevaReserva.variante_id,
-        modelo_codigo: nuevaReserva.modelo_codigo,
-        modelo_nombre: nuevaReserva.modelo_nombre,
-        color: nuevaReserva.color,
-        talla: nuevaReserva.talla,
-        cantidad: nuevaReserva.cantidad,
-        precio_unitario: nuevaReserva.precio_unitario,
-        notas: nuevaReserva.notas,
-        estado: 'Pendiente'
-      })
-      .select()
-      .single();
+    const res = await fetch(`${N8N_URL}/webhook/crear-reserva`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reservaPayload),
+    });
 
-    if (!error && data) {
-      nuevaReserva.id = data.id;
-    } else if (error) {
-      console.error('Error Supabase insert reserva:', error);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.codigo_reserva) {
+        nuevaReserva.codigo_reserva = data.codigo_reserva;
+      }
+      if (data && data.reserva_id) {
+        nuevaReserva.id = data.reserva_id;
+      }
+    } else {
+      throw new Error(`HTTP Error ${res.status}`);
     }
   } catch (err) {
-    console.error('Excepción guardando reserva en Supabase:', err);
+    console.warn('Fallo n8n Skill 4 (Crear Reserva), procesando fallback directo en Supabase:', err);
+
+    // Fallback directo a Supabase
+    try {
+      const { data, error } = await supabase
+        .from('reservas')
+        .insert({
+          codigo_reserva: nuevaReserva.codigo_reserva,
+          cliente_nombre: nuevaReserva.cliente_nombre,
+          cliente_whatsapp: nuevaReserva.cliente_whatsapp,
+          cliente_comuna: nuevaReserva.cliente_comuna,
+          tipo_entrega: nuevaReserva.tipo_entrega,
+          variante_id: nuevaReserva.variante_id,
+          modelo_codigo: nuevaReserva.modelo_codigo,
+          modelo_nombre: nuevaReserva.modelo_nombre,
+          color: nuevaReserva.color,
+          talla: nuevaReserva.talla,
+          cantidad: nuevaReserva.cantidad,
+          precio_unitario: nuevaReserva.precio_unitario,
+          notas: nuevaReserva.notas,
+          estado: 'Pendiente'
+        })
+        .select()
+        .single();
+
+      if (!error && data) {
+        nuevaReserva.id = data.id;
+      } else if (error) {
+        console.error('Error insertando reserva en Supabase:', error);
+      }
+    } catch (dbErr) {
+      console.error('Excepción guardando reserva en Supabase:', dbErr);
+    }
   }
 
-  // 2. Guardar en localStorage sincronizado
+  // 2. Sincronizar en almacenamiento local y notificar reactivamente a la UI
   try {
     const prev = await getReservas();
     const actualizadas = [nuevaReserva, ...prev.filter(r => r.id !== nuevaReserva.id)];
     localStorage.setItem(RESERVAS_STORAGE_KEY, JSON.stringify(actualizadas));
     window.dispatchEvent(new Event('reservas_updated'));
   } catch (e) {
-    console.error('Error guardando reserva localmente:', e);
+    console.error('Error guardando reserva en localStorage:', e);
   }
 
   return nuevaReserva;
@@ -580,7 +607,56 @@ export async function crearReserva({
 
 export const guardarReserva = crearReserva;
 
-export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
+/**
+ * Cancela una reserva conectando a n8n Skill 5 con fallback directo a Supabase
+ */
+export async function cancelarReserva(reservaId, motivo = 'Cancelada por Administrador') {
+  // 1. Intentar cancelar vía n8n Skill 5 (Webhook: /webhook/cancelar-reserva)
+  try {
+    const res = await fetch(`${N8N_URL}/webhook/cancelar-reserva`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: reservaId,
+        reserva_id: reservaId,
+        motivo: motivo,
+        estado: 'Cancelada'
+      }),
+    });
+
+    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+  } catch (err) {
+    console.warn('Fallo n8n Skill 5 (Cancelar Reserva), aplicando fallback en Supabase:', err);
+
+    // Fallback directo a Supabase
+    try {
+      await supabase
+        .from('reservas')
+        .update({ estado: 'Cancelada', notas: motivo, updated_at: new Date().toISOString() })
+        .eq('id', reservaId);
+    } catch (dbErr) {
+      console.error('Error actualizando estado en Supabase:', dbErr);
+    }
+  }
+
+  // 2. Sincronizar en localStorage y notificar reactivamente a la UI
+  try {
+    const list = await getReservas();
+    const actualizadas = list.map(r => r.id === reservaId ? { ...r, estado: 'Cancelada', notas: motivo } : r);
+    localStorage.setItem(RESERVAS_STORAGE_KEY, JSON.stringify(actualizadas));
+    window.dispatchEvent(new Event('reservas_updated'));
+    return actualizadas;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export async function actualizarEstadoReserva(reservaId, nuevoEstado, motivo) {
+  if (nuevoEstado === 'Cancelada') {
+    return await cancelarReserva(reservaId, motivo || 'Cancelada por Administrador');
+  }
+
   try {
     await supabase
       .from('reservas')

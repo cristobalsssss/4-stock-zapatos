@@ -20,10 +20,18 @@
   - Filtros opcionales: `codigo`, `talla`, `color`, `nombre`, `incluir_precio_interno`.
 - **Skill 2 (Registrar Venta):** `https://n8n-backend-finanzas.onrender.com/webhook/registrar-venta`
   - Método: `POST`
-  - Payload: `{ variante_id, cantidad, vendedor, medio_pago, precio_aplicado, comision_vendedor, notas }`
+  - Payload: `{ variante_id, cantidad, vendedor, medio_pago, precio_aplicado, comision_vendedor, notas, fecha_venta }`
 - **Skill 3 (Registrar Devolución):** `https://n8n-backend-finanzas.onrender.com/webhook/registrar-devolucion`
   - Método: `POST`
   - Payload: `{ variante_id, cantidad, motivo, venta_id }`
+- **Skill 4 (Crear Reserva):** `https://n8n-backend-finanzas.onrender.com/webhook/crear-reserva`
+  - Método: `POST`
+  - Payload: `{ cliente_nombre, cliente_whatsapp, cliente_comuna, tipo_entrega, variante_id, modelo_codigo, modelo_nombre, color, talla, cantidad, precio_unitario, notas, items, codigo_reserva }`
+  - Resiliencia: Si n8n presenta latencia o suspensión en Render, aplica automáticamente fallback transaccional directo a Supabase (`public.reservas`).
+- **Skill 5 (Cancelar Reserva):** `https://n8n-backend-finanzas.onrender.com/webhook/cancelar-reserva`
+  - Método: `POST`
+  - Payload: `{ id, reserva_id, motivo, estado: 'Cancelada' }`
+  - Resiliencia: Fallback directo de actualización en Supabase.
 
 ## 4. LÓGICA FINANCIERA, PRECIOS Y COMISIONES
 - `precio_interno`: Precio base oficial de costo/remate para venta directa del dueño/admin.
