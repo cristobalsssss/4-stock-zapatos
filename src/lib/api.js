@@ -246,7 +246,7 @@ export async function subirImagenStorage(file, folder = 'modelos') {
   const fileName = `${folder}/${Date.now()}_${cleanName}.${ext}`;
 
   const { data, error } = await supabase.storage
-    .from(BUCKET_NAME)
+    .from('productos-imagenes')
     .upload(fileName, file, {
       cacheControl: '3600',
       upsert: true
@@ -254,15 +254,15 @@ export async function subirImagenStorage(file, folder = 'modelos') {
 
   if (error) {
     const { data: fallbackData, error: fbError } = await supabase.storage
-      .from('calzado-imagenes')
+      .from('productos-imagenes')
       .upload(fileName, file, { cacheControl: '3600', upsert: true });
 
     if (fbError) throw fbError;
-    const { data: publicUrlData } = supabase.storage.from('calzado-imagenes').getPublicUrl(fileName);
+    const { data: publicUrlData } = supabase.storage.from('productos-imagenes').getPublicUrl(fileName);
     return publicUrlData.publicUrl;
   }
 
-  const { data: publicUrlData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(fileName);
+  const { data: publicUrlData } = supabase.storage.from('productos-imagenes').getPublicUrl(fileName);
   return publicUrlData.publicUrl;
 }
 
@@ -544,7 +544,14 @@ export async function crearReserva({
   notas = '',
   items = []
 }) {
-  const codigoGenerado = `RES-${Math.floor(1000 + Math.random() * 9000)}`;
+  const primerItem = (Array.isArray(items) && items.length > 0) ? items[0] : {};
+  const varId = variante_id || primerItem.variante_id || primerItem.id || null;
+  const modCod = (modelo_codigo && modelo_codigo !== 'N/A') ? modelo_codigo : (primerItem.codigo_modelo || primerItem.codigo || primerItem.modelo_codigo || '');
+  const modNom = modelo_nombre || primerItem.nombre_fantasia || primerItem.nombre || primerItem.modelo_nombre || '';
+  const col = color || primerItem.color || '';
+  const tal = talla ? String(talla) : String(primerItem.talla || '');
+  const cant = Number(cantidad || primerItem.cantidad || primerItem.quantity || (Array.isArray(items) && items.length > 0 ? items.reduce((acc, i) => acc + Number(i.cantidad || i.quantity || 1), 0) : 1));
+  const prec = Number(precio_unitario || primerItem.precio_vendedores || primerItem.precio || primerItem.precio_sugerido || primerItem.precio_unitario || 0);
 
   const reservaPayload = {
     codigo_reserva: codigoGenerado,
@@ -552,22 +559,22 @@ export async function crearReserva({
     cliente_whatsapp: cliente_whatsapp?.trim() || '',
     cliente_comuna: cliente_comuna?.trim() || 'Concepción',
     tipo_entrega: tipo_entrega?.trim() || 'Presencial Concepción/Penco',
-    variante_id: variante_id || items[0]?.variante_id || null,
-    modelo_codigo: modelo_codigo || items.map(i => i.codigo_modelo).join(', ') || 'N/A',
-    modelo_nombre: modelo_nombre || items.map(i => i.nombre_fantasia).join(', ') || '',
-    color: color || items.map(i => i.color).join(', ') || '',
-    talla: talla ? String(talla) : String(items[0]?.talla || ''),
-    cantidad: cantidad || items.reduce((acc, i) => acc + (i.quantity || 1), 0) || 1,
-    precio_unitario: Number(precio_unitario) || Number(items[0]?.precio || 0),
+    variante_id: varId,
+    modelo_codigo: modCod,
+    modelo_nombre: modNom,
+    color: col,
+    talla: tal,
+    cantidad: cant,
+    precio_unitario: prec,
     notas: notas?.trim() || '',
     items: (Array.isArray(items) ? items : []).map(i => ({
       variante_id: i.variante_id || i.id || '',
-      codigo_modelo: i.codigo_modelo || i.codigo || '',
-      nombre_fantasia: i.nombre_fantasia || i.nombre || '',
+      codigo_modelo: i.codigo_modelo || i.codigo || i.modelo_codigo || '',
+      nombre_fantasia: i.nombre_fantasia || i.nombre || i.modelo_nombre || '',
       color: i.color || '',
       talla: i.talla ? String(i.talla) : '',
       cantidad: Number(i.cantidad || i.quantity || 1),
-      precio: Number(i.precio || i.precio_unitario || 0)
+      precio: Number(i.precio_vendedores || i.precio || i.precio_sugerido || i.precio_unitario || 0)
     }))
   };
 

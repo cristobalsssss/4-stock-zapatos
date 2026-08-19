@@ -11,7 +11,7 @@
 - **Catálogo Público:** Consultar Stock en tiempo real e interactuar con galería de imágenes.
 - **Panel Admin Movimientos:** Registrar Venta, Devolución, Gestión de Stock e Imágenes.
 - **Base de Datos:** 5 Tablas Relacionales + Tablas de Auditoría/Telemetría + Vistas Optimizadas.
-- **Almacenamiento (Supabase Storage):** Bucket público `calzado-imagenes` (y buckets auxiliares `productos`, `productos-imagenes`).
+- **Almacenamiento (Supabase Storage):** Bucket público oficial `productos-imagenes`.
   - Módulo de carga rápida con actualización automática de `imagen_portada_variante` o `imagen_defecto_url`.
 
 ## 3. ENDPOINTS DE PRODUCCIÓN N8N (SKILLS ENGINE)
@@ -175,7 +175,7 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
   - Unidades con stock disponible en bodega: 253 pares distribuidos en 173 variantes activas.
 
 ## 8. ALMACENAMIENTO Y GESTIÓN DE IMÁGENES (SUPABASE STORAGE)
-- **Bucket Público Principal:** `productos-imagenes` (y bucket de respaldo `calzado-imagenes`).
+- **Bucket Público Oficial:** `productos-imagenes`.
 - **Lógica de Asociación por Modelo y Color:**
   - **Foto Principal del Modelo:** Se almacena en `imagen_defecto_url` en la tabla `productos` y actúa como la portada inicial destacada visible en el estado neutro.
   - **Foto de Portada del Color:** Se asocia a nivel de `(producto_id, color)`. Todas las tallas que pertenezcan a ese color comparten automáticamente la misma fotografía de portada en el catálogo.
@@ -183,7 +183,7 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
 - **Módulo de Gestión en Panel Admin:**
   - Selector de Modelo y Color.
   - **Grid de Miniaturas Existentes:** Muestra todas las fotos cargadas para el modelo/color actual con opción de eliminación directa (icono papelera) para permitir reemplazo inmediato.
-  - **Zona de Drag & Drop:** Carga rápida de nuevas fotografías a Supabase Storage y actualización en tiempo real en la base de datos.
+  - **Zona de Drag & Drop:** Carga rápida de nuevas fotografías a Supabase Storage (`productos-imagenes`) y actualización en tiempo real en la base de datos.
 
 ## 9. REQUERIMIENTOS DEL FRONTEND (VERCEL)
 1. **Ruta Pública (`/`):**
@@ -198,7 +198,7 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
      * **Desktop (Rueda & Panning 360°):** Zoom fluido mediante rueda del ratón (wheel hasta 5x) y arrastre sostenido (`drag & pan`) libre en todas las direcciones con visualización de escala en tiempo real.
      * **Móvil / Táctil (Pinch & Double-Tap):** Gesto de pinza nativo con 2 dedos (pinch-to-zoom continuo), doble toque (double-tap toggle) para zoom/reset rápido y arrastre suave con 1 dedo sobre imagen ampliada.
      * **Toolbar Flotante:** Controles independientes fuera del viewport de transformación para zoom in (+), zoom out (-), reset (1x), cerrar y flechas de navegación.
-   - **Bolsa de Reserva & WhatsApp Directo (Revisión #14):** Drawer de reserva donde el cliente añade pares seleccionados, ingresa su Nombre, Teléfono WhatsApp (con prefijo pre-llenado `+56 9 ` para autocompletar 8 dígitos) y Comuna/Ciudad, seleccionando modalidad (Entrega presencial en Concepción/Penco o Envío Starken Por Pagar). Al enviar, **genera un código amigable `#RES-XXXX`**, persiste de forma asíncrona y blindada la reserva en Supabase y almacenamiento local sincronizado (`crearReserva`), abre `wa.me` hacia el número y nombre oficial configurado dinámicamente y **vacía de inmediato la bolsa de compras (React state y localStorage)** dejando el contador en 0.
+   - **Bolsa de Reserva & WhatsApp Directo (Revisión #21 - Normalización Total de Payload):** Drawer de reserva donde el cliente añade pares seleccionados, ingresa su Nombre, Teléfono WhatsApp (con prefijo pre-llenado `+56 9 ` para autocompletar 8 dígitos) y Comuna/Ciudad, seleccionando modalidad (Entrega presencial en Concepción/Penco o Envío Starken Por Pagar). Al enviar, genera un código amigable `#RES-XXXX`, normaliza los calzados con `variante_id`, `modelo_codigo`, `modelo_nombre`, `color`, `talla`, `cantidad` y `precio_unitario`, persiste de forma asíncrona en Supabase y n8n (`crearReserva`), abre `wa.me` hacia el número oficial configurado y vacía de inmediato la bolsa de compras.
    - **Widget de Chatbot Asistente con FAQ Contextual de Envíos (Revisión #16):** Chatbot flotante interactivo en la esquina inferior derecha (`/`), contextualizado sobre la tienda 100% online de remate de bodega.
      * **FAQ Prioritaria de Envíos y Modalidad:** Intercepta directamente consultas sobre envíos ("🚚 Envíos", "despachos", "Starken", "Chilexpress", "entregas") respondiendo de inmediato con el desglose oficial de entregas presenciales (Concepción/Penco sin costo) y envíos nacionales por pagar en 24-48 hrs, sin realizar búsquedas erróneas de calzado.
      * **Memoria Acumulativa (Slot Filling):** Mantiene en memoria el contexto de la conversación (modelo, color, presupuesto). Si el usuario pide *"zapatos negros"* y luego responde *"35"*, el bot fusiona ambos filtros y realiza la búsqueda cruzada estricta (`color='negro'` Y `talla='35'`).
@@ -215,8 +215,8 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
      * **Botón Destacado `🔄 Actualizar Datos`:** En la cabecera superior con feedback de spinner giratorio durante la sincronización activa.
      * **Bypass de Caché:** Headers `Cache-Control: no-cache, no-store, must-revalidate` y `Pragma: no-cache` en todas las operaciones de API.
    - **Módulo de Venta Multi-Producto y Vendedores Fijos (Revisión #16):** Selector de vendedor acotado exclusivamente a **`Camila`** (vendedora externa con cálculo de comisión) y **`Venta Interna`** ($0 comisión), con campo editable de "Monto de Venta Real / Cobrado" por calzado y recálculo de comisiones en vivo.
-   - **Flujo de Conversión "Convertir a Venta" con Precarga Híbrida Infalible (Revisión #19):** Al presionar "Convertir a Venta" en una reserva, `handleConvertirReservaAVenta` extrae los datos del calzado leyendo primero las columnas directas (`modelo_codigo`, `modelo_nombre`, `variante_id`, `color`, `talla`, `cantidad`, `precio_unitario`) y con fallback en el array `items`. Busca la coincidencia exacta en `allVariants` por `variante_id` o (`codigo_modelo` + `color` + `talla`) o `codigo_modelo`, precargando automáticamente `saleItems` con precio y stock real, asociando `convertingReservaId` y notas con `#RES-XXXX`. Al presionar "Confirmar Venta", se ejecuta el `UPDATE` atómico completando la reserva en Supabase.
-   - **Pestaña "📋 Reservas" con Soporte Híbrido (Columnas Planas + Array Items - Revisión #19):** `renderDetalleReserva` implementa Prioridad 1 en columnas directas de Supabase y Prioridad 2 en array estructurado `items`, garantizando que nunca se muestre "Sin calzados estructurados" si existe cualquiera de los datos del calzado. La columna "Pares / Detalles" renderiza las viñetas formateadas (`• [Nombre Fantasía] ([Código]) - [Color], T[Talla] x [Cant]`), y por separado debajo el badge de modalidad (`📍 Presencial/Envío`) y el badge de notas (`📝 Nota: [Texto]`), garantizando que las notas y la modalidad nunca lleven viñeta de calzado.
+   - **Flujo de Conversión "Convertir a Venta" con Resolución Inteligente (Revisión #21):** Al presionar "Convertir a Venta" en una reserva, `handleConvertirReservaAVenta` resuelve en orden prioritario la variante por `variante_id`, lista híbrida `shoes` o `modelo_codigo` + `color` + `talla`. Carga de inmediato en `saleItems` con su stock real y precio, asociando `convertingReservaId` y notas con `#RES-XXXX`. Al presionar "Confirmar Venta", se ejecuta el `UPDATE` atómico completando la reserva en Supabase.
+   - **Pestaña "📋 Reservas" con Resolución por Variante y Catálogo (Revisión #21):** `renderDetalleReserva` inspecciona `variante_id`, columnas directas y array `items`, cruzando con el catálogo de variantes para mostrar siempre el nombre de fantasía y código real. Renderiza las viñetas (`• [Nombre Fantasía] ([Código]) - [Color], T[Talla] x [Cant]`), y por separado debajo el badge de modalidad (`📍 Presencial/Envío`) y el badge de notas (`📝 Nota: [Texto]`), garantizando que las notas y la modalidad nunca lleven viñeta de calzado.
    - **Pestaña "Detalle de Movimientos" (Kardex Integral con 🟢 VENTA y 🔵 DEVOLUCIÓN - Revisión #16.1):** Auditoría visual en tiempo real de `detalle_movimientos` con badges diferenciados: 🟢 **VENTA** (-1 stock) con su ID de venta y botón de 1 clic para "Copiar ID", y 🔵 **DEVOLUCIÓN** (+1 stock) mostrando la referencia a la venta original (`venta_id`), motivo y fecha de operación. Refresco automático reactivo tras registrar devoluciones o ventas.
    - **Pestaña "⚙️ Parámetros" y Zona de Peligro:** Configuración persistente del teléfono WhatsApp oficial de ventas, nombre de la vendedora de contacto, modalidad de la tienda, entregas locales y envíos nacionales con alerta visual si el número no está configurado, y botón de **"🧹 Purgar Datos de Prueba (Reservas y Ventas)"** para resetear transacciones manteniendo 100% blindado el catálogo base (`productos`, `inventario_variantes`, `imagenes_variante`, `configuracion`).
    - **Módulo de Devoluciones con Selector Dual de Criterio (Revisión #16.1):** Selector tipo pestañas/radio superior:

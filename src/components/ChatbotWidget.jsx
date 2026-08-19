@@ -157,27 +157,28 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
       const vendedora = config.nombre_vendedora || config.nombre_duena || 'Vendedora';
 
       // 1. Guardar primero en BD y almacenamiento local generando #RES-XXXX
+      const primerItem = reservaActivaItem || {};
       const reservaCreada = await crearReserva({
         cliente_nombre: waNombre.trim(),
         cliente_whatsapp: waPhone.trim(),
         cliente_comuna: waComuna.trim(),
         tipo_entrega: waEntrega,
-        variante_id: reservaActivaItem?.variante_id || null,
-        modelo_codigo: reservaActivaItem?.codigo || 'Consulta General',
-        modelo_nombre: reservaActivaItem?.nombre || '',
-        color: reservaActivaItem?.color || '',
-        talla: reservaActivaItem?.talla || '',
-        cantidad: 1,
-        precio_unitario: reservaActivaItem?.precio || 0,
         notas: 'Reserva vía Asistente Virtual',
+        variante_id: primerItem.variante_id || primerItem.id || null,
+        modelo_codigo: primerItem.codigo_modelo || primerItem.codigo || primerItem.modelo_codigo || '',
+        modelo_nombre: primerItem.nombre_fantasia || primerItem.nombre || primerItem.modelo_nombre || '',
+        color: primerItem.color || '',
+        talla: String(primerItem.talla || ''),
+        cantidad: Number(primerItem.cantidad || 1),
+        precio_unitario: Number(primerItem.precio_vendedores || primerItem.precio || primerItem.precio_sugerido || primerItem.precio_unitario || 0),
         items: reservaActivaItem ? [{
-          variante_id: reservaActivaItem.variante_id || '',
-          codigo_modelo: reservaActivaItem.codigo || '',
-          nombre_fantasia: reservaActivaItem.nombre || '',
-          color: reservaActivaItem.color || '',
-          talla: reservaActivaItem.talla ? String(reservaActivaItem.talla) : '',
-          cantidad: 1,
-          precio: Number(reservaActivaItem.precio || 0)
+          variante_id: primerItem.variante_id || primerItem.id || '',
+          codigo_modelo: primerItem.codigo_modelo || primerItem.codigo || primerItem.modelo_codigo || '',
+          nombre_fantasia: primerItem.nombre_fantasia || primerItem.nombre || primerItem.modelo_nombre || '',
+          color: primerItem.color || '',
+          talla: String(primerItem.talla || ''),
+          cantidad: Number(primerItem.cantidad || 1),
+          precio: Number(primerItem.precio_vendedores || primerItem.precio || primerItem.precio_sugerido || primerItem.precio_unitario || 0)
         }] : []
       });
 

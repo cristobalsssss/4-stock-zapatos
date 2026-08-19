@@ -1,15 +1,15 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "3.5.0",
-    "last_updated": "2026-08-18 23:58:00",
+    "version": "3.6.0",
+    "last_updated": "2026-08-19 00:16:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #19 APLICADA - V3.5.0)",
-    "last_completed_task": "REVISIÓN #19: Soporte híbrido en reservas (columnas directas + items) y precarga infalible en Convertir a Venta",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #21 APLICADA - V3.6.0)",
+    "last_completed_task": "REVISIÓN #21: Normalización total de payload de reservas, resolución inteligente por variante_id y bucket de imágenes oficial",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",
         "database": "Supabase (Postgres Free)",
-        "storage": "Supabase Storage Bucket ('calzado-imagenes', 'productos', 'productos-imagenes')",
+        "storage": "Supabase Storage Bucket ('productos-imagenes')",
         "backend_skills": "n8n (Render Free)",
         "frontend": "Vercel (Free Tier)"
     },

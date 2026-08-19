@@ -59,27 +59,28 @@ export default function ReservationDrawer({
 
     try {
       // 1. Guardar primero en BD y almacenamiento blindado
+      const primerItem = bagItems[0] || {};
       const reservaCreada = await crearReserva({
         cliente_nombre: clientName.trim(),
         cliente_whatsapp: clientPhone.trim(),
         cliente_comuna: clientCity.trim(),
         tipo_entrega: entregaPref,
-        variante_id: bagItems[0]?.variante_id || bagItems[0]?.id || null,
-        modelo_codigo: bagItems[0]?.codigo_modelo || bagItems.map(i => i.codigo_modelo).join(', '),
-        modelo_nombre: bagItems[0]?.nombre_fantasia || bagItems.map(i => i.nombre_fantasia).join(', '),
-        color: bagItems[0]?.color || bagItems.map(i => i.color).join(', '),
-        talla: bagItems[0]?.talla ? String(bagItems[0].talla) : '',
-        cantidad: totalPares,
-        precio_unitario: bagItems[0]?.precio || 0,
         notas: clientNotes.trim(),
-        items: bagItems.map(i => ({
-          variante_id: i.variante_id || i.id || '',
-          codigo_modelo: i.codigo_modelo || '',
-          nombre_fantasia: i.nombre_fantasia || '',
-          color: i.color || '',
-          talla: i.talla ? String(i.talla) : '',
-          cantidad: Number(i.quantity || i.cantidad || 1),
-          precio: Number(i.precio || 0)
+        variante_id: primerItem.variante_id || primerItem.id || null,
+        modelo_codigo: primerItem.codigo_modelo || primerItem.codigo || primerItem.modelo_codigo || '',
+        modelo_nombre: primerItem.nombre_fantasia || primerItem.nombre || primerItem.modelo_nombre || '',
+        color: primerItem.color || '',
+        talla: String(primerItem.talla || ''),
+        cantidad: Number(totalPares || primerItem.cantidad || primerItem.quantity || 1),
+        precio_unitario: Number(primerItem.precio_vendedores || primerItem.precio || primerItem.precio_sugerido || primerItem.precio_unitario || 0),
+        items: bagItems.map(it => ({
+          variante_id: it.variante_id || it.id || '',
+          codigo_modelo: it.codigo_modelo || it.codigo || it.modelo_codigo || '',
+          nombre_fantasia: it.nombre_fantasia || it.nombre || it.modelo_nombre || '',
+          color: it.color || '',
+          talla: String(it.talla || ''),
+          cantidad: Number(it.quantity || it.cantidad || 1),
+          precio: Number(it.precio_vendedores || it.precio || it.precio_sugerido || it.precio_unitario || 0)
         }))
       });
 

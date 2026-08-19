@@ -83,6 +83,7 @@
 - [x] HOTFIX #3.3.4: Implementación de handlePurgarDatosPrueba y restauración pestaña parámetros
 - [x] REVISIÓN #18: Separación estricta de items vs notas en reservas y precarga exacta sin fallback ciego en Convertir a Venta
 - [x] REVISIÓN #19: Soporte híbrido de reservas (columnas planas + array items) y precarga infalible en Convertir a Venta
+- [x] REVISIÓN #21: Normalización total de payload de reservas, resolución por variante_id y bucket de imágenes oficial
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
