@@ -63,6 +63,10 @@
 - [x] REVISIÓN #14: Limpieza total e inmediata de la bolsa de reserva tras confirmar (React state y localStorage)
 - [x] REVISIÓN #14: Flujo seguro y atómico de "Convertir a Venta" (reserva se completa solo tras confirmar venta en BD)
 - [x] REVISIÓN #14: Script y función de purga de transacciones de prueba (`scripts/limpiar_transacciones_test.js` y botón UI en Admin)
+- [x] REVISIÓN #15: Consistencia y deduplicación en Reservas (UPDATE único sin clonar, reactividad en Reservas Activas a 0)
+- [x] REVISIÓN #15: Nombre comercial / fantasía en detalles de reserva ("• Viena (AA0005) - Negro, T37 x 1")
+- [x] REVISIÓN #15: Columna ID Venta con botón de 1 clic para copiar en Kardex/Movimientos
+- [x] REVISIÓN #15: Acción rápida "🔄 Devolver" en Kardex con precarga automática en Devoluciones
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

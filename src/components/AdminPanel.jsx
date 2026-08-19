@@ -27,7 +27,8 @@ import {
   MapPin,
   Check,
   Ban,
-  ArrowRight
+  ArrowRight,
+  Copy
 } from 'lucide-react';
 import { 
   registrarVenta, 
@@ -346,6 +347,35 @@ export default function AdminPanel({ products, onDataChanged }) {
     } finally {
       setIsLoadingMovimientos(false);
     }
+  };
+
+  // Helper para obtener el nombre comercial / fantasía del modelo
+  const getModelName = (codigo, fallback = '') => {
+    if (fallback && fallback !== 'Calzado' && fallback !== 'Consulta General' && fallback !== 'SIN-CODIGO') {
+      return fallback;
+    }
+    const prod = products.find(p => p.codigo_modelo === codigo);
+    return prod?.nombre_fantasia || fallback || '';
+  };
+
+  const [copiedVentaId, setCopiedVentaId] = useState(null);
+  const handleCopyVentaId = (id) => {
+    if (!id) return;
+    navigator.clipboard.writeText(id);
+    setCopiedVentaId(id);
+    setTimeout(() => setCopiedVentaId(null), 2000);
+  };
+
+  const handleIniciarDevolucionDesdeVenta = (mov) => {
+    const prod = mov.inventario_variantes?.productos;
+    const vId = mov.variante_id || mov.inventario_variantes?.id || '';
+    setDevVariantId(vId);
+    setDevCantidad(mov.cantidad || 1);
+    const idVentaRef = mov.venta_id || mov.ventas?.id || mov.id || '';
+    setDevVentaId(idVentaRef);
+    const shortCod = idVentaRef ? `#VTA-${idVentaRef.slice(-6).toUpperCase()}` : '';
+    setDevMotivo(`Devolución de venta ${shortCod} (${prod?.codigo_modelo || 'Calzado'} ${mov.inventario_variantes?.color || ''} T${mov.inventario_variantes?.talla || ''})`);
+    setActiveTab('devoluciones');
   };
 
   useEffect(() => {
@@ -1153,18 +1183,28 @@ export default function AdminPanel({ products, onDataChanged }) {
                       <td className="p-3 max-w-xs">
                         {res.items && res.items.length > 0 ? (
                           <div className="space-y-1">
-                            {res.items.map((it, idx) => (
-                              <div key={idx} className="text-[11px] text-zinc-700">
-                                • <strong className="text-zinc-900">{it.codigo_modelo}</strong> ({it.color}, T{it.talla}) x{it.quantity}
-                              </div>
-                            ))}
+                            {res.items.map((it, idx) => {
+                              const nomFantasia = getModelName(it.codigo_modelo, it.nombre_fantasia);
+                              return (
+                                <div key={idx} className="text-[11px] text-zinc-700">
+                                  • {nomFantasia ? <strong className="text-zinc-900">{nomFantasia} </strong> : null}
+                                  <span className="text-zinc-600">({it.codigo_modelo})</span> - {it.color}, T{it.talla} x {it.quantity || 1}
+                                </div>
+                              );
+                            })}
                             <div className="text-[10px] text-zinc-400 font-medium">{res.tipo_entrega}</div>
                           </div>
-                        ) : res.modelo_codigo && res.modelo_codigo !== 'Consulta General' ? (
+                        ) : res.modelo_codigo && res.modelo_codigo !== 'Consulta General' && res.modelo_codigo !== 'SIN-CODIGO' ? (
                           <div className="space-y-0.5">
-                            <div className="text-[11px] text-zinc-700">
-                              • <strong className="text-zinc-900">{res.modelo_codigo}</strong> {res.color ? `(${res.color}, T${res.talla})` : ''} x{res.cantidad || 1}
-                            </div>
+                            {(() => {
+                              const nomFantasia = getModelName(res.modelo_codigo, res.modelo_nombre);
+                              return (
+                                <div className="text-[11px] text-zinc-700">
+                                  • {nomFantasia ? <strong className="text-zinc-900">{nomFantasia} </strong> : null}
+                                  <span className="text-zinc-600">({res.modelo_codigo})</span> {res.color ? `- ${res.color}, T${res.talla}` : ''} x {res.cantidad || 1}
+                                </div>
+                              );
+                            })()}
                             <div className="text-[10px] text-zinc-400 font-medium">{res.tipo_entrega}</div>
                           </div>
                         ) : (
@@ -1289,9 +1329,10 @@ export default function AdminPanel({ products, onDataChanged }) {
 
           {/* Tabla de Movimientos */}
           <div className="border border-zinc-200 rounded-2xl overflow-x-auto">
-            <table className="w-full text-left text-xs min-w-[850px]">
+            <table className="w-full text-left text-xs min-w-[950px]">
               <thead className="bg-zinc-50 text-zinc-500 font-bold uppercase text-[10px] tracking-wider border-b border-zinc-200">
                 <tr>
+                  <th className="p-3">ID Venta</th>
                   <th className="p-3">Fecha Operación</th>
                   <th className="p-3">Tipo</th>
                   <th className="p-3">Calzado (Modelo / Color / Talla)</th>
@@ -1301,19 +1342,20 @@ export default function AdminPanel({ products, onDataChanged }) {
                   <th className="p-3">Vendedor & Pago</th>
                   <th className="p-3">Registro BD</th>
                   <th className="p-3">Notas</th>
+                  <th className="p-3 text-right">Acción</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-200">
                 {isLoadingMovimientos ? (
                   <tr>
-                    <td colSpan={9} className="p-8 text-center text-zinc-400">
+                    <td colSpan={11} className="p-8 text-center text-zinc-400">
                       <RefreshCw className="w-6 h-6 animate-spin mx-auto text-brand-600 mb-2" />
                       <span>Cargando historial de movimientos...</span>
                     </td>
                   </tr>
                 ) : filteredMovimientos.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="p-8 text-center text-zinc-400 font-medium">
+                    <td colSpan={11} className="p-8 text-center text-zinc-400 font-medium">
                       No se encontraron registros de movimientos con los filtros ingresados.
                     </td>
                   </tr>
@@ -1322,6 +1364,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                     const prod = mov.inventario_variantes?.productos;
                     const isVenta = (mov.tipo_movimiento || '').toLowerCase().includes('venta');
                     const isDev = (mov.tipo_movimiento || '').toLowerCase().includes('devoluc');
+                    const vtaId = mov.venta_id || mov.ventas?.id;
                     const fechaOp = mov.ventas?.fecha_venta 
                       ? new Date(mov.ventas.fecha_venta).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' })
                       : new Date(mov.created_at).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -1332,6 +1375,29 @@ export default function AdminPanel({ products, onDataChanged }) {
 
                     return (
                       <tr key={mov.id} className="hover:bg-zinc-50/70 transition-colors">
+                        <td className="p-3 whitespace-nowrap font-mono text-[11px]">
+                          {vtaId ? (
+                            <div className="flex items-center gap-1.5">
+                              <span className="bg-zinc-100 px-1.5 py-0.5 rounded text-zinc-800 font-bold" title={vtaId}>
+                                #VTA-{vtaId.slice(-6).toUpperCase()}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleCopyVentaId(vtaId)}
+                                className="p-1 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-800 rounded transition-colors cursor-pointer"
+                                title="Copiar ID de Venta"
+                              >
+                                {copiedVentaId === vtaId ? (
+                                  <span className="text-[9px] text-emerald-600 font-bold">¡Copiado!</span>
+                                ) : (
+                                  <Copy className="w-3 h-3" />
+                                )}
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-zinc-400 text-[10px]">-</span>
+                          )}
+                        </td>
                         <td className="p-3 font-semibold text-zinc-800 whitespace-nowrap">
                           {fechaOp}
                         </td>
@@ -1348,7 +1414,7 @@ export default function AdminPanel({ products, onDataChanged }) {
                         </td>
                         <td className="p-3">
                           <div className="font-bold text-zinc-900">
-                            {prod?.codigo_modelo || 'N/A'} - {prod?.nombre_fantasia || ''}
+                            {prod?.codigo_modelo || 'N/A'} {prod?.nombre_fantasia ? `- ${prod.nombre_fantasia}` : ''}
                           </div>
                           <div className="text-[11px] text-zinc-500">
                             Color: <strong className="text-zinc-700">{mov.inventario_variantes?.color}</strong> • Talla: <strong className="text-brand-800 font-bold">{mov.inventario_variantes?.talla}</strong>
@@ -1372,6 +1438,19 @@ export default function AdminPanel({ products, onDataChanged }) {
                         </td>
                         <td className="p-3 text-[11px] text-zinc-500 max-w-xs truncate" title={mov.notas || mov.ventas?.notas}>
                           {mov.notas || mov.ventas?.notas || '-'}
+                        </td>
+                        <td className="p-3 text-right whitespace-nowrap">
+                          {isVenta && (
+                            <button
+                              type="button"
+                              onClick={() => handleIniciarDevolucionDesdeVenta(mov)}
+                              className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer active:scale-95 ml-auto shadow-2xs"
+                              title="Iniciar devolución precargada"
+                            >
+                              <RotateCcw className="w-3 h-3" />
+                              <span>Devolver</span>
+                            </button>
+                          )}
                         </td>
                       </tr>
                     );
@@ -1397,6 +1476,25 @@ export default function AdminPanel({ products, onDataChanged }) {
               <p className="text-xs text-zinc-500">Suma automáticamente la cantidad al stock disponible en bodega.</p>
             </div>
           </div>
+
+          {devVentaId && (
+            <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold rounded-2xl flex items-center justify-between animate-fade-in shadow-2xs">
+              <span className="flex items-center gap-2">
+                <RotateCcw className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                <span>Devolución precargada desde la Venta <strong>#{devVentaId.slice(-6).toUpperCase()}</strong></span>
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setDevVentaId('');
+                  setDevMotivo('Cambio de talla');
+                }}
+                className="text-amber-700 hover:text-amber-900 text-xs font-bold underline cursor-pointer"
+              >
+                Limpiar
+              </button>
+            </div>
+          )}
 
           <form onSubmit={handleExecuteDevolucion} className="space-y-4">
             <div>

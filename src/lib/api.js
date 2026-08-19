@@ -458,20 +458,7 @@ const RESERVAS_STORAGE_KEY = 'stock_zapatos_reservas';
 export async function getReservas() {
   const reservasMap = new Map();
 
-  // 1. Cargar desde localStorage
-  try {
-    const localStr = localStorage.getItem(RESERVAS_STORAGE_KEY);
-    if (localStr) {
-      const localList = JSON.parse(localStr);
-      if (Array.isArray(localList)) {
-        localList.forEach(r => reservasMap.set(r.id, r));
-      }
-    }
-  } catch (e) {
-    console.error('Error leyendo reservas locales:', e);
-  }
-
-  // 2. Cargar desde Supabase y combinar
+  // 1. Cargar desde Supabase (Fuente de verdad canónica)
   try {
     const { data, error } = await supabase
       .from('reservas')
@@ -479,15 +466,41 @@ export async function getReservas() {
       .order('created_at', { ascending: false });
 
     if (!error && Array.isArray(data)) {
-      data.forEach(r => reservasMap.set(r.id, r));
+      data.forEach(r => {
+        const key = r.codigo_reserva || r.id;
+        reservasMap.set(key, r);
+      });
     }
   } catch (err) {
     console.warn('Consulta tabla reservas fallback local:', err);
   }
 
+  // 2. Cargar desde localStorage solo las que no existan en Supabase (ej: offline o recién creadas)
+  try {
+    const localStr = localStorage.getItem(RESERVAS_STORAGE_KEY);
+    if (localStr) {
+      const localList = JSON.parse(localStr);
+      if (Array.isArray(localList)) {
+        localList.forEach(r => {
+          const key = r.codigo_reserva || r.id;
+          if (!reservasMap.has(key)) {
+            reservasMap.set(key, r);
+          }
+        });
+      }
+    }
+  } catch (e) {
+    console.error('Error leyendo reservas locales:', e);
+  }
+
   const result = Array.from(reservasMap.values()).sort(
     (a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0)
   );
+
+  // Sincronizar localStorage con la lista limpia y deduplicada
+  try {
+    localStorage.setItem(RESERVAS_STORAGE_KEY, JSON.stringify(result));
+  } catch (e) {}
 
   return result;
 }
@@ -592,10 +605,10 @@ export async function crearReserva({
     }
   }
 
-  // 2. Sincronizar en almacenamiento local y notificar reactivamente a la UI
+  // 2. Sincronizar en almacenamiento local deduplicado
   try {
     const prev = await getReservas();
-    const actualizadas = [nuevaReserva, ...prev.filter(r => r.id !== nuevaReserva.id)];
+    const actualizadas = [nuevaReserva, ...prev.filter(r => r.codigo_reserva !== nuevaReserva.codigo_reserva && r.id !== nuevaReserva.id)];
     localStorage.setItem(RESERVAS_STORAGE_KEY, JSON.stringify(actualizadas));
     window.dispatchEvent(new Event('reservas_updated'));
   } catch (e) {
@@ -630,10 +643,14 @@ export async function cancelarReserva(reservaId, motivo = 'Cancelada por Adminis
 
     // Fallback directo a Supabase
     try {
-      await supabase
-        .from('reservas')
-        .update({ estado: 'Cancelada', notas: motivo, updated_at: new Date().toISOString() })
-        .eq('id', reservaId);
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reservaId);
+      let query = supabase.from('reservas').update({ estado: 'Cancelada', notas: motivo, updated_at: new Date().toISOString() });
+      if (isUuid) {
+        query = query.eq('id', reservaId);
+      } else {
+        query = query.or(`id.eq.${reservaId},codigo_reserva.eq.${reservaId}`);
+      }
+      await query;
     } catch (dbErr) {
       console.error('Error actualizando estado en Supabase:', dbErr);
     }
@@ -642,7 +659,7 @@ export async function cancelarReserva(reservaId, motivo = 'Cancelada por Adminis
   // 2. Sincronizar en localStorage y notificar reactivamente a la UI
   try {
     const list = await getReservas();
-    const actualizadas = list.map(r => r.id === reservaId ? { ...r, estado: 'Cancelada', notas: motivo } : r);
+    const actualizadas = list.map(r => (r.id === reservaId || r.codigo_reserva === reservaId) ? { ...r, estado: 'Cancelada', notas: motivo } : r);
     localStorage.setItem(RESERVAS_STORAGE_KEY, JSON.stringify(actualizadas));
     window.dispatchEvent(new Event('reservas_updated'));
     return actualizadas;
@@ -652,23 +669,32 @@ export async function cancelarReserva(reservaId, motivo = 'Cancelada por Adminis
   }
 }
 
-export async function actualizarEstadoReserva(reservaId, nuevoEstado, motivo) {
+export async function actualizarEstadoReserva(reservaId, nuevoEstado, motivo = '') {
   if (nuevoEstado === 'Cancelada') {
     return await cancelarReserva(reservaId, motivo || 'Cancelada por Administrador');
   }
 
+  // Actualizar en Supabase
   try {
-    await supabase
-      .from('reservas')
-      .update({ estado: nuevoEstado, updated_at: new Date().toISOString() })
-      .eq('id', reservaId);
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reservaId);
+    const updateData = { estado: nuevoEstado, updated_at: new Date().toISOString() };
+    if (motivo) updateData.notas = motivo;
+
+    let query = supabase.from('reservas').update(updateData);
+    if (isUuid) {
+      query = query.eq('id', reservaId);
+    } else {
+      query = query.or(`id.eq.${reservaId},codigo_reserva.eq.${reservaId}`);
+    }
+    await query;
   } catch (err) {
     console.warn('Fallo actualización Supabase reserva:', err);
   }
 
+  // Actualizar en localStorage
   try {
     const list = await getReservas();
-    const actualizadas = list.map(r => r.id === reservaId ? { ...r, estado: nuevoEstado } : r);
+    const actualizadas = list.map(r => (r.id === reservaId || r.codigo_reserva === reservaId) ? { ...r, estado: nuevoEstado, ...(motivo ? { notas: motivo } : {}) } : r);
     localStorage.setItem(RESERVAS_STORAGE_KEY, JSON.stringify(actualizadas));
     window.dispatchEvent(new Event('reservas_updated'));
     return actualizadas;
