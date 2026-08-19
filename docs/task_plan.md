@@ -75,6 +75,9 @@
 - [x] REVISIÓN #16.1: Reactividad inmediata atómica (Cero F5) en ventas, devoluciones y reservas
 - [x] REVISIÓN #16.1: Blindaje universal de pares / detalles en Reservas (`parseReservaItems`)
 - [x] REVISIÓN #16.1: Selector dual de criterio en Devoluciones (📋 Desde Venta Registrada vs 👟 Por Catálogo)
+- [x] REVISIÓN #17: Reparar flujo "Convertir a Venta" en Reservas con precarga completa de calzados y precio
+- [x] REVISIÓN #17: Parser Universal Blindado para "Pares / Detalles" en Reservas (`renderDetalleReserva`)
+- [x] REVISIÓN #17: Auto-Polling cada 20s, bypass de caché y botón destacado `🔄 Actualizar Datos`
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN

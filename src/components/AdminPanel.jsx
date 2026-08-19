@@ -243,101 +243,6 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
     }
   };
 
-  const handleConvertirReservaAVenta = (reserva) => {
-    // 1. Guardar ID de la reserva en conversión pendiente (se completará SOLO al confirmar la venta)
-    setConvertingReservaId(reserva.id);
-
-    // 2. Cargar items de la reserva al tab de ventas usando el parser blindado
-    const parsed = parseReservaItems(reserva);
-    const itemsCargados = [];
-
-    if (parsed.length > 0) {
-      parsed.forEach(it => {
-        const v = allVariants.find(vItem => 
-          (it.variante_id && vItem.id === it.variante_id) ||
-          ((vItem.codigo_modelo === it.codigo || vItem.codigo_modelo === it.codigo_modelo) &&
-           (!it.color || vItem.color.toLowerCase() === it.color.toLowerCase()) &&
-           (!it.talla || String(vItem.talla) === String(it.talla)))
-        );
-        if (v) {
-          itemsCargados.push({
-            variante_id: v.id,
-            codigo_modelo: v.codigo_modelo,
-            nombre_fantasia: v.nombre_fantasia,
-            color: v.color,
-            talla: v.talla,
-            sku: v.sku_variante,
-            stock_disponible: v.stock_disponible,
-            precio_unitario: Number(it.precio) || Number(v.precio_vendedores),
-            precio_interno: Number(v.precio_interno),
-            cantidad: Number(it.cantidad) || 1
-          });
-        }
-      });
-    }
-
-    if (itemsCargados.length > 0) {
-      setSaleItems(itemsCargados);
-    }
-    const codRes = reserva.codigo_reserva ? `#${reserva.codigo_reserva} ` : '';
-    setNotasVenta(`Reserva ${codRes}de ${reserva.cliente_nombre} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.tipo_entrega || ''}. ${reserva.notas || ''}`);
-    setActiveTab('ventas');
-  };
-
-  const handlePurgarDatosPrueba = async () => {
-    const confirm = window.confirm(
-      "⚠️ ¿Estás seguro de purgar todos los datos de prueba de Reservas, Ventas y Movimientos?\n\nEl catálogo base de productos, variantes y configuración se mantendrá 100% blindado e intacto."
-    );
-    if (!confirm) return;
-
-    setIsPurgingData(true);
-    setPurgeStatusMsg(null);
-    try {
-      const res = await purgarDatosPruebaFrontend();
-      setPurgeStatusMsg(res.message);
-      await refreshAllAdminData();
-      setTimeout(() => setPurgeStatusMsg(null), 5000);
-    } catch (err) {
-      console.error(err);
-      setPurgeStatusMsg('Error al purgar datos: ' + err.message);
-    } finally {
-      setIsPurgingData(false);
-    }
-  };
-
-  const filteredReservas = useMemo(() => {
-    return reservas.filter(r => {
-      if (reservaFilterEstado !== 'todos' && r.estado !== reservaFilterEstado) return false;
-      if (!reservaSearch.trim()) return true;
-      const q = reservaSearch.toLowerCase();
-      const nom = (r.cliente_nombre || '').toLowerCase();
-      const com = (r.cliente_comuna || '').toLowerCase();
-      const tel = (r.cliente_whatsapp || '').toLowerCase();
-      const not = (r.notas || '').toLowerCase();
-      return nom.includes(q) || com.includes(q) || tel.includes(q) || not.includes(q);
-    });
-  }, [reservas, reservaFilterEstado, reservaSearch]);
-
-  // =========================================================================
-  // ESTADO PARA TAB 3: DETALLE DE MOVIMIENTOS KARDEX
-  // =========================================================================
-  const [movimientos, setMovimientos] = useState([]);
-  const [isLoadingMovimientos, setIsLoadingMovimientos] = useState(false);
-  const [movSearch, setMovSearch] = useState('');
-  const [movFilterTipo, setMovFilterTipo] = useState('todos');
-
-  const loadMovimientos = async () => {
-    setIsLoadingMovimientos(true);
-    try {
-      const data = await getDetalleMovimientos();
-      setMovimientos(data || []);
-    } catch (err) {
-      console.error('Error al cargar movimientos:', err);
-    } finally {
-      setIsLoadingMovimientos(false);
-    }
-  };
-
   // Helper para obtener el nombre comercial / fantasía del modelo
   const getModelName = (codigo, fallback = '') => {
     if (fallback && fallback !== 'Calzado' && fallback !== 'Consulta General' && fallback !== 'SIN-CODIGO') {
@@ -347,59 +252,119 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
     return prod?.nombre_fantasia || fallback || '';
   };
 
-  // Helper blindado universal para procesar items de reservas (JSON, array o texto plano)
-  const parseReservaItems = (res) => {
+  // =========================================================================
+  // PARSER UNIVERSAL BLINDADO PARA "PARES / DETALLES" EN RESERVAS
+  // =========================================================================
+  const renderDetalleReserva = (res, catalogo = products) => {
     if (!res) return [];
-    let raw = res.items || res.detalles;
+
+    // 1. Inspeccionar en orden todos los posibles campos
+    let raw = res.items || res.detalles || res.productos || res.pares_reserva || res.metadata?.items || res.metadata?.detalles;
+
     if (typeof raw === 'string') {
       try {
         raw = JSON.parse(raw);
-      } catch (e) {
-        raw = null;
+      } catch {
+        // No es JSON, mantener como texto plano
       }
     }
+
+    const resolveName = (cod, fallback = '') => {
+      if (fallback && fallback !== 'Calzado' && fallback !== 'Consulta General' && fallback !== 'SIN-CODIGO') {
+        return fallback;
+      }
+      const cleanCod = String(cod || '').trim().toLowerCase();
+      const prod = (catalogo || []).find(p => String(p.codigo_modelo || '').trim().toLowerCase() === cleanCod);
+      return prod?.nombre_fantasia || fallback || '';
+    };
+
+    // A) Array estructurado
     if (Array.isArray(raw) && raw.length > 0) {
       return raw.map(it => {
-        const cod = it.codigo_modelo || it.modelo_codigo || it.sku || '';
-        const nom = it.nombre_fantasia || it.nombre || getModelName(cod, it.nombre_fantasia);
+        const cod = it.codigo_modelo || it.modelo_codigo || it.sku || it.codigo || '';
+        const fallbackNom = it.nombre_fantasia || it.nombre || it.modelo_nombre || it.modelo || '';
+        const nom = resolveName(cod, fallbackNom);
         return {
           nombre: nom || 'Calzado',
           codigo: cod,
           color: it.color || '',
-          talla: it.talla || '',
-          cantidad: it.quantity || it.cantidad || 1,
-          precio: it.precio || it.precio_unitario || 0
+          talla: it.talla ? String(it.talla) : '',
+          cantidad: Number(it.quantity || it.cantidad || it.cant || 1),
+          precio: Number(it.precio || it.precio_unitario || 0),
+          variante_id: it.variante_id || it.id || ''
         };
       });
     }
 
-    if (res.modelo_codigo && res.modelo_codigo !== 'Consulta General' && res.modelo_codigo !== 'SIN-CODIGO') {
-      const cods = String(res.modelo_codigo).split(',').map(s => s.trim());
-      const noms = String(res.modelo_nombre || '').split(',').map(s => s.trim());
+    // B) Texto plano que no era JSON
+    if (typeof raw === 'string' && raw.trim() && !raw.trim().startsWith('{') && !raw.trim().startsWith('[')) {
+      return [{
+        nombre: raw.replace(/^Modalidad:[^.]*\.?\s*/i, '').trim(),
+        codigo: '',
+        color: '',
+        talla: '',
+        cantidad: 1,
+        precio: 0,
+        isPlainText: true
+      }];
+    }
+
+    // C) Fallback: campos raíz (modelo_codigo, variante_id, etc.)
+    const rootCod = res.modelo_codigo || res.codigo_modelo || res.variante_id || '';
+    if (rootCod && rootCod !== 'Consulta General' && rootCod !== 'SIN-CODIGO') {
+      const cods = String(rootCod).split(',').map(s => s.trim());
+      const noms = String(res.modelo_nombre || res.nombre_fantasia || '').split(',').map(s => s.trim());
       const cols = String(res.color || '').split(',').map(s => s.trim());
       const tals = String(res.talla || '').split(',').map(s => s.trim());
 
       return cods.map((cod, idx) => {
-        const nom = getModelName(cod, noms[idx] || res.modelo_nombre);
+        const nom = resolveName(cod, noms[idx] || res.modelo_nombre);
         const col = cols[idx] || res.color || '';
-        const tal = tals[idx] || res.talla || '';
-        const cant = cods.length === 1 && (res.cantidad || 1) > 1 ? res.cantidad : 1;
+        const tal = tals[idx] || res.talla ? String(tals[idx] || res.talla) : '';
+        const cant = cods.length === 1 && (res.cantidad || 1) > 1 ? Number(res.cantidad) : 1;
         return {
           nombre: nom || 'Calzado',
           codigo: cod,
           color: col,
           talla: tal,
           cantidad: cant,
-          precio: res.precio_unitario || 0
+          precio: Number(res.precio_unitario || res.precio || 0),
+          variante_id: res.variante_id || ''
         };
       });
     }
 
-    return [];
+    // D) Fallback de notas
+    if (res.notas && res.notas.trim()) {
+      const cleanNota = res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '').trim();
+      if (cleanNota) {
+        return [{
+          nombre: cleanNota,
+          codigo: '',
+          color: '',
+          talla: '',
+          cantidad: 1,
+          precio: 0,
+          isPlainText: true
+        }];
+      }
+    }
+
+    return [{
+      nombre: 'Reserva General',
+      codigo: '',
+      color: '',
+      talla: '',
+      cantidad: 1,
+      precio: 0,
+      isPlainText: true
+    }];
   };
 
-  // Master refresh reactivo e inmediato (CERO F5)
+  // Master refresh reactivo e inmediato con estado de carga (CERO F5 / SHIFT+F5)
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const refreshAllAdminData = async () => {
+    setIsRefreshing(true);
     try {
       await Promise.all([
         loadReservas(),
@@ -408,7 +373,107 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
       ]);
     } catch (err) {
       console.error('Error al sincronizar datos admin:', err);
+    } finally {
+      setIsRefreshing(false);
     }
+  };
+
+  // Auto-Polling en segundo plano cada 20 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refreshAllAdminData();
+    }, 20000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleConvertirReservaAVenta = (reserva) => {
+    // 1. Guardar ID de la reserva en conversión pendiente
+    setConvertingReservaId(reserva.id);
+
+    // 2. Extraer items usando el parser universal blindado
+    const parsed = renderDetalleReserva(reserva, products);
+    const itemsCargados = [];
+
+    parsed.forEach(it => {
+      if (it.isPlainText) return;
+
+      // Buscar variante en catálogo
+      let matchedVariant = null;
+
+      if (it.variante_id) {
+        matchedVariant = allVariants.find(v => v.id === it.variante_id);
+      }
+
+      if (!matchedVariant && it.codigo) {
+        const codClean = String(it.codigo).trim().toLowerCase();
+        const colClean = String(it.color || '').trim().toLowerCase();
+        const talClean = String(it.talla || '').trim();
+
+        matchedVariant = allVariants.find(v => 
+          String(v.codigo_modelo || '').trim().toLowerCase() === codClean &&
+          (!colClean || String(v.color || '').trim().toLowerCase() === colClean) &&
+          (!talClean || String(v.talla || '').trim() === talClean)
+        );
+
+        if (!matchedVariant) {
+          matchedVariant = allVariants.find(v => 
+            String(v.codigo_modelo || '').trim().toLowerCase() === codClean
+          );
+        }
+      }
+
+      if (matchedVariant) {
+        const precioUnitario = Number(it.precio) > 0 ? Number(it.precio) : Number(matchedVariant.precio_vendedores);
+        itemsCargados.push({
+          variante_id: matchedVariant.id,
+          codigo_modelo: matchedVariant.codigo_modelo,
+          nombre_fantasia: matchedVariant.nombre_fantasia || it.nombre,
+          color: matchedVariant.color || it.color,
+          talla: matchedVariant.talla || it.talla,
+          sku: matchedVariant.sku_variante,
+          stock_disponible: matchedVariant.stock_disponible,
+          precio_unitario: precioUnitario,
+          precio_interno: Number(matchedVariant.precio_interno || 0),
+          cantidad: Math.max(1, Number(it.cantidad) || 1)
+        });
+      } else if (allVariants.length > 0) {
+        const fallbackVar = allVariants[0];
+        const precioUnitario = Number(it.precio) > 0 ? Number(it.precio) : Number(fallbackVar.precio_vendedores);
+        itemsCargados.push({
+          variante_id: fallbackVar.id,
+          codigo_modelo: it.codigo || fallbackVar.codigo_modelo,
+          nombre_fantasia: it.nombre || fallbackVar.nombre_fantasia,
+          color: it.color || fallbackVar.color,
+          talla: it.talla || fallbackVar.talla,
+          sku: fallbackVar.sku_variante,
+          stock_disponible: fallbackVar.stock_disponible,
+          precio_unitario: precioUnitario,
+          precio_interno: Number(fallbackVar.precio_interno || 0),
+          cantidad: Math.max(1, Number(it.cantidad) || 1)
+        });
+      }
+    });
+
+    if (itemsCargados.length === 0 && allVariants.length > 0) {
+      const v = allVariants[0];
+      itemsCargados.push({
+        variante_id: v.id,
+        codigo_modelo: v.codigo_modelo,
+        nombre_fantasia: v.nombre_fantasia,
+        color: v.color,
+        talla: v.talla,
+        sku: v.sku_variante,
+        stock_disponible: v.stock_disponible,
+        precio_unitario: Number(v.precio_vendedores),
+        precio_interno: Number(v.precio_interno),
+        cantidad: 1
+      });
+    }
+
+    setSaleItems(itemsCargados);
+    const codRes = reserva.codigo_reserva ? `#${reserva.codigo_reserva} ` : '';
+    setNotasVenta(`Reserva ${codRes}de ${reserva.cliente_nombre || 'Cliente'} (${reserva.cliente_comuna || 'Concepción'}). ${reserva.tipo_entrega || ''}. ${reserva.cliente_whatsapp ? `Tel: ${reserva.cliente_whatsapp}` : ''}`);
+    setActiveTab('ventas');
   };
 
   const [copiedVentaId, setCopiedVentaId] = useState(null);
@@ -769,11 +834,12 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
           <button
             type="button"
             onClick={refreshAllAdminData}
-            title="Sincronizar todos los datos en tiempo real"
-            className="flex items-center gap-1.5 px-3 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-xl text-xs font-bold transition-all cursor-pointer active:scale-95"
+            disabled={isRefreshing}
+            title="Actualizar datos en tiempo real (Cero Shift+F5)"
+            className="flex items-center gap-2 px-3.5 py-2 bg-brand-700 hover:bg-brand-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs hover:shadow-sm cursor-pointer active:scale-95 disabled:opacity-50"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Sincronizar</span>
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Actualizando...' : '🔄 Actualizar Datos'}</span>
           </button>
           {onLogout && (
             <button
@@ -1301,18 +1367,24 @@ export default function AdminPanel({ products, onDataChanged, onLogout }) {
                       </td>
                       <td className="p-3 max-w-xs">
                         {(() => {
-                          const parsedItems = parseReservaItems(res);
+                          const parsedItems = renderDetalleReserva(res, products);
                           return (
                             <div className="space-y-1">
                               {parsedItems.length > 0 ? (
                                 parsedItems.map((it, idx) => (
-                                  <div key={idx} className="text-[11px] text-zinc-800">
-                                    • <strong className="text-zinc-900">{it.nombre}</strong> {it.codigo ? <span className="text-zinc-500 font-medium">({it.codigo})</span> : null} {it.color || it.talla ? `- ${it.color ? it.color : ''}${it.talla ? `, T${it.talla}` : ''}` : ''} x {it.cantidad}
+                                  <div key={idx} className="text-[11px] text-zinc-800 font-medium">
+                                    {it.isPlainText ? (
+                                      <span>• {it.nombre}</span>
+                                    ) : (
+                                      <span>
+                                        • <strong className="text-zinc-900">{it.nombre}</strong> {it.codigo ? <span className="text-zinc-500 font-medium">({it.codigo})</span> : null} {it.color || it.talla ? `- ${it.color ? it.color : ''}${it.talla ? `, T${it.talla}` : ''}` : ''} x {it.cantidad}
+                                      </span>
+                                    )}
                                   </div>
                                 ))
                               ) : (
                                 <div className="text-[11px] text-zinc-700 font-medium">
-                                  {res.notas ? res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '') || 'Reserva general' : 'Consulta general'}
+                                  • {res.notas ? res.notas.replace(/^Modalidad:[^.]*\.?\s*/i, '') || 'Reserva general' : 'Calzado Reserva'}
                                 </div>
                               )}
 

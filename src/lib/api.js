@@ -71,7 +71,11 @@ export async function registrarVenta({ variante_id, cantidad, vendedor, medio_pa
   try {
     const res = await fetch(`${N8N_URL}/webhook/registrar-venta`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      },
       body: JSON.stringify({
         variante_id,
         cantidad,
@@ -174,7 +178,11 @@ export async function registrarDevolucion({ variante_id, cantidad, motivo, venta
   try {
     const res = await fetch(`${N8N_URL}/webhook/registrar-devolucion`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      },
       body: JSON.stringify({ variante_id, cantidad, motivo, venta_id }),
     });
 
@@ -567,7 +575,11 @@ export async function crearReserva({
   try {
     const res = await fetch(`${N8N_URL}/webhook/crear-reserva`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      },
       body: JSON.stringify(reservaPayload),
     });
 
@@ -603,6 +615,7 @@ export async function crearReserva({
           cantidad: nuevaReserva.cantidad,
           precio_unitario: nuevaReserva.precio_unitario,
           notas: nuevaReserva.notas,
+          items: nuevaReserva.items,
           estado: 'Pendiente'
         })
         .select()
@@ -641,7 +654,11 @@ export async function cancelarReserva(reservaId, motivo = 'Cancelada por Adminis
   try {
     const res = await fetch(`${N8N_URL}/webhook/cancelar-reserva`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      },
       body: JSON.stringify({
         id: reservaId,
         reserva_id: reservaId,
