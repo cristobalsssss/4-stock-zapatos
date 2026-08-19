@@ -80,10 +80,12 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
       codigo_modelo: product.codigo_modelo,
       nombre_fantasia: product.nombre_fantasia,
       variante_id: activeVariant.id,
+      id: activeVariant.id,
       sku: activeVariant.sku_variante,
       color: activeVariant.color,
       talla: activeVariant.talla,
       precio: Number(activeVariant.precio_vendedores),
+      precio_vendedores: Number(activeVariant.precio_vendedores),
       precio_interno: Number(activeVariant.precio_interno),
       stock_disponible: activeVariant.stock_disponible,
       imagen_url: displayImage

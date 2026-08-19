@@ -1008,15 +1008,19 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
 
       if (matchColor && matchTalla && matchPrecio) {
         variantesDisponibles.push({
+          id: v.id,
+          variante_id: v.id,
           codigo: prod.codigo_modelo,
+          codigo_modelo: prod.codigo_modelo,
           nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+          nombre_fantasia: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
           material: prod.material,
           imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
           color: v.color,
           talla: v.talla,
           precio: precio,
+          precio_vendedores: precio,
           stock: v.stock_disponible,
-          variante_id: v.id,
           producto_id: prod.id
         });
       }
@@ -1033,15 +1037,19 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
         (prod.inventario_variantes || []).forEach(v => {
           if (v.stock_disponible > 0) {
             alternativas.push({
+              id: v.id,
+              variante_id: v.id,
               codigo: prod.codigo_modelo,
+              codigo_modelo: prod.codigo_modelo,
               nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+              nombre_fantasia: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
               material: prod.material,
               imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
               color: v.color,
               talla: v.talla,
               precio: Number(v.precio_vendedores),
+              precio_vendedores: Number(v.precio_vendedores),
               stock: v.stock_disponible,
-              variante_id: v.id,
               producto_id: prod.id
             });
           }
@@ -1051,15 +1059,19 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
         (prod.inventario_variantes || []).forEach(v => {
           if (v.stock_disponible > 0 && String(v.talla) === String(nuevoContexto.talla)) {
             alternativas.push({
+              id: v.id,
+              variante_id: v.id,
               codigo: prod.codigo_modelo,
+              codigo_modelo: prod.codigo_modelo,
               nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+              nombre_fantasia: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
               material: prod.material,
               imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
               color: v.color,
               talla: v.talla,
               precio: Number(v.precio_vendedores),
+              precio_vendedores: Number(v.precio_vendedores),
               stock: v.stock_disponible,
-              variante_id: v.id,
               producto_id: prod.id
             });
           }

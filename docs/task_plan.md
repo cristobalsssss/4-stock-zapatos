@@ -84,6 +84,7 @@
 - [x] REVISIÓN #18: Separación estricta de items vs notas en reservas y precarga exacta sin fallback ciego en Convertir a Venta
 - [x] REVISIÓN #19: Soporte híbrido de reservas (columnas planas + array items) y precarga infalible en Convertir a Venta
 - [x] REVISIÓN #21: Normalización total de payload de reservas, resolución por variante_id y bucket de imágenes oficial
+- [x] REVISIÓN #23: Corrección de mapeo en el origen de reservas y unificación total al bucket productos-imagenes
 - [ ] Desplegar sitio web en Vercel
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
