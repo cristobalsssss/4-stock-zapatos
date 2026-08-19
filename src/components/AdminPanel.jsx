@@ -357,15 +357,66 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
   };
 
   // =========================================================================
-  // EXTRACTOR Y PARSER DE CALZADOS ESTRUCTURADOS EN RESERVAS
+  // EXTRACTOR HÍBRIDO Y PARSER DE CALZADOS EN RESERVAS (COLUMNAS + ITEMS)
   // =========================================================================
   const renderDetalleReserva = (res, catalogo = safeProducts) => {
     if (!res) return [];
     const catList = Array.isArray(catalogo) ? catalogo : safeProducts;
 
-    try {
-      let raw = res.items || res.items_reserva || res.productos || res.detalles;
+    const resolveName = (cod, fallback = '') => {
+      if (fallback && fallback !== 'Calzado' && fallback !== 'Consulta General' && fallback !== 'SIN-CODIGO' && fallback !== 'N/A') {
+        return fallback;
+      }
+      const cleanCod = String(cod || '').trim().toLowerCase();
+      const prod = catList.find(p => String(p?.codigo_modelo || p?.codigo || '').trim().toLowerCase() === cleanCod);
+      return prod?.nombre_fantasia || prod?.nombre || fallback || '';
+    };
 
+    try {
+      // 1. PRIORIDAD 1: Columnas directas de Supabase en la raíz del objeto
+      const rootCod = res.modelo_codigo || res.codigo_modelo;
+      const rootNom = res.modelo_nombre || res.nombre_fantasia;
+      const rootVarId = res.variante_id;
+      const rootColor = res.color;
+      const rootTalla = res.talla;
+
+      if ((rootCod && rootCod !== 'Consulta General' && rootCod !== 'SIN-CODIGO' && rootCod !== 'N/A') || rootNom || rootVarId || rootColor || rootTalla) {
+        const cods = String(rootCod || '').split(',').map(s => s.trim()).filter(Boolean);
+        const noms = String(rootNom || '').split(',').map(s => s.trim()).filter(Boolean);
+        const cols = String(rootColor || '').split(',').map(s => s.trim());
+        const tals = String(rootTalla || '').split(',').map(s => s.trim());
+
+        if (cods.length > 0) {
+          return cods.map((cod, idx) => {
+            const nom = resolveName(cod, noms[idx] || rootNom);
+            const col = cols[idx] || rootColor || 'Estándar';
+            const tal = tals[idx] || rootTalla ? String(tals[idx] || rootTalla) : '';
+            const cant = cods.length === 1 && (res.cantidad || 1) > 1 ? Number(res.cantidad) : 1;
+            return {
+              variante_id: res.variante_id || '',
+              codigo_modelo: cod,
+              nombre_fantasia: nom || 'Calzado',
+              color: col,
+              talla: tal,
+              cantidad: cant,
+              precio: Number(res.precio_unitario || res.precio || 0)
+            };
+          });
+        } else if (rootNom || rootVarId || rootColor || rootTalla) {
+          return [{
+            variante_id: rootVarId || '',
+            codigo_modelo: rootCod || '',
+            nombre_fantasia: rootNom || 'Calzado',
+            color: rootColor || 'Estándar',
+            talla: rootTalla ? String(rootTalla) : '',
+            cantidad: Number(res.cantidad || 1),
+            precio: Number(res.precio_unitario || res.precio || 0)
+          }];
+        }
+      }
+
+      // 2. PRIORIDAD 2: Array items / detalles (JSON o Array)
+      let raw = res.items || res.items_reserva || res.productos || res.detalles;
       if (typeof raw === 'string') {
         try {
           raw = JSON.parse(raw);
@@ -374,19 +425,9 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
         }
       }
 
-      const resolveName = (cod, fallback = '') => {
-        if (fallback && fallback !== 'Calzado' && fallback !== 'Consulta General' && fallback !== 'SIN-CODIGO') {
-          return fallback;
-        }
-        const cleanCod = String(cod || '').trim().toLowerCase();
-        const prod = catList.find(p => String(p?.codigo_modelo || '').trim().toLowerCase() === cleanCod);
-        return prod?.nombre_fantasia || fallback || '';
-      };
-
-      // A) Array estructurado (Fuente canónica)
       if (Array.isArray(raw) && raw.length > 0) {
-        return raw
-          .filter(it => it && (it.codigo_modelo || it.modelo_codigo || it.variante_id || it.nombre_fantasia || it.nombre))
+        const parsedItems = raw
+          .filter(it => it && (it.codigo_modelo || it.modelo_codigo || it.variante_id || it.nombre_fantasia || it.nombre || it.color || it.talla))
           .map(it => {
             const cod = it.codigo_modelo || it.modelo_codigo || it.sku || it.codigo || '';
             const fallbackNom = it.nombre_fantasia || it.nombre || it.modelo_nombre || it.modelo || '';
@@ -395,37 +436,14 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
               variante_id: it.variante_id || it.id || '',
               codigo_modelo: cod,
               nombre_fantasia: nom || 'Calzado',
-              color: it.color || '',
+              color: it.color || 'Estándar',
               talla: it.talla ? String(it.talla) : '',
               cantidad: Number(it.cantidad || it.quantity || it.cant || 1),
               precio: Number(it.precio || it.precio_unitario || 0)
             };
           });
-      }
 
-      // B) Fallback: campos raíz (modelo_codigo, variante_id, etc.) solo si no son texto genérico
-      const rootCod = res.modelo_codigo || res.codigo_modelo;
-      if (rootCod && rootCod !== 'Consulta General' && rootCod !== 'SIN-CODIGO' && rootCod !== 'N/A') {
-        const cods = String(rootCod).split(',').map(s => s.trim());
-        const noms = String(res.modelo_nombre || res.nombre_fantasia || '').split(',').map(s => s.trim());
-        const cols = String(res.color || '').split(',').map(s => s.trim());
-        const tals = String(res.talla || '').split(',').map(s => s.trim());
-
-        return cods.map((cod, idx) => {
-          const nom = resolveName(cod, noms[idx] || res.modelo_nombre);
-          const col = cols[idx] || res.color || '';
-          const tal = tals[idx] || res.talla ? String(tals[idx] || res.talla) : '';
-          const cant = cods.length === 1 && (res.cantidad || 1) > 1 ? Number(res.cantidad) : 1;
-          return {
-            variante_id: res.variante_id || '',
-            codigo_modelo: cod,
-            nombre_fantasia: nom || 'Calzado',
-            color: col,
-            talla: tal,
-            cantidad: cant,
-            precio: Number(res.precio_unitario || res.precio || 0)
-          };
-        });
+        if (parsedItems.length > 0) return parsedItems;
       }
     } catch (err) {
       console.error('Error parseando calzados de reserva:', err);
@@ -462,57 +480,107 @@ export default function AdminPanel({ products = [], onDataChanged, onLogout }) {
   }, [isAuthenticated]);
 
   const handleConvertirReservaAVenta = (reserva) => {
-    // 1. Extraer los calzados reales estructurados
+    // 1. Extraer los calzados reales mediante parser híbrido
     const shoes = renderDetalleReserva(reserva, safeProducts);
 
-    if (!shoes || shoes.length === 0) {
-      alert("⚠️ Esta reserva no contiene items estructurados para precarga automática. Por favor selecciona el calzado manualmente en el formulario de venta.");
+    // Identificar datos de calzado a nivel de raíz o de items
+    const codigo = reserva.modelo_codigo || reserva.codigo_modelo || shoes[0]?.codigo_modelo || '';
+    const color = reserva.color || shoes[0]?.color || '';
+    const talla = reserva.talla ? String(reserva.talla) : (shoes[0]?.talla ? String(shoes[0].talla) : '');
+    const varianteId = reserva.variante_id || shoes[0]?.variante_id || '';
+    const precio = Number(reserva.precio_unitario || shoes[0]?.precio || 0);
+    const cantidad = Number(reserva.cantidad || shoes[0]?.cantidad || 1);
+
+    if (!codigo && !varianteId && shoes.length === 0) {
+      alert("⚠️ Esta reserva no contiene datos de calzado para precarga automática. Por favor selecciona el calzado manualmente en el formulario de ventas.");
       setActiveTab('ventas');
       return;
     }
 
     const itemsCargados = [];
 
-    shoes.forEach(it => {
-      const itVarId = it.variante_id ? String(it.variante_id).trim() : '';
-      const itCod = String(it.codigo_modelo || '').trim().toLowerCase();
-      const itCol = String(it.color || '').trim().toLowerCase();
-      const itTal = String(it.talla || '').trim();
+    // Prioridad: mapear desde la lista de calzados extraídos
+    if (shoes.length > 0) {
+      shoes.forEach(it => {
+        const itVarId = it.variante_id ? String(it.variante_id).trim() : '';
+        const itCod = String(it.codigo_modelo || '').trim().toLowerCase();
+        const itCol = String(it.color || '').trim().toLowerCase();
+        const itTal = String(it.talla || '').trim();
 
-      // Buscar coincidencia EXACTA
+        let matchedVariant = null;
+
+        if (itVarId) {
+          matchedVariant = allVariants.find(v => String(v.id).trim() === itVarId);
+        }
+
+        if (!matchedVariant && itCod) {
+          matchedVariant = allVariants.find(v => 
+            String(v.codigo_modelo || '').trim().toLowerCase() === itCod &&
+            (!itCol || String(v.color || '').trim().toLowerCase() === itCol) &&
+            (!itTal || String(v.talla || '').trim() === itTal)
+          );
+          if (!matchedVariant) {
+            matchedVariant = allVariants.find(v => String(v.codigo_modelo || '').trim().toLowerCase() === itCod);
+          }
+        }
+
+        if (matchedVariant) {
+          const precioUnitario = Number(it.precio) > 0 ? Number(it.precio) : Number(matchedVariant.precio_vendedores);
+          itemsCargados.push({
+            variante_id: matchedVariant.id,
+            codigo_modelo: matchedVariant.codigo_modelo,
+            nombre_fantasia: matchedVariant.nombre_fantasia || it.nombre_fantasia,
+            color: matchedVariant.color || it.color,
+            talla: matchedVariant.talla || it.talla,
+            sku: matchedVariant.sku_variante,
+            stock_disponible: matchedVariant.stock_disponible,
+            precio_unitario: precioUnitario,
+            precio_interno: Number(matchedVariant.precio_interno || 0),
+            cantidad: Math.max(1, Number(it.cantidad) || 1)
+          });
+        }
+      });
+    }
+
+    // Fallback: si no se encontró en la lista de items pero existen columnas directas
+    if (itemsCargados.length === 0 && (varianteId || codigo)) {
       let matchedVariant = null;
-
-      if (itVarId) {
-        matchedVariant = allVariants.find(v => String(v.id).trim() === itVarId);
+      if (varianteId) {
+        matchedVariant = allVariants.find(v => String(v.id).trim() === String(varianteId).trim());
       }
-
-      if (!matchedVariant && itCod) {
+      if (!matchedVariant && codigo) {
+        const itCod = String(codigo).trim().toLowerCase();
+        const itCol = String(color).trim().toLowerCase();
+        const itTal = String(talla).trim();
         matchedVariant = allVariants.find(v => 
           String(v.codigo_modelo || '').trim().toLowerCase() === itCod &&
           (!itCol || String(v.color || '').trim().toLowerCase() === itCol) &&
           (!itTal || String(v.talla || '').trim() === itTal)
         );
+        if (!matchedVariant) {
+          matchedVariant = allVariants.find(v => String(v.codigo_modelo || '').trim().toLowerCase() === itCod);
+        }
       }
 
       if (matchedVariant) {
-        const precioUnitario = Number(it.precio) > 0 ? Number(it.precio) : Number(matchedVariant.precio_vendedores);
+        const precioUnitario = precio > 0 ? precio : Number(matchedVariant.precio_vendedores);
         itemsCargados.push({
           variante_id: matchedVariant.id,
           codigo_modelo: matchedVariant.codigo_modelo,
-          nombre_fantasia: matchedVariant.nombre_fantasia || it.nombre_fantasia,
-          color: matchedVariant.color || it.color,
-          talla: matchedVariant.talla || it.talla,
+          nombre_fantasia: matchedVariant.nombre_fantasia || reserva.modelo_nombre || 'Calzado',
+          color: matchedVariant.color || color || 'Estándar',
+          talla: matchedVariant.talla || talla || '',
           sku: matchedVariant.sku_variante,
           stock_disponible: matchedVariant.stock_disponible,
           precio_unitario: precioUnitario,
           precio_interno: Number(matchedVariant.precio_interno || 0),
-          cantidad: Math.max(1, Number(it.cantidad) || 1)
+          cantidad: Math.max(1, cantidad)
         });
       }
-    });
+    }
 
     if (itemsCargados.length === 0) {
-      alert("⚠️ No se encontró la variante exacta en el inventario para los calzados de esta reserva. Por favor selecciona el calzado en el formulario.");
+      alert("⚠️ No se encontró la variante exacta en el inventario actual para este calzado. Por favor selecciónalo manualmente en el catálogo de ventas.");
       setActiveTab('ventas');
       return;
     }

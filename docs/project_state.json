@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "3.4.0",
-    "last_updated": "2026-08-18 23:46:00",
+    "version": "3.5.0",
+    "last_updated": "2026-08-18 23:58:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #18 APLICADA - V3.4.0)",
-    "last_completed_task": "REVISIÓN #18: Separación estricta de items vs notas en reservas y precarga exacta sin fallback ciego en Convertir a Venta",
+    "active_phase": "FASE 4: VIBE CODING DEL FRONTEND EN VERCEL (REVISIÓN #19 APLICADA - V3.5.0)",
+    "last_completed_task": "REVISIÓN #19: Soporte híbrido en reservas (columnas directas + items) y precarga infalible en Convertir a Venta",
     "current_task": "FASE 5: Pruebas End-to-End, Validación y Despliegue en Vercel",
     "environment": {
         "os": "Windows (PowerShell)",
