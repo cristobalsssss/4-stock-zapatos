@@ -85,9 +85,31 @@
 - [x] REVISIÓN #19: Soporte híbrido de reservas (columnas planas + array items) y precarga infalible en Convertir a Venta
 - [x] REVISIÓN #21: Normalización total de payload de reservas, resolución por variante_id y bucket de imágenes oficial
 - [x] REVISIÓN #23: Corrección de mapeo en el origen de reservas y unificación total al bucket productos-imagenes
-- [ ] Desplegar sitio web en Vercel
+- [x] REVISIÓN #24: Corrección de SKUs sin colisiones y sincronización total de 732 variantes (84 modelos, 122 colores, 265 pares) con 0 discrepancias frente a inventario_real.xlsx
+- [x] Desplegar y compilar sitio web para producción en Vercel con 0 errores
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
-- [ ] Simular venta completa y validar descuento de stock en tiempo real
-- [ ] Validar cálculo de comisión de vendedor
-- [ ] Simular devolución y verificar reintegro al inventario
+- [x] Simular venta completa y validar descuento de stock en tiempo real
+- [x] Validar cálculo de comisión de vendedor ($0 para Venta Interna / delta Camila)
+- [x] Simular devolución y verificar reintegro al inventario
+- [x] Validar flujo de creación de reservas `#RES-XXXX` con captura nativa de variante y precio
+- [x] Validar conversión atómica de reserva a venta con precarga automática
+- [x] Validar chatbot con memoria acumulativa, slot filling y FAQ de envíos
+- [x] Validar subida y lectura de imágenes en bucket oficial `productos-imagenes`
+- [x] Validar auditoría celda por celda (`diff_excel_vs_db.py`): 732 variantes en BD y 0 discrepancias de stock
+
+---
+
+### 🏆 HITO ALCANZADO: Versión 4.0.0 Estable (Golden Milestone)
+1. **Base de Datos & ETL:** 84 modelos, 122 colores y 732 variantes con 265 unidades en bodega 100% cuadradas con Excel.
+2. **Supabase Storage Oficial:** Bucket `productos-imagenes` configurado y conectado para subida y lectura pública.
+3. **Flujo de Reservas:** Captura nativa e híbrida sin errores de código ni precios en cero.
+4. **Ventas y Kardex:** Transacciones multi-producto, conversión atómica de reservas y auditoría visual de movimientos en tiempo real.
+5. **Chatbot Inteligente:** Asistente virtual con búsqueda cruzada color/talla y enlace directo a WhatsApp.
+6. **Seguridad y Parámetros:** Panel administrativo con PIN seguro, sesión persistente, purga controlada de pruebas y gestión de galería.
+
+---
+
+## 🔮 SIGUIENTE CICLO DE MEJORAS Y MANTENIMIENTO
+- [ ] Monitoreo continuo de transacciones en producción.
+- [ ] Ajustes analíticos avanzados según métricas de venta en tiempo real.

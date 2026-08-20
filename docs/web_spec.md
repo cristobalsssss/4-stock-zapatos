@@ -169,10 +169,11 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
 ## 7. CARGA Y MIGRACIÓN DE DATOS REALES (ETL)
 - **Origen de datos:** `data/inventario_real.xlsx`
 - **Mecanismo:** Script Node.js con herencia de celdas combinadas (*Forward Fill*).
-- **Resultados de Producción:**
+- **Resultados de Producción Verificados (0 discrepancias):**
   - `productos`: 84 registros únicos por código de modelo.
-  - `inventario_variantes`: 714 variantes (combinación modelo + color + talla).
-  - Unidades con stock disponible en bodega: 253 pares distribuidos en 173 variantes activas.
+  - `colores`: 122 grupos de color únicos.
+  - `inventario_variantes`: 732 variantes (combinación modelo + color + 6 tallas).
+  - Unidades con stock disponible en bodega: 265 pares distribuidos en 180 variantes activas.
 
 ## 8. ALMACENAMIENTO Y GESTIÓN DE IMÁGENES (SUPABASE STORAGE)
 - **Bucket Público Oficial:** `productos-imagenes`.
@@ -215,9 +216,9 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
      * **Botón Destacado `🔄 Actualizar Datos`:** En la cabecera superior con feedback de spinner giratorio durante la sincronización activa.
      * **Bypass de Caché:** Headers `Cache-Control: no-cache, no-store, must-revalidate` y `Pragma: no-cache` en todas las operaciones de API.
    - **Módulo de Venta Multi-Producto y Vendedores Fijos (Revisión #16):** Selector de vendedor acotado exclusivamente a **`Camila`** (vendedora externa con cálculo de comisión) y **`Venta Interna`** ($0 comisión), con campo editable de "Monto de Venta Real / Cobrado" por calzado y recálculo de comisiones en vivo.
-   - **Flujo de Conversión "Convertir a Venta" con Resolución Inteligente (Revisión #21):** Al presionar "Convertir a Venta" en una reserva, `handleConvertirReservaAVenta` resuelve en orden prioritario la variante por `variante_id`, lista híbrida `shoes` o `modelo_codigo` + `color` + `talla`. Carga de inmediato en `saleItems` con su stock real y precio, asociando `convertingReservaId` y notas con `#RES-XXXX`. Al presionar "Confirmar Venta", se ejecuta el `UPDATE` atómico completando la reserva en Supabase.
-   - **Pestaña "📋 Reservas" con Resolución por Variante y Catálogo (Revisión #21):** `renderDetalleReserva` inspecciona `variante_id`, columnas directas y array `items`, cruzando con el catálogo de variantes para mostrar siempre el nombre de fantasía y código real. Renderiza las viñetas (`• [Nombre Fantasía] ([Código]) - [Color], T[Talla] x [Cant]`), y por separado debajo el badge de modalidad (`📍 Presencial/Envío`) y el badge de notas (`📝 Nota: [Texto]`), garantizando que las notas y la modalidad nunca lleven viñeta de calzado.
-   - **Pestaña "Detalle de Movimientos" (Kardex Integral con 🟢 VENTA y 🔵 DEVOLUCIÓN - Revisión #16.1):** Auditoría visual en tiempo real de `detalle_movimientos` con badges diferenciados: 🟢 **VENTA** (-1 stock) con su ID de venta y botón de 1 clic para "Copiar ID", y 🔵 **DEVOLUCIÓN** (+1 stock) mostrando la referencia a la venta original (`venta_id`), motivo y fecha de operación. Refresco automático reactivo tras registrar devoluciones o ventas.
+   - **Flujo de Conversión "Convertir a Venta" Atómico y Seguro (Versión 4.0.0):** Al presionar "Convertir a Venta" en una reserva, `handleConvertirReservaAVenta` extrae y resuelve en orden prioritario la variante por `variante_id`, lista híbrida `shoes` o `modelo_codigo` + `color` + `talla`. Carga de inmediato en `saleItems` con su stock real y precio, asociando `convertingReservaId` y notas con `#RES-XXXX`. Al presionar "Confirmar Venta", se ejecuta el `UPDATE` atómico completando la reserva en Supabase sin alertas de items faltantes.
+   - **Pestaña "📋 Reservas" con Mapeo Nativo e Híbrido (Versión 4.0.0):** `renderDetalleReserva` inspecciona columnas planas nativas (`modelo_codigo`, `modelo_nombre`, `variante_id`, `color`, `talla`, `cantidad`, `precio_unitario`) y array `items`, cruzando con el catálogo de variantes para mostrar siempre el nombre de fantasía y código real. Renderiza las viñetas (`• [Nombre Fantasía] ([Código]) - [Color], T[Talla] x [Cant]`), y por separado debajo el badge de modalidad (`📍 Presencial/Envío`) y el badge de notas (`📝 Nota: [Texto]`).
+   - **Pestaña "Detalle de Movimientos" (Kardex Integral con 🟢 VENTA y 🔵 DEVOLUCIÓN):** Auditoría visual en tiempo real de `detalle_movimientos` con badges diferenciados: 🟢 **VENTA** (-1 stock) con su ID de venta y botón de 1 clic para "Copiar ID", y 🔵 **DEVOLUCIÓN** (+1 stock) mostrando la referencia a la venta original (`venta_id`), motivo y fecha de operación. Refresco automático reactivo tras registrar devoluciones o ventas.
    - **Pestaña "⚙️ Parámetros" y Zona de Peligro:** Configuración persistente del teléfono WhatsApp oficial de ventas, nombre de la vendedora de contacto, modalidad de la tienda, entregas locales y envíos nacionales con alerta visual si el número no está configurado, y botón de **"🧹 Purgar Datos de Prueba (Reservas y Ventas)"** para resetear transacciones manteniendo 100% blindado el catálogo base (`productos`, `inventario_variantes`, `imagenes_variante`, `configuracion`).
    - **Módulo de Devoluciones con Selector Dual de Criterio (Revisión #16.1):** Selector tipo pestañas/radio superior:
      * **Opción A: 📋 Desde Venta Registrada (Recomendado):** Desplegable con las ventas completadas ordenadas de la más reciente a la más antigua con formato `[#VTA-XXXX] • [Fecha] • [Vendedor] • [Modelo] ([Color] [Talla]) ($[Monto])`, precargando automáticamente variante, cantidad, motivo y referencia ID.

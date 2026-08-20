@@ -252,8 +252,8 @@ def load_data():
             continue
 
         for talla, stock in entry['tallas'].items():
-            # Generate SKU: normalize color to uppercase alphanumeric abbreviation
-            color_code = re.sub(r'[^A-Za-z0-9]', '', color)[:4].upper()
+            # Generate SKU: normalize full color to uppercase alphanumeric without collisions
+            color_code = re.sub(r'[^A-Za-z0-9]', '', color).upper()
             sku = f"{cod}-{color_code}-{talla}"
 
             try:
@@ -261,10 +261,12 @@ def load_data():
                     """INSERT INTO public.inventario_variantes
                        (producto_id, sku_variante, color, talla, stock_disponible, precio_interno, precio_vendedores)
                        VALUES (:pid, :sku, :color, :talla, :stock, :pi, :pv)
-                       ON CONFLICT (sku_variante) DO UPDATE SET
+                       ON CONFLICT (producto_id, color, talla) DO UPDATE SET
+                           sku_variante     = EXCLUDED.sku_variante,
                            stock_disponible = EXCLUDED.stock_disponible,
                            precio_interno   = EXCLUDED.precio_interno,
-                           precio_vendedores= EXCLUDED.precio_vendedores""",
+                           precio_vendedores= EXCLUDED.precio_vendedores,
+                           updated_at       = timezone('utc'::text, now())""",
                     pid=prod_id,
                     sku=sku,
                     color=color,
@@ -276,11 +278,8 @@ def load_data():
                 inserted_variants += 1
             except Exception as e:
                 err = str(e)
-                if "uq_producto_color_talla" in err:
-                    skipped_variants += 1
-                else:
-                    print(f"  [ERR] SKU {sku}: {err[:100]}")
-                    errors_variants += 1
+                print(f"  [ERR] Variant {sku}: {err[:100]}")
+                errors_variants += 1
 
     print(f"[STEP 3] Variants: {inserted_variants} inserted, {skipped_variants} skipped (duplicates), {errors_variants} errors")
 

@@ -1,0 +1,7266 @@
+{
+  "productos": [
+    {
+      "codigo_modelo": "AA0001",
+      "nombre_fantasia": "Sidney",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "nombre_fantasia": "Barcelona",
+      "material": "Cuero 100%",
+      "taco_base": "5cm /acrilico",
+      "horma": "Normal",
+      "info_adicional": "Tachas decorativas"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "nombre_fantasia": "Florencia",
+      "material": "Cuero 100%",
+      "taco_base": "5cm",
+      "horma": "Normal",
+      "info_adicional": "Cadena Decorativa"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "nombre_fantasia": "Singapur",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "nombre_fantasia": "Viena",
+      "material": "Cuero 100%",
+      "taco_base": "4,5cm /acrilico",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0006",
+      "nombre_fantasia": "Sevilla",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0007",
+      "nombre_fantasia": "Praga",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AC0009",
+      "nombre_fantasia": "Amsterdan",
+      "material": "Cuero 100%",
+      "taco_base": "4cm",
+      "horma": "Normal",
+      "info_adicional": "Tachas decorativas"
+    },
+    {
+      "codigo_modelo": "AD0011",
+      "nombre_fantasia": "Córdoba",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "nombre_fantasia": "Granada",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0013",
+      "nombre_fantasia": "Valencia",
+      "material": "Cuero 100%",
+      "taco_base": "7cm/acrilico",
+      "horma": "Pequeña",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "nombre_fantasia": "Beijing",
+      "material": "Cuero 100%",
+      "taco_base": "1,5cm",
+      "horma": "Pequeña",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0016",
+      "nombre_fantasia": "Milan",
+      "material": "Cuero 100%",
+      "taco_base": "1,5cm",
+      "horma": "Pequeña",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AE0017",
+      "nombre_fantasia": "Málaga",
+      "material": "Cuero 100%",
+      "taco_base": "1,5cm",
+      "horma": "Pequeña",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AE0018",
+      "nombre_fantasia": "Lisboa",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AE0019",
+      "nombre_fantasia": "Lisboa",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "BE0020",
+      "nombre_fantasia": "Toronto",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "BB0021",
+      "nombre_fantasia": "Roma",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "BC0022",
+      "nombre_fantasia": "Pekin",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0024",
+      "nombre_fantasia": "Venecia",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0025",
+      "nombre_fantasia": "Los Ängeles",
+      "material": "Cuero 100%",
+      "taco_base": "4,5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "nombre_fantasia": "Camboriu",
+      "material": "Cuero 100%",
+      "taco_base": "4,5cm",
+      "horma": "Pequeña",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0027",
+      "nombre_fantasia": "Montevideo",
+      "material": "Cuero 100%",
+      "taco_base": "4,5cm",
+      "horma": "Pequeña",
+      "info_adicional": "Tachas decorativas"
+    },
+    {
+      "codigo_modelo": "AA0028",
+      "nombre_fantasia": "Dublin",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0029",
+      "nombre_fantasia": "Madagascar",
+      "material": "Cuero 100%",
+      "taco_base": "9cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AE0030",
+      "nombre_fantasia": "London",
+      "material": "Cuero 100%",
+      "taco_base": "3,5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AE0031",
+      "nombre_fantasia": "Bombay",
+      "material": "Cuero 100%",
+      "taco_base": "3,5cm",
+      "horma": "Normal",
+      "info_adicional": "Detalle Bordado"
+    },
+    {
+      "codigo_modelo": "AA0032",
+      "nombre_fantasia": "Bariloche",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0033",
+      "nombre_fantasia": "Ibiza",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "nombre_fantasia": "Santiago",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "nombre_fantasia": "Copacabana",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "nombre_fantasia": "Mendoza",
+      "material": "Cuero 100%",
+      "taco_base": "3,5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "nombre_fantasia": "Palermo",
+      "material": "Cuero 100%",
+      "taco_base": "9cm",
+      "horma": "Pequeña",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "nombre_fantasia": "Atenas",
+      "material": "Cuero 100%",
+      "taco_base": "9cm",
+      "horma": "Normal",
+      "info_adicional": "Antideslizante"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "nombre_fantasia": "Orlando",
+      "material": "Cuero 100%",
+      "taco_base": "9cm",
+      "horma": "Normal",
+      "info_adicional": "Antideslizante"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "nombre_fantasia": "Trinidad",
+      "material": "Cuero 100%",
+      "taco_base": "6cm",
+      "horma": "Normal",
+      "info_adicional": "Charol"
+    },
+    {
+      "codigo_modelo": "AD0042",
+      "nombre_fantasia": "Estocolmo",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "nombre_fantasia": "Rosario",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "nombre_fantasia": "Asti",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "CD0045",
+      "nombre_fantasia": "Mercedes",
+      "material": "Cuero 100%",
+      "taco_base": "5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "CD0046",
+      "nombre_fantasia": "Monterrey",
+      "material": "Cuero 100%",
+      "taco_base": "3,5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "nombre_fantasia": "Alicante",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "CA0048",
+      "nombre_fantasia": "Regina",
+      "material": "Cuero 100%",
+      "taco_base": "9cm",
+      "horma": "Normal",
+      "info_adicional": "Antideslizante"
+    },
+    {
+      "codigo_modelo": "CD0049",
+      "nombre_fantasia": "Dinamarca",
+      "material": "Cuero 100%",
+      "taco_base": "4cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DE0050",
+      "nombre_fantasia": "Amazona",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Diseño anaconda"
+    },
+    {
+      "codigo_modelo": "DE0051",
+      "nombre_fantasia": "Habana",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Diseño Glitter"
+    },
+    {
+      "codigo_modelo": "DE0052",
+      "nombre_fantasia": "Mónaco",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DE0053",
+      "nombre_fantasia": "Munich",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Diseño Anaconda"
+    },
+    {
+      "codigo_modelo": "DE0054",
+      "nombre_fantasia": "Helsinki",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Diseño Brillo Estrella"
+    },
+    {
+      "codigo_modelo": "DE0055",
+      "nombre_fantasia": "Osaka",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Diseño Textura y Brillo"
+    },
+    {
+      "codigo_modelo": "DE0056",
+      "nombre_fantasia": "Otawa",
+      "material": "Cuero 100%",
+      "taco_base": "4cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "nombre_fantasia": "Rio",
+      "material": "Cuero 100%",
+      "taco_base": "4,5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DE0058",
+      "nombre_fantasia": "Oslo",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Diseño Textura y Brillo"
+    },
+    {
+      "codigo_modelo": "DC0059",
+      "nombre_fantasia": "Ankara",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DC0060",
+      "nombre_fantasia": "Basilea",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DA0061",
+      "nombre_fantasia": "Ginebra",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DB0062",
+      "nombre_fantasia": "Moscu",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DB0063",
+      "nombre_fantasia": "Lugano",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "nombre_fantasia": "Davos",
+      "material": "Cuero 100%",
+      "taco_base": "5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "CD0065",
+      "nombre_fantasia": "Medellín",
+      "material": "Cuero 100%",
+      "taco_base": "4cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DD0066",
+      "nombre_fantasia": "Cali",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DD0067",
+      "nombre_fantasia": "Cartagena",
+      "material": "Cuero 100%",
+      "taco_base": "2,5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "nombre_fantasia": "Lima",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Detalle Tachas"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "nombre_fantasia": "Cusco",
+      "material": "Cuero 100%",
+      "taco_base": "4,5cm",
+      "horma": "Normal",
+      "info_adicional": "Detalle Flecos"
+    },
+    {
+      "codigo_modelo": "DA0070",
+      "nombre_fantasia": "Florida",
+      "material": "Cuero 100%",
+      "taco_base": "5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "EA0071",
+      "nombre_fantasia": "Africa",
+      "material": "Cuero 100%",
+      "taco_base": "5cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Piel Costuras"
+    },
+    {
+      "codigo_modelo": "EA0072",
+      "nombre_fantasia": "Andes",
+      "material": "Cuero 100%",
+      "taco_base": "5cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Piel Costuras"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "nombre_fantasia": "Palo Alto",
+      "material": "Cuero 100%",
+      "taco_base": "6cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Tachas"
+    },
+    {
+      "codigo_modelo": "EE0074",
+      "nombre_fantasia": "Cairo",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Tachas"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "nombre_fantasia": "Dallas",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Costuras"
+    },
+    {
+      "codigo_modelo": "EE0076",
+      "nombre_fantasia": "Chicago",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Costuras"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "nombre_fantasia": "Turín",
+      "material": "Cuero 100%",
+      "taco_base": "3cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Tachas"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "nombre_fantasia": "Vancouver",
+      "material": "Cuero 100%",
+      "taco_base": "4,5cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Hebillas"
+    },
+    {
+      "codigo_modelo": "ED0079",
+      "nombre_fantasia": "Quebec",
+      "material": "Cuero 100%",
+      "taco_base": "4cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Tachas"
+    },
+    {
+      "codigo_modelo": "ED0080",
+      "nombre_fantasia": "zurich",
+      "material": "Cuero 100%",
+      "taco_base": "2,5cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Tachas y Hebillas"
+    },
+    {
+      "codigo_modelo": "ED0081",
+      "nombre_fantasia": "Bangkok",
+      "material": "Cuero 100%",
+      "taco_base": "5,5cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade"
+    },
+    {
+      "codigo_modelo": "EE0082",
+      "nombre_fantasia": "Nara",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "EE0083",
+      "nombre_fantasia": "Akita",
+      "material": "Cuero 100%",
+      "taco_base": "3,5cm",
+      "horma": "Normal",
+      "info_adicional": "Colección HandMade / Detalle Costuras"
+    },
+    {
+      "codigo_modelo": "CD0084",
+      "nombre_fantasia": "Berlín",
+      "material": "Cuero 100%",
+      "taco_base": "2,5cm",
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0085",
+      "nombre_fantasia": "Qatar",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AD0086",
+      "nombre_fantasia": "Filadelfia",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0087",
+      "nombre_fantasia": "Hamburgo",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0088",
+      "nombre_fantasia": "Madrid",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    },
+    {
+      "codigo_modelo": "AA0089",
+      "nombre_fantasia": "Bruselas",
+      "material": null,
+      "taco_base": null,
+      "horma": "Normal",
+      "info_adicional": null
+    }
+  ],
+  "variantes": [
+    {
+      "codigo_modelo": "AA0001",
+      "color": "Nude",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0001-NUDE-35"
+    },
+    {
+      "codigo_modelo": "AA0001",
+      "color": "Nude",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0001-NUDE-36"
+    },
+    {
+      "codigo_modelo": "AA0001",
+      "color": "Nude",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0001-NUDE-37"
+    },
+    {
+      "codigo_modelo": "AA0001",
+      "color": "Nude",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0001-NUDE-38"
+    },
+    {
+      "codigo_modelo": "AA0001",
+      "color": "Nude",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0001-NUDE-39"
+    },
+    {
+      "codigo_modelo": "AA0001",
+      "color": "Nude",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0001-NUDE-40"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-SUELA-35"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-SUELA-36"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-SUELA-37"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-SUELA-38"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-SUELA-39"
+    },
+    {
+      "codigo_modelo": "AA0002",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0002-SUELA-40"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-SUELA-35"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-SUELA-36"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-SUELA-37"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-SUELA-38"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-SUELA-39"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-SUELA-40"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Nude",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NUDE-35"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Nude",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NUDE-36"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Nude",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NUDE-37"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Nude",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NUDE-38"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Nude",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NUDE-39"
+    },
+    {
+      "codigo_modelo": "AA0003",
+      "color": "Nude",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "AA0003-NUDE-40"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-SUELA-35"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-SUELA-36"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-SUELA-37"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-SUELA-38"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-SUELA-39"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-SUELA-40"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Visón",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-VISN-35"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Visón",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-VISN-36"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Visón",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-VISN-37"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Visón",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-VISN-38"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Visón",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-VISN-39"
+    },
+    {
+      "codigo_modelo": "AA0004",
+      "color": "Visón",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0004-VISN-40"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-SUELA-35"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-SUELA-36"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-SUELA-37"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-SUELA-38"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-SUELA-39"
+    },
+    {
+      "codigo_modelo": "AA0005",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0005-SUELA-40"
+    },
+    {
+      "codigo_modelo": "AA0006",
+      "color": "Suela(Beige)",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0006-SUELABEIGE-35"
+    },
+    {
+      "codigo_modelo": "AA0006",
+      "color": "Suela(Beige)",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0006-SUELABEIGE-36"
+    },
+    {
+      "codigo_modelo": "AA0006",
+      "color": "Suela(Beige)",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0006-SUELABEIGE-37"
+    },
+    {
+      "codigo_modelo": "AA0006",
+      "color": "Suela(Beige)",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0006-SUELABEIGE-38"
+    },
+    {
+      "codigo_modelo": "AA0006",
+      "color": "Suela(Beige)",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0006-SUELABEIGE-39"
+    },
+    {
+      "codigo_modelo": "AA0006",
+      "color": "Suela(Beige)",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0006-SUELABEIGE-40"
+    },
+    {
+      "codigo_modelo": "AA0007",
+      "color": "Plata",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0007-PLATA-35"
+    },
+    {
+      "codigo_modelo": "AA0007",
+      "color": "Plata",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0007-PLATA-36"
+    },
+    {
+      "codigo_modelo": "AA0007",
+      "color": "Plata",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0007-PLATA-37"
+    },
+    {
+      "codigo_modelo": "AA0007",
+      "color": "Plata",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0007-PLATA-38"
+    },
+    {
+      "codigo_modelo": "AA0007",
+      "color": "Plata",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0007-PLATA-39"
+    },
+    {
+      "codigo_modelo": "AA0007",
+      "color": "Plata",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0007-PLATA-40"
+    },
+    {
+      "codigo_modelo": "AC0009",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AC0009-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AC0009",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AC0009-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AC0009",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AC0009-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AC0009",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AC0009-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AC0009",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AC0009-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AC0009",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AC0009-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AD0011",
+      "color": "Nude",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0011-NUDE-35"
+    },
+    {
+      "codigo_modelo": "AD0011",
+      "color": "Nude",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0011-NUDE-36"
+    },
+    {
+      "codigo_modelo": "AD0011",
+      "color": "Nude",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0011-NUDE-37"
+    },
+    {
+      "codigo_modelo": "AD0011",
+      "color": "Nude",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0011-NUDE-38"
+    },
+    {
+      "codigo_modelo": "AD0011",
+      "color": "Nude",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0011-NUDE-39"
+    },
+    {
+      "codigo_modelo": "AD0011",
+      "color": "Nude",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0011-NUDE-40"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Nude",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NUDE-35"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Nude",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NUDE-36"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Nude",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NUDE-37"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Nude",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NUDE-38"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Nude",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NUDE-39"
+    },
+    {
+      "codigo_modelo": "AD0012",
+      "color": "Nude",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0012-NUDE-40"
+    },
+    {
+      "codigo_modelo": "AD0013",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AD0013-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AD0013",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AD0013-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AD0013",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AD0013-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AD0013",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AD0013-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AD0013",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AD0013-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AD0013",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AD0013-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Print",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PRINT-35"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Print",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PRINT-36"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Print",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PRINT-37"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Print",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PRINT-38"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Print",
+      "talla": 39,
+      "stock": 2,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PRINT-39"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Print",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PRINT-40"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Platino Metalizado",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PLATINOMETALIZADO-35"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Platino Metalizado",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PLATINOMETALIZADO-36"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Platino Metalizado",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PLATINOMETALIZADO-37"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Platino Metalizado",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PLATINOMETALIZADO-38"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Platino Metalizado",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PLATINOMETALIZADO-39"
+    },
+    {
+      "codigo_modelo": "AD0015",
+      "color": "Platino Metalizado",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0015-PLATINOMETALIZADO-40"
+    },
+    {
+      "codigo_modelo": "AD0016",
+      "color": "Beige",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0016-BEIGE-35"
+    },
+    {
+      "codigo_modelo": "AD0016",
+      "color": "Beige",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0016-BEIGE-36"
+    },
+    {
+      "codigo_modelo": "AD0016",
+      "color": "Beige",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0016-BEIGE-37"
+    },
+    {
+      "codigo_modelo": "AD0016",
+      "color": "Beige",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0016-BEIGE-38"
+    },
+    {
+      "codigo_modelo": "AD0016",
+      "color": "Beige",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0016-BEIGE-39"
+    },
+    {
+      "codigo_modelo": "AD0016",
+      "color": "Beige",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AD0016-BEIGE-40"
+    },
+    {
+      "codigo_modelo": "AE0017",
+      "color": "Print",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0017-PRINT-35"
+    },
+    {
+      "codigo_modelo": "AE0017",
+      "color": "Print",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0017-PRINT-36"
+    },
+    {
+      "codigo_modelo": "AE0017",
+      "color": "Print",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0017-PRINT-37"
+    },
+    {
+      "codigo_modelo": "AE0017",
+      "color": "Print",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0017-PRINT-38"
+    },
+    {
+      "codigo_modelo": "AE0017",
+      "color": "Print",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0017-PRINT-39"
+    },
+    {
+      "codigo_modelo": "AE0017",
+      "color": "Print",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0017-PRINT-40"
+    },
+    {
+      "codigo_modelo": "AE0018",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0018-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AE0018",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0018-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AE0018",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0018-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AE0018",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0018-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AE0018",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0018-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AE0018",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0018-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AE0019",
+      "color": "Cebra",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0019-CEBRA-35"
+    },
+    {
+      "codigo_modelo": "AE0019",
+      "color": "Cebra",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0019-CEBRA-36"
+    },
+    {
+      "codigo_modelo": "AE0019",
+      "color": "Cebra",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0019-CEBRA-37"
+    },
+    {
+      "codigo_modelo": "AE0019",
+      "color": "Cebra",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0019-CEBRA-38"
+    },
+    {
+      "codigo_modelo": "AE0019",
+      "color": "Cebra",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0019-CEBRA-39"
+    },
+    {
+      "codigo_modelo": "AE0019",
+      "color": "Cebra",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AE0019-CEBRA-40"
+    },
+    {
+      "codigo_modelo": "BE0020",
+      "color": "varios (pendiente)",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BE0020-VARIOSPENDIENTE-35"
+    },
+    {
+      "codigo_modelo": "BE0020",
+      "color": "varios (pendiente)",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BE0020-VARIOSPENDIENTE-36"
+    },
+    {
+      "codigo_modelo": "BE0020",
+      "color": "varios (pendiente)",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BE0020-VARIOSPENDIENTE-37"
+    },
+    {
+      "codigo_modelo": "BE0020",
+      "color": "varios (pendiente)",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BE0020-VARIOSPENDIENTE-38"
+    },
+    {
+      "codigo_modelo": "BE0020",
+      "color": "varios (pendiente)",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BE0020-VARIOSPENDIENTE-39"
+    },
+    {
+      "codigo_modelo": "BE0020",
+      "color": "varios (pendiente)",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BE0020-VARIOSPENDIENTE-40"
+    },
+    {
+      "codigo_modelo": "BB0021",
+      "color": "Hueso",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BB0021-HUESO-35"
+    },
+    {
+      "codigo_modelo": "BB0021",
+      "color": "Hueso",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BB0021-HUESO-36"
+    },
+    {
+      "codigo_modelo": "BB0021",
+      "color": "Hueso",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BB0021-HUESO-37"
+    },
+    {
+      "codigo_modelo": "BB0021",
+      "color": "Hueso",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BB0021-HUESO-38"
+    },
+    {
+      "codigo_modelo": "BB0021",
+      "color": "Hueso",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BB0021-HUESO-39"
+    },
+    {
+      "codigo_modelo": "BB0021",
+      "color": "Hueso",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BB0021-HUESO-40"
+    },
+    {
+      "codigo_modelo": "BC0022",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BC0022-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "BC0022",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BC0022-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "BC0022",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BC0022-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "BC0022",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BC0022-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "BC0022",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BC0022-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "BC0022",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "BC0022-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AA0024",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0024-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AA0024",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0024-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AA0024",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0024-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AA0024",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0024-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AA0024",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0024-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AA0024",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0024-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AA0025",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0025-SUELA-35"
+    },
+    {
+      "codigo_modelo": "AA0025",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0025-SUELA-36"
+    },
+    {
+      "codigo_modelo": "AA0025",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0025-SUELA-37"
+    },
+    {
+      "codigo_modelo": "AA0025",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0025-SUELA-38"
+    },
+    {
+      "codigo_modelo": "AA0025",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0025-SUELA-39"
+    },
+    {
+      "codigo_modelo": "AA0025",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AA0025-SUELA-40"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Blanco",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-BLANCO-35"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Blanco",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-BLANCO-36"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Blanco",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-BLANCO-37"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Blanco",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-BLANCO-38"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Blanco",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-BLANCO-39"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Blanco",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-BLANCO-40"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Iguana",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-IGUANA-35"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Iguana",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-IGUANA-36"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Iguana",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-IGUANA-37"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Iguana",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-IGUANA-38"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Iguana",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-IGUANA-39"
+    },
+    {
+      "codigo_modelo": "AA0026",
+      "color": "Iguana",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0026-IGUANA-40"
+    },
+    {
+      "codigo_modelo": "AA0027",
+      "color": "Blanco",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0027-BLANCO-35"
+    },
+    {
+      "codigo_modelo": "AA0027",
+      "color": "Blanco",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0027-BLANCO-36"
+    },
+    {
+      "codigo_modelo": "AA0027",
+      "color": "Blanco",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0027-BLANCO-37"
+    },
+    {
+      "codigo_modelo": "AA0027",
+      "color": "Blanco",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0027-BLANCO-38"
+    },
+    {
+      "codigo_modelo": "AA0027",
+      "color": "Blanco",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0027-BLANCO-39"
+    },
+    {
+      "codigo_modelo": "AA0027",
+      "color": "Blanco",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "AA0027-BLANCO-40"
+    },
+    {
+      "codigo_modelo": "AA0028",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0028-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AA0028",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0028-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AA0028",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0028-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AA0028",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0028-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AA0028",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0028-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AA0028",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0028-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AD0029",
+      "color": "Print",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 19990.0,
+      "precio_vendedores": 19990.0,
+      "sku_variante": "AD0029-PRINT-35"
+    },
+    {
+      "codigo_modelo": "AD0029",
+      "color": "Print",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 19990.0,
+      "precio_vendedores": 19990.0,
+      "sku_variante": "AD0029-PRINT-36"
+    },
+    {
+      "codigo_modelo": "AD0029",
+      "color": "Print",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 19990.0,
+      "precio_vendedores": 19990.0,
+      "sku_variante": "AD0029-PRINT-37"
+    },
+    {
+      "codigo_modelo": "AD0029",
+      "color": "Print",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 19990.0,
+      "precio_vendedores": 19990.0,
+      "sku_variante": "AD0029-PRINT-38"
+    },
+    {
+      "codigo_modelo": "AD0029",
+      "color": "Print",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 19990.0,
+      "precio_vendedores": 19990.0,
+      "sku_variante": "AD0029-PRINT-39"
+    },
+    {
+      "codigo_modelo": "AD0029",
+      "color": "Print",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 19990.0,
+      "precio_vendedores": 19990.0,
+      "sku_variante": "AD0029-PRINT-40"
+    },
+    {
+      "codigo_modelo": "AE0030",
+      "color": "Blanco",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0030-BLANCO-35"
+    },
+    {
+      "codigo_modelo": "AE0030",
+      "color": "Blanco",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0030-BLANCO-36"
+    },
+    {
+      "codigo_modelo": "AE0030",
+      "color": "Blanco",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0030-BLANCO-37"
+    },
+    {
+      "codigo_modelo": "AE0030",
+      "color": "Blanco",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0030-BLANCO-38"
+    },
+    {
+      "codigo_modelo": "AE0030",
+      "color": "Blanco",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0030-BLANCO-39"
+    },
+    {
+      "codigo_modelo": "AE0030",
+      "color": "Blanco",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AE0030-BLANCO-40"
+    },
+    {
+      "codigo_modelo": "AE0031",
+      "color": "Blanco-Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AE0031-BLANCOSUELA-35"
+    },
+    {
+      "codigo_modelo": "AE0031",
+      "color": "Blanco-Suela",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AE0031-BLANCOSUELA-36"
+    },
+    {
+      "codigo_modelo": "AE0031",
+      "color": "Blanco-Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AE0031-BLANCOSUELA-37"
+    },
+    {
+      "codigo_modelo": "AE0031",
+      "color": "Blanco-Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AE0031-BLANCOSUELA-38"
+    },
+    {
+      "codigo_modelo": "AE0031",
+      "color": "Blanco-Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AE0031-BLANCOSUELA-39"
+    },
+    {
+      "codigo_modelo": "AE0031",
+      "color": "Blanco-Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "AE0031-BLANCOSUELA-40"
+    },
+    {
+      "codigo_modelo": "AA0032",
+      "color": "Visón",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0032-VISN-35"
+    },
+    {
+      "codigo_modelo": "AA0032",
+      "color": "Visón",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0032-VISN-36"
+    },
+    {
+      "codigo_modelo": "AA0032",
+      "color": "Visón",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0032-VISN-37"
+    },
+    {
+      "codigo_modelo": "AA0032",
+      "color": "Visón",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0032-VISN-38"
+    },
+    {
+      "codigo_modelo": "AA0032",
+      "color": "Visón",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0032-VISN-39"
+    },
+    {
+      "codigo_modelo": "AA0032",
+      "color": "Visón",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0032-VISN-40"
+    },
+    {
+      "codigo_modelo": "AA0033",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0033-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AA0033",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0033-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AA0033",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0033-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AA0033",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0033-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AA0033",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0033-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AA0033",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0033-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-SUELA-35"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-SUELA-36"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-SUELA-37"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-SUELA-38"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-SUELA-39"
+    },
+    {
+      "codigo_modelo": "AA0034",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0034-SUELA-40"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Print",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-PRINT-35"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Print",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-PRINT-36"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Print",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-PRINT-37"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Print",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-PRINT-38"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Print",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-PRINT-39"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Print",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-PRINT-40"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Cebra",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-CEBRA-35"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Cebra",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-CEBRA-36"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Cebra",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-CEBRA-37"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Cebra",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-CEBRA-38"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Cebra",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-CEBRA-39"
+    },
+    {
+      "codigo_modelo": "AD0035",
+      "color": "Cebra",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0035-CEBRA-40"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Plata",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PLATA-35"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Plata",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PLATA-36"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Plata",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PLATA-37"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Plata",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PLATA-38"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Plata",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PLATA-39"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Plata",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PLATA-40"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Dorado",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-DORADO-35"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Dorado",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-DORADO-36"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Dorado",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-DORADO-37"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Dorado",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-DORADO-38"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Dorado",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-DORADO-39"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Dorado",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-DORADO-40"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Print",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PRINT-35"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Print",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PRINT-36"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Print",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PRINT-37"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Print",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PRINT-38"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Print",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PRINT-39"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Print",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-PRINT-40"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Nude",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-NUDE-35"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Nude",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-NUDE-36"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Nude",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-NUDE-37"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Nude",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-NUDE-38"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Nude",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-NUDE-39"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Nude",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-NUDE-40"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Rosa",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-ROSA-35"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Rosa",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-ROSA-36"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Rosa",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-ROSA-37"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Rosa",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-ROSA-38"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Rosa",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-ROSA-39"
+    },
+    {
+      "codigo_modelo": "AD0037",
+      "color": "Rosa",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "AD0037-ROSA-40"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Plata",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PLATA-35"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Plata",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PLATA-36"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Plata",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PLATA-37"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Plata",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PLATA-38"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Plata",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PLATA-39"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Plata",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PLATA-40"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Print",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PRINT-35"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Print",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PRINT-36"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Print",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PRINT-37"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Print",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PRINT-38"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Print",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PRINT-39"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Print",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-PRINT-40"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Rojo",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-ROJO-35"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Rojo",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-ROJO-36"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Rojo",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-ROJO-37"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Rojo",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-ROJO-38"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Rojo",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-ROJO-39"
+    },
+    {
+      "codigo_modelo": "AF0038",
+      "color": "Rojo",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "AF0038-ROJO-40"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Beige",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-BEIGE-35"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Beige",
+      "talla": 36,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-BEIGE-36"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Beige",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-BEIGE-37"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Beige",
+      "talla": 38,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-BEIGE-38"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Beige",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-BEIGE-39"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Beige",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-BEIGE-40"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Nude",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NUDE-35"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Nude",
+      "talla": 36,
+      "stock": 4,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NUDE-36"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Nude",
+      "talla": 37,
+      "stock": 4,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NUDE-37"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Nude",
+      "talla": 38,
+      "stock": 4,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NUDE-38"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Nude",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NUDE-39"
+    },
+    {
+      "codigo_modelo": "CA0039",
+      "color": "Nude",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0039-NUDE-40"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 3,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-SUELA-35"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-SUELA-36"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 3,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-SUELA-37"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 4,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-SUELA-38"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-SUELA-39"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-SUELA-40"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Beige",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-BEIGE-35"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Beige",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-BEIGE-36"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Beige",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-BEIGE-37"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Beige",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-BEIGE-38"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Beige",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-BEIGE-39"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Beige",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-BEIGE-40"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Peltre",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-PELTRE-35"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Peltre",
+      "talla": 36,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-PELTRE-36"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Peltre",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-PELTRE-37"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Peltre",
+      "talla": 38,
+      "stock": 3,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-PELTRE-38"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Peltre",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-PELTRE-39"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Peltre",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-PELTRE-40"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Caimán",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-CAIMN-35"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Caimán",
+      "talla": 36,
+      "stock": 4,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-CAIMN-36"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Caimán",
+      "talla": 37,
+      "stock": 4,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-CAIMN-37"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Caimán",
+      "talla": 38,
+      "stock": 5,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-CAIMN-38"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Caimán",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-CAIMN-39"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Caimán",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-CAIMN-40"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Olivo",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-OLIVO-35"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Olivo",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-OLIVO-36"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Olivo",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-OLIVO-37"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Olivo",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-OLIVO-38"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Olivo",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-OLIVO-39"
+    },
+    {
+      "codigo_modelo": "CA0040",
+      "color": "Olivo",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0040-OLIVO-40"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Nude",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NUDE-35"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Nude",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NUDE-36"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Nude",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NUDE-37"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Nude",
+      "talla": 38,
+      "stock": 3,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NUDE-38"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Nude",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NUDE-39"
+    },
+    {
+      "codigo_modelo": "CD0041",
+      "color": "Nude",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CD0041-NUDE-40"
+    },
+    {
+      "codigo_modelo": "AD0042",
+      "color": "Print",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0042-PRINT-35"
+    },
+    {
+      "codigo_modelo": "AD0042",
+      "color": "Print",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0042-PRINT-36"
+    },
+    {
+      "codigo_modelo": "AD0042",
+      "color": "Print",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0042-PRINT-37"
+    },
+    {
+      "codigo_modelo": "AD0042",
+      "color": "Print",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0042-PRINT-38"
+    },
+    {
+      "codigo_modelo": "AD0042",
+      "color": "Print",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0042-PRINT-39"
+    },
+    {
+      "codigo_modelo": "AD0042",
+      "color": "Print",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0042-PRINT-40"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Plata",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATA-35"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Plata",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATA-36"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Plata",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATA-37"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Plata",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATA-38"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Plata",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATA-39"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Plata",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATA-40"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Platino",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATINO-35"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Platino",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATINO-36"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Platino",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATINO-37"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Platino",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATINO-38"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Platino",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATINO-39"
+    },
+    {
+      "codigo_modelo": "AD0043",
+      "color": "Platino",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0043-PLATINO-40"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Plata",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PLATA-35"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Plata",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PLATA-36"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Plata",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PLATA-37"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Plata",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PLATA-38"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Plata",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PLATA-39"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Plata",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PLATA-40"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Print",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PRINT-35"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Print",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PRINT-36"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Print",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PRINT-37"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Print",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PRINT-38"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Print",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PRINT-39"
+    },
+    {
+      "codigo_modelo": "AD0044",
+      "color": "Print",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0044-PRINT-40"
+    },
+    {
+      "codigo_modelo": "CD0045",
+      "color": "Beige(Nude)",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0045-BEIGENUDE-35"
+    },
+    {
+      "codigo_modelo": "CD0045",
+      "color": "Beige(Nude)",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0045-BEIGENUDE-36"
+    },
+    {
+      "codigo_modelo": "CD0045",
+      "color": "Beige(Nude)",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0045-BEIGENUDE-37"
+    },
+    {
+      "codigo_modelo": "CD0045",
+      "color": "Beige(Nude)",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0045-BEIGENUDE-38"
+    },
+    {
+      "codigo_modelo": "CD0045",
+      "color": "Beige(Nude)",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0045-BEIGENUDE-39"
+    },
+    {
+      "codigo_modelo": "CD0045",
+      "color": "Beige(Nude)",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0045-BEIGENUDE-40"
+    },
+    {
+      "codigo_modelo": "CD0046",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0046-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "CD0046",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0046-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "CD0046",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0046-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "CD0046",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 3,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0046-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "CD0046",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0046-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "CD0046",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "CD0046-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-SUELA-35"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-SUELA-36"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-SUELA-37"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-SUELA-38"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-SUELA-39"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-SUELA-40"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Blanco",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGROBLANCO-35"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Blanco",
+      "talla": 36,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGROBLANCO-36"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Blanco",
+      "talla": 37,
+      "stock": 3,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGROBLANCO-37"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Blanco",
+      "talla": 38,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGROBLANCO-38"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Blanco",
+      "talla": 39,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGROBLANCO-39"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Blanco",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGROBLANCO-40"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Nude",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGRONUDE-35"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Nude",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGRONUDE-36"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Nude",
+      "talla": 37,
+      "stock": 3,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGRONUDE-37"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Nude",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGRONUDE-38"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Nude",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGRONUDE-39"
+    },
+    {
+      "codigo_modelo": "CD0047",
+      "color": "Negro-Nude",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "CD0047-NEGRONUDE-40"
+    },
+    {
+      "codigo_modelo": "CA0048",
+      "color": "Beige",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0048-BEIGE-35"
+    },
+    {
+      "codigo_modelo": "CA0048",
+      "color": "Beige",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0048-BEIGE-36"
+    },
+    {
+      "codigo_modelo": "CA0048",
+      "color": "Beige",
+      "talla": 37,
+      "stock": 4,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0048-BEIGE-37"
+    },
+    {
+      "codigo_modelo": "CA0048",
+      "color": "Beige",
+      "talla": 38,
+      "stock": 3,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0048-BEIGE-38"
+    },
+    {
+      "codigo_modelo": "CA0048",
+      "color": "Beige",
+      "talla": 39,
+      "stock": 2,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0048-BEIGE-39"
+    },
+    {
+      "codigo_modelo": "CA0048",
+      "color": "Beige",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 44990.0,
+      "precio_vendedores": 44990.0,
+      "sku_variante": "CA0048-BEIGE-40"
+    },
+    {
+      "codigo_modelo": "CD0049",
+      "color": "Nude",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "CD0049-NUDE-35"
+    },
+    {
+      "codigo_modelo": "CD0049",
+      "color": "Nude",
+      "talla": 36,
+      "stock": 3,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "CD0049-NUDE-36"
+    },
+    {
+      "codigo_modelo": "CD0049",
+      "color": "Nude",
+      "talla": 37,
+      "stock": 3,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "CD0049-NUDE-37"
+    },
+    {
+      "codigo_modelo": "CD0049",
+      "color": "Nude",
+      "talla": 38,
+      "stock": 2,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "CD0049-NUDE-38"
+    },
+    {
+      "codigo_modelo": "CD0049",
+      "color": "Nude",
+      "talla": 39,
+      "stock": 2,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "CD0049-NUDE-39"
+    },
+    {
+      "codigo_modelo": "CD0049",
+      "color": "Nude",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "CD0049-NUDE-40"
+    },
+    {
+      "codigo_modelo": "DE0050",
+      "color": "Rosa",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0050-ROSA-35"
+    },
+    {
+      "codigo_modelo": "DE0050",
+      "color": "Rosa",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0050-ROSA-36"
+    },
+    {
+      "codigo_modelo": "DE0050",
+      "color": "Rosa",
+      "talla": 37,
+      "stock": 3,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0050-ROSA-37"
+    },
+    {
+      "codigo_modelo": "DE0050",
+      "color": "Rosa",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0050-ROSA-38"
+    },
+    {
+      "codigo_modelo": "DE0050",
+      "color": "Rosa",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0050-ROSA-39"
+    },
+    {
+      "codigo_modelo": "DE0050",
+      "color": "Rosa",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0050-ROSA-40"
+    },
+    {
+      "codigo_modelo": "DE0051",
+      "color": "Blanco",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0051-BLANCO-35"
+    },
+    {
+      "codigo_modelo": "DE0051",
+      "color": "Blanco",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0051-BLANCO-36"
+    },
+    {
+      "codigo_modelo": "DE0051",
+      "color": "Blanco",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0051-BLANCO-37"
+    },
+    {
+      "codigo_modelo": "DE0051",
+      "color": "Blanco",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0051-BLANCO-38"
+    },
+    {
+      "codigo_modelo": "DE0051",
+      "color": "Blanco",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0051-BLANCO-39"
+    },
+    {
+      "codigo_modelo": "DE0051",
+      "color": "Blanco",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0051-BLANCO-40"
+    },
+    {
+      "codigo_modelo": "DE0052",
+      "color": "Print",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0052-PRINT-35"
+    },
+    {
+      "codigo_modelo": "DE0052",
+      "color": "Print",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0052-PRINT-36"
+    },
+    {
+      "codigo_modelo": "DE0052",
+      "color": "Print",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0052-PRINT-37"
+    },
+    {
+      "codigo_modelo": "DE0052",
+      "color": "Print",
+      "talla": 38,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0052-PRINT-38"
+    },
+    {
+      "codigo_modelo": "DE0052",
+      "color": "Print",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0052-PRINT-39"
+    },
+    {
+      "codigo_modelo": "DE0052",
+      "color": "Print",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0052-PRINT-40"
+    },
+    {
+      "codigo_modelo": "DE0053",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0053-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "DE0053",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0053-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "DE0053",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0053-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "DE0053",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0053-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "DE0053",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0053-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "DE0053",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0053-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "DE0054",
+      "color": "Rosa",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0054-ROSA-35"
+    },
+    {
+      "codigo_modelo": "DE0054",
+      "color": "Rosa",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0054-ROSA-36"
+    },
+    {
+      "codigo_modelo": "DE0054",
+      "color": "Rosa",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0054-ROSA-37"
+    },
+    {
+      "codigo_modelo": "DE0054",
+      "color": "Rosa",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0054-ROSA-38"
+    },
+    {
+      "codigo_modelo": "DE0054",
+      "color": "Rosa",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0054-ROSA-39"
+    },
+    {
+      "codigo_modelo": "DE0054",
+      "color": "Rosa",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0054-ROSA-40"
+    },
+    {
+      "codigo_modelo": "DE0055",
+      "color": "Peltre",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0055-PELTRE-35"
+    },
+    {
+      "codigo_modelo": "DE0055",
+      "color": "Peltre",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0055-PELTRE-36"
+    },
+    {
+      "codigo_modelo": "DE0055",
+      "color": "Peltre",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0055-PELTRE-37"
+    },
+    {
+      "codigo_modelo": "DE0055",
+      "color": "Peltre",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0055-PELTRE-38"
+    },
+    {
+      "codigo_modelo": "DE0055",
+      "color": "Peltre",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0055-PELTRE-39"
+    },
+    {
+      "codigo_modelo": "DE0055",
+      "color": "Peltre",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0055-PELTRE-40"
+    },
+    {
+      "codigo_modelo": "DE0056",
+      "color": "Blanco",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "DE0056-BLANCO-35"
+    },
+    {
+      "codigo_modelo": "DE0056",
+      "color": "Blanco",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "DE0056-BLANCO-36"
+    },
+    {
+      "codigo_modelo": "DE0056",
+      "color": "Blanco",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "DE0056-BLANCO-37"
+    },
+    {
+      "codigo_modelo": "DE0056",
+      "color": "Blanco",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "DE0056-BLANCO-38"
+    },
+    {
+      "codigo_modelo": "DE0056",
+      "color": "Blanco",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "DE0056-BLANCO-39"
+    },
+    {
+      "codigo_modelo": "DE0056",
+      "color": "Blanco",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 34990.0,
+      "precio_vendedores": 34990.0,
+      "sku_variante": "DE0056-BLANCO-40"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Print",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-PRINT-35"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Print",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-PRINT-36"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Print",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-PRINT-37"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Print",
+      "talla": 38,
+      "stock": 2,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-PRINT-38"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Print",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-PRINT-39"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Print",
+      "talla": 40,
+      "stock": 2,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-PRINT-40"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Miel",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-MIEL-35"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Miel",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-MIEL-36"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Miel",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-MIEL-37"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Miel",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-MIEL-38"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Miel",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-MIEL-39"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Miel",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-MIEL-40"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Verde",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-VERDE-35"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Verde",
+      "talla": 36,
+      "stock": 2,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-VERDE-36"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Verde",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-VERDE-37"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Verde",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-VERDE-38"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Verde",
+      "talla": 39,
+      "stock": 2,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-VERDE-39"
+    },
+    {
+      "codigo_modelo": "DD0057",
+      "color": "Verde",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DD0057-VERDE-40"
+    },
+    {
+      "codigo_modelo": "DE0058",
+      "color": "Rosa",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0058-ROSA-35"
+    },
+    {
+      "codigo_modelo": "DE0058",
+      "color": "Rosa",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0058-ROSA-36"
+    },
+    {
+      "codigo_modelo": "DE0058",
+      "color": "Rosa",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0058-ROSA-37"
+    },
+    {
+      "codigo_modelo": "DE0058",
+      "color": "Rosa",
+      "talla": 38,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0058-ROSA-38"
+    },
+    {
+      "codigo_modelo": "DE0058",
+      "color": "Rosa",
+      "talla": 39,
+      "stock": 2,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0058-ROSA-39"
+    },
+    {
+      "codigo_modelo": "DE0058",
+      "color": "Rosa",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 39990.0,
+      "precio_vendedores": 39990.0,
+      "sku_variante": "DE0058-ROSA-40"
+    },
+    {
+      "codigo_modelo": "DC0059",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DC0059-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "DC0059",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DC0059-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "DC0059",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DC0059-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "DC0059",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DC0059-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "DC0059",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DC0059-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "DC0059",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DC0059-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "DC0060",
+      "color": "Taupé",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DC0060-TAUP-35"
+    },
+    {
+      "codigo_modelo": "DC0060",
+      "color": "Taupé",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DC0060-TAUP-36"
+    },
+    {
+      "codigo_modelo": "DC0060",
+      "color": "Taupé",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DC0060-TAUP-37"
+    },
+    {
+      "codigo_modelo": "DC0060",
+      "color": "Taupé",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DC0060-TAUP-38"
+    },
+    {
+      "codigo_modelo": "DC0060",
+      "color": "Taupé",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DC0060-TAUP-39"
+    },
+    {
+      "codigo_modelo": "DC0060",
+      "color": "Taupé",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DC0060-TAUP-40"
+    },
+    {
+      "codigo_modelo": "DA0061",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DA0061-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "DA0061",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DA0061-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "DA0061",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DA0061-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "DA0061",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DA0061-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "DA0061",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DA0061-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "DA0061",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DA0061-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "DB0062",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0062-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "DB0062",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0062-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "DB0062",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0062-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "DB0062",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0062-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "DB0062",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0062-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "DB0062",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0062-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "DB0063",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0063-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "DB0063",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0063-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "DB0063",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0063-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "DB0063",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0063-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "DB0063",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0063-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "DB0063",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "DB0063-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 2,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Miel",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-MIEL-35"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Miel",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-MIEL-36"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Miel",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-MIEL-37"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Miel",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-MIEL-38"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Miel",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-MIEL-39"
+    },
+    {
+      "codigo_modelo": "DD0064",
+      "color": "Miel",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0064-MIEL-40"
+    },
+    {
+      "codigo_modelo": "CD0065",
+      "color": "Negro-Blanco",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0065-NEGROBLANCO-35"
+    },
+    {
+      "codigo_modelo": "CD0065",
+      "color": "Negro-Blanco",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0065-NEGROBLANCO-36"
+    },
+    {
+      "codigo_modelo": "CD0065",
+      "color": "Negro-Blanco",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0065-NEGROBLANCO-37"
+    },
+    {
+      "codigo_modelo": "CD0065",
+      "color": "Negro-Blanco",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0065-NEGROBLANCO-38"
+    },
+    {
+      "codigo_modelo": "CD0065",
+      "color": "Negro-Blanco",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0065-NEGROBLANCO-39"
+    },
+    {
+      "codigo_modelo": "CD0065",
+      "color": "Negro-Blanco",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0065-NEGROBLANCO-40"
+    },
+    {
+      "codigo_modelo": "DD0066",
+      "color": "Plata",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0066-PLATA-35"
+    },
+    {
+      "codigo_modelo": "DD0066",
+      "color": "Plata",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0066-PLATA-36"
+    },
+    {
+      "codigo_modelo": "DD0066",
+      "color": "Plata",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0066-PLATA-37"
+    },
+    {
+      "codigo_modelo": "DD0066",
+      "color": "Plata",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0066-PLATA-38"
+    },
+    {
+      "codigo_modelo": "DD0066",
+      "color": "Plata",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0066-PLATA-39"
+    },
+    {
+      "codigo_modelo": "DD0066",
+      "color": "Plata",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0066-PLATA-40"
+    },
+    {
+      "codigo_modelo": "DD0067",
+      "color": "Plata",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0067-PLATA-35"
+    },
+    {
+      "codigo_modelo": "DD0067",
+      "color": "Plata",
+      "talla": 36,
+      "stock": 2,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0067-PLATA-36"
+    },
+    {
+      "codigo_modelo": "DD0067",
+      "color": "Plata",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0067-PLATA-37"
+    },
+    {
+      "codigo_modelo": "DD0067",
+      "color": "Plata",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0067-PLATA-38"
+    },
+    {
+      "codigo_modelo": "DD0067",
+      "color": "Plata",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0067-PLATA-39"
+    },
+    {
+      "codigo_modelo": "DD0067",
+      "color": "Plata",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DD0067-PLATA-40"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Suela(beige)",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-SUELABEIGE-35"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Suela(beige)",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-SUELABEIGE-36"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Suela(beige)",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-SUELABEIGE-37"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Suela(beige)",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-SUELABEIGE-38"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Suela(beige)",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-SUELABEIGE-39"
+    },
+    {
+      "codigo_modelo": "DA0068",
+      "color": "Suela(beige)",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0068-SUELABEIGE-40"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-SUELA-35"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-SUELA-36"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-SUELA-37"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-SUELA-38"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-SUELA-39"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-SUELA-40"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Taupé",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-TAUP-35"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Taupé",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-TAUP-36"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Taupé",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-TAUP-37"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Taupé",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-TAUP-38"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Taupé",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-TAUP-39"
+    },
+    {
+      "codigo_modelo": "DA0069",
+      "color": "Taupé",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 29990.0,
+      "precio_vendedores": 29990.0,
+      "sku_variante": "DA0069-TAUP-40"
+    },
+    {
+      "codigo_modelo": "DA0070",
+      "color": "Visón",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DA0070-VISN-35"
+    },
+    {
+      "codigo_modelo": "DA0070",
+      "color": "Visón",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DA0070-VISN-36"
+    },
+    {
+      "codigo_modelo": "DA0070",
+      "color": "Visón",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DA0070-VISN-37"
+    },
+    {
+      "codigo_modelo": "DA0070",
+      "color": "Visón",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DA0070-VISN-38"
+    },
+    {
+      "codigo_modelo": "DA0070",
+      "color": "Visón",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DA0070-VISN-39"
+    },
+    {
+      "codigo_modelo": "DA0070",
+      "color": "Visón",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "DA0070-VISN-40"
+    },
+    {
+      "codigo_modelo": "EA0071",
+      "color": "Suela-Print",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0071-SUELAPRINT-35"
+    },
+    {
+      "codigo_modelo": "EA0071",
+      "color": "Suela-Print",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0071-SUELAPRINT-36"
+    },
+    {
+      "codigo_modelo": "EA0071",
+      "color": "Suela-Print",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0071-SUELAPRINT-37"
+    },
+    {
+      "codigo_modelo": "EA0071",
+      "color": "Suela-Print",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0071-SUELAPRINT-38"
+    },
+    {
+      "codigo_modelo": "EA0071",
+      "color": "Suela-Print",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0071-SUELAPRINT-39"
+    },
+    {
+      "codigo_modelo": "EA0071",
+      "color": "Suela-Print",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0071-SUELAPRINT-40"
+    },
+    {
+      "codigo_modelo": "EA0072",
+      "color": "Negro-Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0072-NEGROSUELA-35"
+    },
+    {
+      "codigo_modelo": "EA0072",
+      "color": "Negro-Suela",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0072-NEGROSUELA-36"
+    },
+    {
+      "codigo_modelo": "EA0072",
+      "color": "Negro-Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0072-NEGROSUELA-37"
+    },
+    {
+      "codigo_modelo": "EA0072",
+      "color": "Negro-Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0072-NEGROSUELA-38"
+    },
+    {
+      "codigo_modelo": "EA0072",
+      "color": "Negro-Suela",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0072-NEGROSUELA-39"
+    },
+    {
+      "codigo_modelo": "EA0072",
+      "color": "Negro-Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0072-NEGROSUELA-40"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-SUELA-35"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-SUELA-36"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-SUELA-37"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-SUELA-38"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-SUELA-39"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-SUELA-40"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "EA0073",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 64990.0,
+      "precio_vendedores": 64990.0,
+      "sku_variante": "EA0073-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "EE0074",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0074-SUELA-35"
+    },
+    {
+      "codigo_modelo": "EE0074",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0074-SUELA-36"
+    },
+    {
+      "codigo_modelo": "EE0074",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0074-SUELA-37"
+    },
+    {
+      "codigo_modelo": "EE0074",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0074-SUELA-38"
+    },
+    {
+      "codigo_modelo": "EE0074",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0074-SUELA-39"
+    },
+    {
+      "codigo_modelo": "EE0074",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0074-SUELA-40"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Blanco",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELABLANCO-35"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Blanco",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELABLANCO-36"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Blanco",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELABLANCO-37"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Blanco",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELABLANCO-38"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Blanco",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELABLANCO-39"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Blanco",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELABLANCO-40"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELANEGRO-35"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELANEGRO-36"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Negro",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELANEGRO-37"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELANEGRO-38"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELANEGRO-39"
+    },
+    {
+      "codigo_modelo": "EE0075",
+      "color": "Suela-Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0075-SUELANEGRO-40"
+    },
+    {
+      "codigo_modelo": "EE0076",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0076-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "EE0076",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0076-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "EE0076",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0076-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "EE0076",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0076-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "EE0076",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0076-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "EE0076",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0076-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-SUELA-35"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-SUELA-36"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-SUELA-37"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-SUELA-38"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-SUELA-39"
+    },
+    {
+      "codigo_modelo": "EC0077",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EC0077-SUELA-40"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-SUELA-35"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-SUELA-36"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-SUELA-37"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-SUELA-38"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-SUELA-39"
+    },
+    {
+      "codigo_modelo": "EA0078",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 69990.0,
+      "precio_vendedores": 69990.0,
+      "sku_variante": "EA0078-SUELA-40"
+    },
+    {
+      "codigo_modelo": "ED0079",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0079-SUELA-35"
+    },
+    {
+      "codigo_modelo": "ED0079",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0079-SUELA-36"
+    },
+    {
+      "codigo_modelo": "ED0079",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0079-SUELA-37"
+    },
+    {
+      "codigo_modelo": "ED0079",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 2,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0079-SUELA-38"
+    },
+    {
+      "codigo_modelo": "ED0079",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0079-SUELA-39"
+    },
+    {
+      "codigo_modelo": "ED0079",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0079-SUELA-40"
+    },
+    {
+      "codigo_modelo": "ED0080",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0080-SUELA-35"
+    },
+    {
+      "codigo_modelo": "ED0080",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0080-SUELA-36"
+    },
+    {
+      "codigo_modelo": "ED0080",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0080-SUELA-37"
+    },
+    {
+      "codigo_modelo": "ED0080",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 2,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0080-SUELA-38"
+    },
+    {
+      "codigo_modelo": "ED0080",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0080-SUELA-39"
+    },
+    {
+      "codigo_modelo": "ED0080",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0080-SUELA-40"
+    },
+    {
+      "codigo_modelo": "ED0081",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0081-SUELA-35"
+    },
+    {
+      "codigo_modelo": "ED0081",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0081-SUELA-36"
+    },
+    {
+      "codigo_modelo": "ED0081",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 2,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0081-SUELA-37"
+    },
+    {
+      "codigo_modelo": "ED0081",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 2,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0081-SUELA-38"
+    },
+    {
+      "codigo_modelo": "ED0081",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0081-SUELA-39"
+    },
+    {
+      "codigo_modelo": "ED0081",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "ED0081-SUELA-40"
+    },
+    {
+      "codigo_modelo": "EE0082",
+      "color": "Rojo",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "EE0082-ROJO-35"
+    },
+    {
+      "codigo_modelo": "EE0082",
+      "color": "Rojo",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "EE0082-ROJO-36"
+    },
+    {
+      "codigo_modelo": "EE0082",
+      "color": "Rojo",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "EE0082-ROJO-37"
+    },
+    {
+      "codigo_modelo": "EE0082",
+      "color": "Rojo",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "EE0082-ROJO-38"
+    },
+    {
+      "codigo_modelo": "EE0082",
+      "color": "Rojo",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "EE0082-ROJO-39"
+    },
+    {
+      "codigo_modelo": "EE0082",
+      "color": "Rojo",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "EE0082-ROJO-40"
+    },
+    {
+      "codigo_modelo": "EE0083",
+      "color": "Negro/suela(verde)",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0083-NEGROSUELAVERDE-35"
+    },
+    {
+      "codigo_modelo": "EE0083",
+      "color": "Negro/suela(verde)",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0083-NEGROSUELAVERDE-36"
+    },
+    {
+      "codigo_modelo": "EE0083",
+      "color": "Negro/suela(verde)",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0083-NEGROSUELAVERDE-37"
+    },
+    {
+      "codigo_modelo": "EE0083",
+      "color": "Negro/suela(verde)",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0083-NEGROSUELAVERDE-38"
+    },
+    {
+      "codigo_modelo": "EE0083",
+      "color": "Negro/suela(verde)",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0083-NEGROSUELAVERDE-39"
+    },
+    {
+      "codigo_modelo": "EE0083",
+      "color": "Negro/suela(verde)",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 54990.0,
+      "precio_vendedores": 54990.0,
+      "sku_variante": "EE0083-NEGROSUELAVERDE-40"
+    },
+    {
+      "codigo_modelo": "CD0084",
+      "color": "Beige",
+      "talla": 35,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0084-BEIGE-35"
+    },
+    {
+      "codigo_modelo": "CD0084",
+      "color": "Beige",
+      "talla": 36,
+      "stock": 2,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0084-BEIGE-36"
+    },
+    {
+      "codigo_modelo": "CD0084",
+      "color": "Beige",
+      "talla": 37,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0084-BEIGE-37"
+    },
+    {
+      "codigo_modelo": "CD0084",
+      "color": "Beige",
+      "talla": 38,
+      "stock": 1,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0084-BEIGE-38"
+    },
+    {
+      "codigo_modelo": "CD0084",
+      "color": "Beige",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0084-BEIGE-39"
+    },
+    {
+      "codigo_modelo": "CD0084",
+      "color": "Beige",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 24990.0,
+      "precio_vendedores": 24990.0,
+      "sku_variante": "CD0084-BEIGE-40"
+    },
+    {
+      "codigo_modelo": "AA0085",
+      "color": "Suela",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0085-SUELA-35"
+    },
+    {
+      "codigo_modelo": "AA0085",
+      "color": "Suela",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0085-SUELA-36"
+    },
+    {
+      "codigo_modelo": "AA0085",
+      "color": "Suela",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0085-SUELA-37"
+    },
+    {
+      "codigo_modelo": "AA0085",
+      "color": "Suela",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0085-SUELA-38"
+    },
+    {
+      "codigo_modelo": "AA0085",
+      "color": "Suela",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0085-SUELA-39"
+    },
+    {
+      "codigo_modelo": "AA0085",
+      "color": "Suela",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0085-SUELA-40"
+    },
+    {
+      "codigo_modelo": "AD0086",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0086-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AD0086",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0086-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AD0086",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0086-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AD0086",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0086-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AD0086",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0086-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AD0086",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AD0086-NEGRO-40"
+    },
+    {
+      "codigo_modelo": "AA0087",
+      "color": "Nude",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0087-NUDE-35"
+    },
+    {
+      "codigo_modelo": "AA0087",
+      "color": "Nude",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0087-NUDE-36"
+    },
+    {
+      "codigo_modelo": "AA0087",
+      "color": "Nude",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0087-NUDE-37"
+    },
+    {
+      "codigo_modelo": "AA0087",
+      "color": "Nude",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0087-NUDE-38"
+    },
+    {
+      "codigo_modelo": "AA0087",
+      "color": "Nude",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0087-NUDE-39"
+    },
+    {
+      "codigo_modelo": "AA0087",
+      "color": "Nude",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0087-NUDE-40"
+    },
+    {
+      "codigo_modelo": "AA0088",
+      "color": "Visón",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0088-VISN-35"
+    },
+    {
+      "codigo_modelo": "AA0088",
+      "color": "Visón",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0088-VISN-36"
+    },
+    {
+      "codigo_modelo": "AA0088",
+      "color": "Visón",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0088-VISN-37"
+    },
+    {
+      "codigo_modelo": "AA0088",
+      "color": "Visón",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0088-VISN-38"
+    },
+    {
+      "codigo_modelo": "AA0088",
+      "color": "Visón",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0088-VISN-39"
+    },
+    {
+      "codigo_modelo": "AA0088",
+      "color": "Visón",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0088-VISN-40"
+    },
+    {
+      "codigo_modelo": "AA0089",
+      "color": "Negro",
+      "talla": 35,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0089-NEGRO-35"
+    },
+    {
+      "codigo_modelo": "AA0089",
+      "color": "Negro",
+      "talla": 36,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0089-NEGRO-36"
+    },
+    {
+      "codigo_modelo": "AA0089",
+      "color": "Negro",
+      "talla": 37,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0089-NEGRO-37"
+    },
+    {
+      "codigo_modelo": "AA0089",
+      "color": "Negro",
+      "talla": 38,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0089-NEGRO-38"
+    },
+    {
+      "codigo_modelo": "AA0089",
+      "color": "Negro",
+      "talla": 39,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0089-NEGRO-39"
+    },
+    {
+      "codigo_modelo": "AA0089",
+      "color": "Negro",
+      "talla": 40,
+      "stock": 0,
+      "precio_interno": 0.0,
+      "precio_vendedores": 0.0,
+      "sku_variante": "AA0089-NEGRO-40"
+    }
+  ]
+}
