@@ -252,6 +252,17 @@ export default function ReservationDrawer({
               </span>
             </div>
 
+            {/* Mensaje de Confianza Sin Pago Inmediato */}
+            <div className="bg-emerald-50/90 border border-emerald-200/90 rounded-2xl p-3 text-[11px] text-emerald-950 leading-relaxed shadow-xs flex items-start gap-2.5">
+              <span className="text-base leading-none">🔒</span>
+              <div>
+                <p className="font-bold text-emerald-900">Reserva 100% gratuita • No requiere pago ahora</p>
+                <p className="text-emerald-700/90 text-[10.5px] mt-0.5">
+                  Una vez confirmada la disponibilidad de tu talla, coordinas el pago y entrega directamente con la vendedora por WhatsApp.
+                </p>
+              </div>
+            </div>
+
             {/* Inputs del Cliente con Teléfono pre-llenado */}
             <div className="space-y-2 text-xs">
               <div className="relative">
@@ -339,7 +350,7 @@ export default function ReservationDrawer({
               className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
             >
               <Send className="w-4 h-4" />
-              <span>{isSubmitting ? 'Guardando Reserva...' : `Enviar Reserva a ${vendedoraNombre} por WhatsApp`}</span>
+              <span>{isSubmitting ? 'Guardando Reserva...' : 'Confirmar Reserva por WhatsApp'}</span>
             </button>
 
             <button

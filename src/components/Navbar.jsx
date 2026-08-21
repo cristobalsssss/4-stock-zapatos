@@ -32,7 +32,7 @@ export default function Navbar({
               src="/logo.png" 
               alt="Tinyglam" 
               onError={() => setLogoError(true)}
-              className="h-10 w-auto object-contain max-w-[150px] group-hover:scale-105 transition-transform" 
+              className="h-9 sm:h-10 md:h-11 w-auto object-contain max-w-[160px] group-hover:scale-103 transition-transform" 
             />
           ) : (
             <div className="flex items-center gap-2.5">

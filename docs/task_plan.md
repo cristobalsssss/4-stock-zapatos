@@ -86,7 +86,7 @@
 - [x] REVISIÓN #21: Normalización total de payload de reservas, resolución por variante_id y bucket de imágenes oficial
 - [x] REVISIÓN #23: Corrección de mapeo en el origen de reservas y unificación total al bucket productos-imagenes
 - [x] REVISIÓN #24: Corrección de SKUs sin colisiones, 732 variantes (84 modelos, 122 colores, 265 pares) y sincronización de columna Categorías
-- [x] REVISIÓN #24.1: Branding oficial Tinyglam, Logo en Header con fallback, Regla de Escasez (<3), Auto-Apertura de Bolsa y Chatbot por Categoría
+- [x] REVISIÓN #25: Refuerzo de confianza en reservas ("Sin Pago Inmediato"), botón tranquilizador y armonización visual de Logo Tinyglam en Header y Hero
 - [x] Desplegar y compilar sitio web para producción en Vercel con 0 errores
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
@@ -101,13 +101,13 @@
 
 ---
 
-### 🏆 HITO ALCANZADO: Versión 4.1.0 Estable (Golden Milestone)
-1. **Base de Datos & ETL:** 84 modelos categorizados (Botines, Sandalias, Zapatillas, Botas, Zapatos), 122 colores y 732 variantes con 265 unidades en bodega 100% cuadradas con Excel.
-2. **Branding Tinyglam Oficial:** Calzado de Cuero Premium Argentino en Chile con soporte de Logo en Header y fallback tipográfico elegante.
-3. **Psicología de Compra y UX:** Regla de escasez visual (< 3 pares "¡Últimas unidades!"), paso 2 dinámico según color y auto-apertura inmediata de la bolsa de reserva.
-4. **Chatbot Inteligente Multi-Filtro:** Búsqueda cruzada por categoría + talla, memoria contextual y botón "Ver Catálogo".
-5. **Supabase Storage Oficial:** Bucket `productos-imagenes` configurado y conectado para subida y lectura pública.
-6. **Ventas, Kardex y Panel Admin:** Transacciones multi-producto, conversión atómica de reservas, monitor de stock crítico y gestión de galería.
+### 🏆 HITO ALCANZADO: Versión 4.2.0 Estable (Golden Milestone)
+1. **Confianza y Cero Fricción:** Mensajes explícitos de "Reserva 100% gratuita • No requiere pago ahora" en Drawer y Chatbot con botón "Confirmar Reserva por WhatsApp".
+2. **Branding Tinyglam Armonizado:** Calzado de Cuero Premium Argentino en Chile con soporte de Logo `/logo.png` en Header y Hero banner con fallback tipográfico refinado.
+3. **Base de Datos & Categorías:** 84 modelos categorizados (Botines, Sandalias, Zapatillas, Botas, Zapatos), 122 colores y 732 variantes con 265 unidades en bodega 100% cuadradas con Excel.
+4. **Psicología de Compra y UX:** Regla de escasez visual (< 3 pares "¡Últimas unidades!"), paso 2 dinámico según color y auto-apertura inmediata de la bolsa de reserva.
+5. **Chatbot Inteligente Multi-Filtro:** Búsqueda cruzada por categoría + talla, memoria contextual y botón "Ver Catálogo".
+6. **Supabase Storage y Admin:** Bucket `productos-imagenes` oficial, conversión atómica de reservas a venta, monitor de stock crítico y gestión de galería.
 
 ---
 

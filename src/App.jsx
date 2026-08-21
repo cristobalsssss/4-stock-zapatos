@@ -27,6 +27,7 @@ export default function App() {
   });
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [isBagOpen, setIsBagOpen] = useState(false);
+  const [heroLogoError, setHeroLogoError] = useState(false);
   
   // Galería Modal
   const [galleryProduct, setGalleryProduct] = useState(null);
@@ -221,22 +222,38 @@ export default function App() {
       {currentView === 'catalog' && (
         <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8 w-full">
           {/* Hero Section Editorial */}
-          <div className="relative rounded-3xl bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800 text-white p-6 sm:p-12 overflow-hidden shadow-xl border border-zinc-800">
+          <div className="relative rounded-3xl bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800 text-white p-6 sm:p-10 md:p-12 overflow-hidden shadow-xl border border-zinc-800">
             <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-10 bg-[radial-gradient(#fb7185_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
             
-            <div className="max-w-2xl relative z-10 space-y-3">
+            <div className="max-w-3xl relative z-10 space-y-4">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30 text-xs font-semibold tracking-wide">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Tinyglam • Stock Físico en Bodega</span>
               </div>
-              <h1 className="font-display font-black text-3xl sm:text-5xl tracking-tight text-white leading-tight">
-                Tinyglam
-              </h1>
-              <p className="text-zinc-200 text-sm sm:text-lg font-medium max-w-xl">
-                Calzado de Cuero Premium Argentino en Chile
-              </p>
-              <p className="text-zinc-400 text-xs sm:text-sm font-normal max-w-xl">
-                Encuentra tu talla y modelo favorito en tiempo real. Añade a tu bolsa y reserva directo con nuestra vendedora oficial vía WhatsApp.
+              
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 pt-1">
+                {!heroLogoError && (
+                  <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 inline-flex items-center justify-center max-w-[200px] shadow-md group">
+                    <img 
+                      src="/logo.png" 
+                      alt="Tinyglam Logo" 
+                      onError={() => setHeroLogoError(true)}
+                      className="h-10 md:h-12 w-auto object-contain"
+                    />
+                  </div>
+                )}
+                <div>
+                  <h1 className="font-display font-black text-3xl sm:text-5xl tracking-tight text-white leading-tight">
+                    Tinyglam
+                  </h1>
+                  <p className="text-brand-300 text-sm sm:text-lg font-bold tracking-wide mt-0.5">
+                    Calzado de Cuero Premium Argentino en Chile
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-zinc-300 text-xs sm:text-sm font-normal max-w-xl leading-relaxed">
+                Encuentra tu talla y modelo favorito en tiempo real. Añade a tu bolsa y reserva directo con nuestra vendedora oficial vía WhatsApp <strong className="text-white font-semibold underline decoration-brand-500/60 underline-offset-2">sin pago inmediato</strong>.
               </p>
             </div>
           </div>
