@@ -1,10 +1,10 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "4.1.0",
+    "version": "4.1.1",
     "status": "ESTABLE - GOLDEN MILESTONE",
     "last_updated": "2026-08-20 20:21:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "PRODUCCIÓN: VERSIÓN 4.1.0 ESTABLE (GOLDEN MILESTONE)",
+    "active_phase": "PRODUCCIÓN: VERSIÓN 4.1.1 ESTABLE (GOLDEN MILESTONE)",
     "last_completed_task": "REVISIÓN #24: Categorías (84 modelos), Branding Oficial Tinyglam, Logo Header, Regla de Escasez (<3) y Chatbot por Categoría",
     "current_task": "Mantenimiento, Monitoreo de Ventas y Despliegue Continuo en Vercel",
     "milestones_achieved": [

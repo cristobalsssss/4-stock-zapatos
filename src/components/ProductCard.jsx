@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Eye, ShoppingBag, Check, AlertTriangle, Layers, ZoomIn } from 'lucide-react';
+import { Eye, ShoppingBag, Check, AlertTriangle, Layers, ZoomIn, Sparkles } from 'lucide-react';
 import InteractiveLightbox from './InteractiveLightbox';
 
 export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
