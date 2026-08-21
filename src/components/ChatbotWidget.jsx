@@ -514,7 +514,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
               <div className="bg-emerald-100/70 border border-emerald-300/70 rounded-xl p-2 text-[10.5px] text-emerald-950 leading-relaxed flex items-start gap-1.5">
                 <span className="text-xs">💡</span>
                 <span>
-                  <strong>Recuerda:</strong> Esta reserva no te cobra nada ahora. Tu pedido se enviará a nuestra vendedora para coordinar entrega y pago por WhatsApp.
+                  <strong>Recuerda:</strong> Tu calzado queda apartado al instante sin cobro previo. Coordinaremos el pago y despacho directamente por WhatsApp.
                 </span>
               </div>
 

@@ -256,9 +256,9 @@ export default function ReservationDrawer({
             <div className="bg-emerald-50/90 border border-emerald-200/90 rounded-2xl p-3 text-[11px] text-emerald-950 leading-relaxed shadow-xs flex items-start gap-2.5">
               <span className="text-base leading-none">🔒</span>
               <div>
-                <p className="font-bold text-emerald-900">Reserva 100% gratuita • No requiere pago ahora</p>
+                <p className="font-bold text-emerald-900">Reserva gratuita • Sin pago inmediato</p>
                 <p className="text-emerald-700/90 text-[10.5px] mt-0.5">
-                  Una vez confirmada la disponibilidad de tu talla, coordinas el pago y entrega directamente con la vendedora por WhatsApp.
+                  Tu par queda apartado en el sistema; nuestra vendedora te contactará por WhatsApp para coordinar el método de pago y entrega.
                 </p>
               </div>
             </div>
