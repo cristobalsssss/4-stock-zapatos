@@ -372,7 +372,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
                                   title="Ver en catálogo"
                                 >
                                   <Eye className="w-3 h-3" />
-                                  <span>Catálogo</span>
+                                  <span>Ver Catálogo</span>
                                 </button>
 
                                 <button

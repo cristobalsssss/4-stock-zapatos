@@ -1,0 +1,1 @@
+import openpyxl from 'openpyxl'; // will use python to generate json or use python script directly

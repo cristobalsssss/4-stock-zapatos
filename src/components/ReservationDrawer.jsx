@@ -94,8 +94,8 @@ export default function ReservationDrawer({
       });
 
       // 2. Formatear mensaje para WhatsApp hacia el número oficial configurado
-      let mensaje = `👠 *SOLICITUD DE RESERVA #${codigoRes}*\n\n`;
-      mensaje += `Hola ${vendedoraNombre}, quiero reservar los siguientes pares de su catálogo boutique:\n\n`;
+      let mensaje = `👠 *SOLICITUD DE RESERVA #${codigoRes} - TINYGLAM*\n\n`;
+      mensaje += `Hola ${vendedoraNombre}, quiero reservar los siguientes pares de su catálogo Tinyglam:\n\n`;
       mensaje += `🔖 *Código de Reserva:* #${codigoRes}\n\n`;
 
       bagItems.forEach((item, index) => {

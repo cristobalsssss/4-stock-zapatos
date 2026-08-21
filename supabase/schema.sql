@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS public.productos (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     codigo_modelo TEXT NOT NULL UNIQUE,
     nombre_fantasia TEXT NOT NULL,
+    categoria TEXT,
     material TEXT,
     taco_base TEXT,
     horma TEXT DEFAULT 'Normal',

@@ -7,10 +7,10 @@ export default function Footer({ onOpenAdminLogin }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-lg bg-brand-600 text-white flex items-center justify-center font-display font-bold text-xs">
-            Z
+            T
           </div>
-          <span className="font-semibold text-zinc-800">Boutique de Calzado Femenino</span>
-          <span>• Catálogo & Gestión de Inventario en Tiempo Real</span>
+          <span className="font-bold text-zinc-900">Tinyglam</span>
+          <span>• Calzado de Cuero Premium Argentino en Chile</span>
         </div>
 
         <div className="flex items-center gap-4">
@@ -23,7 +23,7 @@ export default function Footer({ onOpenAdminLogin }) {
           </button>
           <span>•</span>
           <span className="flex items-center gap-1">
-            Diseñado para E-commerce Boutique <Sparkles className="w-3 h-3 text-brand-500" />
+            Tinyglam Boutique <Sparkles className="w-3 h-3 text-brand-500" />
           </span>
         </div>
       </div>

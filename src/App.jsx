@@ -118,6 +118,8 @@ export default function App() {
       }
       return [...prev, { ...item, quantity: 1 }];
     });
+    // Auto-apertura inmediata de la bolsa de reserva
+    setIsBagOpen(true);
   };
 
   const handleUpdateQuantity = (varianteId, newQty) => {
@@ -225,12 +227,15 @@ export default function App() {
             <div className="max-w-2xl relative z-10 space-y-3">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30 text-xs font-semibold tracking-wide">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Colección 2026 • Stock Físico en Bodega</span>
+                <span>Tinyglam • Stock Físico en Bodega</span>
               </div>
-              <h1 className="font-display font-extrabold text-3xl sm:text-5xl tracking-tight text-white leading-tight">
-                Zapatos Exclusivos de Alta Calidad
+              <h1 className="font-display font-black text-3xl sm:text-5xl tracking-tight text-white leading-tight">
+                Tinyglam
               </h1>
-              <p className="text-zinc-300 text-xs sm:text-base font-normal max-w-xl">
+              <p className="text-zinc-200 text-sm sm:text-lg font-medium max-w-xl">
+                Calzado de Cuero Premium Argentino en Chile
+              </p>
+              <p className="text-zinc-400 text-xs sm:text-sm font-normal max-w-xl">
                 Encuentra tu talla y modelo favorito en tiempo real. Añade a tu bolsa y reserva directo con nuestra vendedora oficial vía WhatsApp.
               </p>
             </div>

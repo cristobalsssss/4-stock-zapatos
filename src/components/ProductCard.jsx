@@ -140,10 +140,17 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
           {/* Badge Disponibilidad Global */}
           <div className="absolute top-3 right-3">
             {totalStockProducto > 0 ? (
-              <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                {totalStockProducto} {totalStockProducto === 1 ? 'par' : 'pares'}
-              </span>
+              totalStockProducto < 3 ? (
+                <span className="bg-amber-500 text-white font-bold text-[11px] px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-md animate-pulse">
+                  <Sparkles className="w-3 h-3 text-amber-200" />
+                  ¡Últimas unidades!
+                </span>
+              ) : (
+                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Disponible
+                </span>
+              )
             ) : (
               <span className="bg-zinc-800/90 text-zinc-300 text-[11px] font-medium px-2.5 py-0.5 rounded-full shadow-xs">
                 Agotado
@@ -198,9 +205,9 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
               </span>
             </div>
 
-            {/* Atributos: Material, Taco, Horma */}
+            {/* Atributos: Categoría, Material, Taco, Horma */}
             <p className="text-xs text-zinc-500 mb-3 line-clamp-1">
-              {[product.material, product.taco_base, product.horma ? `Horma ${product.horma}` : null]
+              {[product.categoria, product.material, product.taco_base, product.horma ? `Horma ${product.horma}` : null]
                 .filter(Boolean)
                 .join(' • ')}
             </p>
@@ -222,11 +229,11 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
                         key={c.color}
                         type="button"
                         onClick={() => handleSelectColor(c.color)}
-                        className={`px-2.5 py-1 text-xs font-medium rounded-lg border transition-all ${
+                        className={`px-2.5 py-1 rounded-xl text-xs font-semibold border transition-all ${
                           isSelected
-                            ? 'border-brand-600 bg-brand-50/80 text-brand-900 font-bold shadow-xs ring-1 ring-brand-500'
-                            : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300'
-                        } ${!tieneStock ? 'opacity-50 line-through' : ''}`}
+                            ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs'
+                            : 'bg-zinc-50 hover:bg-zinc-100 text-zinc-700 border-zinc-200'
+                        } ${!tieneStock ? 'opacity-40 line-through' : ''}`}
                       >
                         {c.color}
                       </button>
@@ -240,7 +247,7 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
             <div className="mb-4">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">
-                  Tallas {selectedColor ? `en ${selectedColor}:` : '(Elige color primero):'}
+                  {selectedColor ? `2. Seleccionar talla en color ${selectedColor}:` : '2. Talla (selecciona color primero)'}
                 </span>
                 {activeVariant && activeVariant.stock_disponible === 1 && (
                   <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded flex items-center gap-1 animate-pulse border border-amber-200">

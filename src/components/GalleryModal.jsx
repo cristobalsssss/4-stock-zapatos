@@ -336,7 +336,7 @@ export default function GalleryModal({ product, initialVariant, onClose, onAddTo
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                    2. Talla {selectedColor ? `en Color ${selectedColor}` : '(Selecciona color primero)'}:
+                    {selectedColor ? `2. Seleccionar talla en color ${selectedColor}:` : '2. Talla (selecciona color primero)'}
                   </span>
                   {activeVariant && activeVariant.stock_disponible === 1 && (
                     <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
@@ -387,6 +387,12 @@ export default function GalleryModal({ product, initialVariant, onClose, onAddTo
 
               {/* Ficha Técnica Compacta */}
               <div className="bg-zinc-50 rounded-2xl p-3.5 border border-zinc-100 space-y-1.5 text-xs text-zinc-600">
+                {product.categoria && (
+                  <div className="flex justify-between">
+                    <span className="text-zinc-400 font-medium">Categoría:</span>
+                    <span className="font-semibold text-zinc-900">{product.categoria}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-zinc-400 font-medium">Material:</span>
                   <span className="font-semibold text-zinc-900">{product.material || 'Cuero Legítimo'}</span>

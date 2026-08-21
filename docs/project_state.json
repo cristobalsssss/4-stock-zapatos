@@ -1,19 +1,19 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "4.0.1",
+    "version": "4.1.0",
     "status": "ESTABLE - GOLDEN MILESTONE",
-    "last_updated": "2026-08-20 16:28:00",
+    "last_updated": "2026-08-20 20:21:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "PRODUCCIÓN: VERSIÓN 4.0.1 ESTABLE (GOLDEN MILESTONE)",
-    "last_completed_task": "SINCRONIZACIÓN TOTAL: Corrección de SKUs sin colisiones, 732 variantes (84 modelos, 122 colores) y 0 discrepancias con inventario_real.xlsx",
+    "active_phase": "PRODUCCIÓN: VERSIÓN 4.1.0 ESTABLE (GOLDEN MILESTONE)",
+    "last_completed_task": "REVISIÓN #24: Categorías (84 modelos), Branding Oficial Tinyglam, Logo Header, Regla de Escasez (<3) y Chatbot por Categoría",
     "current_task": "Mantenimiento, Monitoreo de Ventas y Despliegue Continuo en Vercel",
     "milestones_achieved": [
         "1. Base de datos Supabase con catálogo completo 100% verificado (84 modelos, 122 colores, 732 variantes, 265 unidades en bodega).",
-        "2. Storage oficial verificado en bucket 'productos-imagenes' con políticas de subida y lectura.",
-        "3. Flujo integral de Reservas con captura limpia de datos nativos (sin SIN-CODIGO ni precios en cero).",
-        "4. Conversión atómica de Reserva a Venta con precarga automática de calzado, stock real y precio.",
-        "5. Chatbot con filtro inteligente de tallas/colores, slot-filling conversacional y enlace directo a WhatsApp.",
-        "6. Panel /admin protegido con purga de datos de prueba, monitor de stock crítico y gestión de galería."
+        "2. Soporte oficial de Categorías (Botines, Sandalias, Zapatillas, Botas, Zapatos) sincronizado desde inventario_real.xlsx.",
+        "3. Branding oficial Tinyglam ('Calzado de Cuero Premium Argentino en Chile') con logo dinámico en Header y fallback tipográfico.",
+        "4. Regla de escasez visual (< 3 pares '¡Últimas unidades!', >= 3 limpio 'Disponible') y paso 2 dinámico según color.",
+        "5. Auto-apertura inmediata de la bolsa de reserva y Chatbot inteligente con parser de categorías y botón 'Ver Catálogo'.",
+        "6. Conversión atómica de Reserva a Venta y almacenamiento verificado en bucket 'productos-imagenes'."
     ],
     "environment": {
         "os": "Windows (PowerShell)",

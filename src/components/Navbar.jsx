@@ -11,12 +11,14 @@ export default function Navbar({
   onRefresh,
   isLoading
 }) {
+  const [logoError, setLogoError] = React.useState(false);
+
   return (
     <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-zinc-200/80 transition-all">
       {/* Top micro banner */}
       <div className="bg-zinc-900 text-zinc-300 text-xs py-1.5 px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2">
         <Sparkles className="w-3.5 h-3.5 text-brand-400 animate-pulse" />
-        <span>Colección Exclusiva de Calzado Femenino • Stock y Reserva en Tiempo Real</span>
+        <span>Tinyglam • Calzado de Cuero Premium Argentino en Chile • Stock en Tiempo Real</span>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
@@ -25,17 +27,28 @@ export default function Navbar({
           onClick={() => setCurrentView('catalog')}
           className="flex items-center gap-2.5 cursor-pointer group"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center text-white shadow-sm shadow-brand-500/20 group-hover:scale-105 transition-transform">
-            <span className="font-display font-black text-lg tracking-wider">Z</span>
-          </div>
-          <div>
-            <span className="font-display font-bold text-lg text-zinc-900 tracking-tight block group-hover:text-brand-600 transition-colors">
-              ZAPATOS BOUTIQUE
-            </span>
-            <span className="text-[10px] tracking-widest uppercase font-semibold text-zinc-400 block -mt-1">
-              Catálogo & Stock
-            </span>
-          </div>
+          {!logoError ? (
+            <img 
+              src="/logo.png" 
+              alt="Tinyglam" 
+              onError={() => setLogoError(true)}
+              className="h-10 w-auto object-contain max-w-[150px] group-hover:scale-105 transition-transform" 
+            />
+          ) : (
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center text-white shadow-sm shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                <span className="font-display font-black text-xl tracking-wider">T</span>
+              </div>
+              <div>
+                <span className="font-display font-black text-xl text-zinc-900 tracking-tight block group-hover:text-brand-600 transition-colors leading-none">
+                  Tinyglam
+                </span>
+                <span className="text-[10px] tracking-wide font-semibold text-brand-600 block mt-0.5">
+                  Cuero Premium Argentino
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Action Controls */}

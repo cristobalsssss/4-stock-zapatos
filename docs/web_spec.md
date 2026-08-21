@@ -1,14 +1,14 @@
 # WEB_SPEC.MD - ESPECIFICACIÓN TÉCNICA DEL PROYECTO
 
 ## 1. INFORMACIÓN DEL PROYECTO
-- **Nombre:** Mantenedor de Stock de Zapatos y Registro de Movimientos (Ejercicio 3)
+- **Nombre:** Tinyglam - Calzado de Cuero Premium Argentino en Chile (Stock & Reservas en Tiempo Real)
 - **Repositorio GitHub:** https://github.com/cristobalsssss/4-stock-zapatos.git
 - **Estrategia:** Vibe Coding + AI Skills (n8n) + Backend (Supabase) + Frontend (Vercel)
 
 ## 2. ARQUITECTURA DEL SISTEMA
-\[ FRONTEND (Vercel) \] <---> \[ SKILLS ENGINE (n8n en Render) \] <---> \[ DATABASE & STORAGE (Supabase) \]
+[ FRONTEND (Vercel) ] <---> [ SKILLS ENGINE (n8n en Render) ] <---> [ DATABASE & STORAGE (Supabase) ]
 
-- **Catálogo Público:** Consultar Stock en tiempo real e interactuar con galería de imágenes.
+- **Catálogo Público (Tinyglam):** Consultar Stock en tiempo real e interactuar con galería de imágenes multi-ángulo.
 - **Panel Admin Movimientos:** Registrar Venta, Devolución, Gestión de Stock e Imágenes.
 - **Base de Datos:** 5 Tablas Relacionales + Tablas de Auditoría/Telemetría + Vistas Optimizadas.
 - **Almacenamiento (Supabase Storage):** Bucket público oficial `productos-imagenes`.
@@ -17,7 +17,7 @@
 ## 3. ENDPOINTS DE PRODUCCIÓN N8N (SKILLS ENGINE)
 - **Skill 1 (Consultar Stock):** `https://n8n-backend-finanzas.onrender.com/webhook/consultar-stock`
   - Método: `POST` / `GET`
-  - Filtros opcionales: `codigo`, `talla`, `color`, `nombre`, `incluir_precio_interno`.
+  - Filtros opcionales: `codigo`, `talla`, `color`, `nombre`, `categoria`, `incluir_precio_interno`.
 - **Skill 2 (Registrar Venta):** `https://n8n-backend-finanzas.onrender.com/webhook/registrar-venta`
   - Método: `POST`
   - Payload: `{ variante_id, cantidad, vendedor, medio_pago, precio_aplicado, comision_vendedor, notas, fecha_venta }`
@@ -50,6 +50,7 @@
 - `id` (uuid, PK, default: gen_random_uuid())
 - `codigo_modelo` (text, ej: "AA0002", "EC0077", UNIQUE)
 - `nombre_fantasia` (text, ej: "Barcelona", "Turín")
+- `categoria` (text, ej: "Botines", "Sandalias", "Zapatillas", "Botas", "Zapatos")
 - `material` (text, ej: "Cuero 100%")
 - `taco_base` (text, ej: "5cm / acrilico")
 - `horma` (text, ej: "Normal")
@@ -192,22 +193,21 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
    - **Estado Inicial Neutro (Revisión #3):**
      * Al cargar la tarjeta o abrir la ficha de detalle, el estado inicial es neutro (`selectedColor = null`, `selectedVariantId = null`).
      * Se muestra únicamente la foto de portada principal del modelo.
-     * El botón de reserva se encuentra **estrictamente deshabilitado** con mensaje orientativo: *"Selecciona color y talla para reservar"*.
-     * Al elegir color, se filtran las tallas y fotos correspondientes; una vez seleccionada la talla, el botón pasa a estar 100% activo.
-   - **Zoom Interactivo Profundo y Gestos Táctiles (Revisión #5 - Motor Estándar react-zoom-pan-pinch):**
-     * **Aislamiento Total de Estado (`key={currentIndex}`):** Al cambiar de foto (flechas, miniaturas o swipe), el `TransformWrapper` se reinicia limpiamente a 1x (0,0), garantizando que no se arrastren offsets ni zoom residual a la siguiente fotografía.
-     * **Desktop (Rueda & Panning 360°):** Zoom fluido mediante rueda del ratón (wheel hasta 5x) y arrastre sostenido (`drag & pan`) libre en todas las direcciones con visualización de escala en tiempo real.
-     * **Móvil / Táctil (Pinch & Double-Tap):** Gesto de pinza nativo con 2 dedos (pinch-to-zoom continuo), doble toque (double-tap toggle) para zoom/reset rápido y arrastre suave con 1 dedo sobre imagen ampliada.
-     * **Toolbar Flotante:** Controles independientes fuera del viewport de transformación para zoom in (+), zoom out (-), reset (1x), cerrar y flechas de navegación.
-   - **Bolsa de Reserva & WhatsApp Directo (Revisión #21 - Normalización Total de Payload):** Drawer de reserva donde el cliente añade pares seleccionados, ingresa su Nombre, Teléfono WhatsApp (con prefijo pre-llenado `+56 9 ` para autocompletar 8 dígitos) y Comuna/Ciudad, seleccionando modalidad (Entrega presencial en Concepción/Penco o Envío Starken Por Pagar). Al enviar, genera un código amigable `#RES-XXXX`, normaliza los calzados con `variante_id`, `modelo_codigo`, `modelo_nombre`, `color`, `talla`, `cantidad` y `precio_unitario`, persiste de forma asíncrona en Supabase y n8n (`crearReserva`), abre `wa.me` hacia el número oficial configurado y vacía de inmediato la bolsa de compras.
-   - **Widget de Chatbot Asistente con FAQ Contextual de Envíos (Revisión #16):** Chatbot flotante interactivo en la esquina inferior derecha (`/`), contextualizado sobre la tienda 100% online de remate de bodega.
-     * **FAQ Prioritaria de Envíos y Modalidad:** Intercepta directamente consultas sobre envíos ("🚚 Envíos", "despachos", "Starken", "Chilexpress", "entregas") respondiendo de inmediato con el desglose oficial de entregas presenciales (Concepción/Penco sin costo) y envíos nacionales por pagar en 24-48 hrs, sin realizar búsquedas erróneas de calzado.
-     * **Memoria Acumulativa (Slot Filling):** Mantiene en memoria el contexto de la conversación (modelo, color, presupuesto). Si el usuario pide *"zapatos negros"* y luego responde *"35"*, el bot fusiona ambos filtros y realiza la búsqueda cruzada estricta (`color='negro'` Y `talla='35'`).
-     * **Motor Universal de Precios:** Parser matemático que normaliza expresiones (*"más de 60 mil"*, *"60k"*, *"hasta 40.000"*, *"sobre 50 mil"*, *"entre 30 y 45 mil"*) contra `precio_vendedores` con stock disponible > 0.
-     * **Preview Visual en Reserva de Chat:** Al presionar "Reservar" en una tarjeta del chat, la cabecera del formulario muestra una mini tarjeta con foto, código, nombre, variante seleccionada y precio antes de solicitar los datos.
-     * **Código Único `#RES-XXXX`:** Cada reserva genera su código único visible en el chat, en el mensaje preformateado de WhatsApp y en el panel administrativo.
-     * **Paginación Interactiva ("Ver más"):** Muestra 4 tarjetas a la vez con indicador (*"Mostrando 4 de X calzados disponibles"*) y botón interactivo `[✨ Ver 4 modelos más]`.
-     * **Sincronización Reactiva Global (`useTiendaConfig`):** Cambios de vendedora o WhatsApp en /admin se reflejan de inmediato en toda la interfaz sin recargar.
+    - **Tarjetas de Producto y Regla de Escasez Visual (Revisión #24):**
+      * **Regla de Escasez (< 3 pares):** Si el stock total del modelo es menor a 3 pares (`< 3`), muestra el badge destacado `"¡Últimas unidades!"` con animación de alerta. Si el modelo cuenta con 3 o más pares (`>= 3`), se omite el conteo numérico para preservar una presentación limpia y exclusiva (`"Disponible"`).
+      * **Selector de Tallas Dinámico (Paso 2):** Mientras no se elija color, muestra `"2. Talla (selecciona color primero)"`. Al seleccionar color, el encabezado conmuta de inmediato a `"2. Seleccionar talla en color [Color]:"`.
+      * **Auto-Apertura de Bolsa:** Al presionar "Reservar" (desde tarjeta o modal), la bolsa de reserva se abre de inmediato en pantalla.
+    - **Bolsa de Reserva & WhatsApp Directo (Revisión #21 / #24):** Drawer de reserva donde el cliente añade pares seleccionados, ingresa su Nombre, Teléfono WhatsApp (con prefijo pre-llenado `+56 9 ` para autocompletar 8 dígitos) y Comuna/Ciudad, seleccionando modalidad (Entrega presencial en Concepción/Penco o Envío Starken Por Pagar). Al enviar, genera un código amigable `#RES-XXXX`, normaliza los calzados con `variante_id`, `modelo_codigo`, `modelo_nombre`, `color`, `talla`, `cantidad` y `precio_unitario`, persiste de forma asíncrona en Supabase y n8n (`crearReserva`), abre `wa.me` hacia el número oficial configurado con el formato Tinyglam y vacía de inmediato la bolsa de compras.
+    - **Widget de Chatbot Asistente con Búsqueda por Categoría (Revisión #24):** Chatbot flotante interactivo en la esquina inferior derecha (`/`), contextualizado sobre la tienda Tinyglam.
+      * **Búsqueda Cruzada por Categoría y Talla:** Parser inteligente que detecta intenciones por categoría (*zapatillas, botines, sandalias, botas, zapatos*). Si el usuario consulta (ej: *"tienes zapatillas talla 38"*), filtra estrictamente por `categoria = 'Zapatillas'` y `stock_disponible > 0` en esa talla.
+      * **Botón "Ver Catálogo":** Cada tarjeta de calzado sugerido en el chat dispone de los botones interactivos `[👁️ Ver Catálogo]` y `[🛍️ Reservar]`.
+      * **FAQ Prioritaria de Envíos y Modalidad:** Intercepta directamente consultas sobre envíos ("🚚 Envíos", "despachos", "Starken", "Chilexpress", "entregas") respondiendo de inmediato con el desglose oficial de entregas presenciales (Concepción/Penco sin costo) y envíos nacionales por pagar en 24-48 hrs, sin realizar búsquedas erróneas de calzado.
+      * **Memoria Acumulativa (Slot Filling):** Mantiene en memoria el contexto de la conversación (modelo, categoría, color, presupuesto, talla).
+      * **Motor Universal de Precios:** Parser matemático que normaliza expresiones (*"más de 60 mil"*, *"60k"*, *"hasta 40.000"*, *"sobre 50 mil"*, *"entre 30 y 45 mil"*) contra `precio_vendedores` con stock disponible > 0.
+      * **Preview Visual en Reserva de Chat:** Al presionar "Reservar" en una tarjeta del chat, la cabecera del formulario muestra una mini tarjeta con foto, código, nombre, variante seleccionada y precio antes de solicitar los datos.
+      * **Código Único `#RES-XXXX`:** Cada reserva genera su código único visible en el chat, en el mensaje preformateado de WhatsApp y en el panel administrativo.
+      * **Paginación Interactiva ("Ver más"):** Muestra 4 tarjetas a la vez con indicador (*"Mostrando 4 de X calzados disponibles"*) y botón interactivo `[✨ Ver 4 modelos más]`.
+      * **Sincronización Reactiva Global (`useTiendaConfig`):** Cambios de vendedora o WhatsApp en /admin se reflejan de inmediato en toda la interfaz sin recargar.
 
 2. **Ruta Privada (`/admin`):**
    - **Acceso Protegido por PIN & Sesión Persistente (Revisión #16.1):** Autenticación por contraseña configurada en `VITE_ADMIN_PASSWORD` (por defecto `Tiny1234` / `Gaspi.123#2026`). Al autenticarse, persiste el token de sesión en `sessionStorage.getItem('admin_auth')` para evitar deslogueos al recargar la página, incluyendo botón visible de **"Cerrar Sesión"** en la cabecera del panel.

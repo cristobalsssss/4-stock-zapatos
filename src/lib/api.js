@@ -13,6 +13,7 @@ export async function getCatalogFromSupabase() {
         id,
         codigo_modelo,
         nombre_fantasia,
+        categoria,
         material,
         taco_base,
         horma,
@@ -953,22 +954,38 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
     nuevoContexto.modelo_nombre = modeloMatch.nombre_fantasia;
   }
 
+  // E. Extracción de Categoría (zapatilla/s, botin/es, sandalia/s, bota/s, zapato/s)
+  if (q.match(/\bzapatillas?\b|\bsneakers?\b/i)) {
+    nuevoContexto.categoria = 'Zapatillas';
+  } else if (q.match(/\bbotines?\b/i)) {
+    nuevoContexto.categoria = 'Botines';
+  } else if (q.match(/\bsandalias?\b|\bchalas?\b/i)) {
+    nuevoContexto.categoria = 'Sandalias';
+  } else if (q.match(/\bbotas?\b/i)) {
+    nuevoContexto.categoria = 'Botas';
+  } else if (q.match(/\bzapatos?\b/i)) {
+    nuevoContexto.categoria = 'Zapatos';
+  }
+
   // =========================================================================
   // 5. INTENCIÓN GUIADA: Si el usuario busca modelo/color/categoría SIN talla
   // =========================================================================
   const tieneTalla = Boolean(nuevoContexto.talla);
   const tieneColor = Boolean(nuevoContexto.color);
   const tieneModelo = Boolean(nuevoContexto.modelo_codigo);
+  const tieneCategoria = Boolean(nuevoContexto.categoria);
   const tienePrecio = Boolean(nuevoContexto.minPrice || nuevoContexto.maxPrice);
 
-  if (!tieneTalla && (tieneColor || tieneModelo || q.includes('zapato') || q.includes('botin') || q.includes('sandalia') || q.includes('taco') || q.includes('stiletto'))) {
+  if (!tieneTalla && (tieneColor || tieneModelo || tieneCategoria || q.includes('taco') || q.includes('stiletto'))) {
     let detalleInteres = '';
     if (tieneModelo) detalleInteres = `el modelo ${nuevoContexto.modelo_codigo} (${nuevoContexto.modelo_nombre || ''})`;
+    else if (tieneCategoria && tieneColor) detalleInteres = `${nuevoContexto.categoria.toLowerCase()} en color ${nuevoContexto.color}`;
+    else if (tieneCategoria) detalleInteres = `${nuevoContexto.categoria.toLowerCase()} de cuero premium`;
     else if (tieneColor) detalleInteres = `calzados en color ${nuevoContexto.color}`;
     else detalleInteres = 'nuestro calzado en cuero genuino';
 
     return {
-      text: `¡Excelente elección! Para verificar exactamente qué unidades nos quedan en bodega en remate para ${detalleInteres}, ¿qué talla buscas? (ej: 35, 36, 37, 38, 39, 40)`,
+      text: `¡Excelente elección! Para verificar qué unidades nos quedan en bodega para ${detalleInteres}, ¿qué talla buscas? (ej: 35, 36, 37, 38, 39, 40)`,
       tarjetasSugeridas: [],
       nuevoContexto
     };
@@ -985,7 +1002,12 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
       ? prod.codigo_modelo === nuevoContexto.modelo_codigo
       : true;
 
-    if (!matchModelo) return;
+    // Coincidencia de Categoría si está en el contexto
+    const matchCategoria = nuevoContexto.categoria
+      ? String(prod.categoria || '').toLowerCase() === nuevoContexto.categoria.toLowerCase()
+      : true;
+
+    if (!matchModelo || !matchCategoria) return;
 
     (prod.inventario_variantes || []).forEach(v => {
       if (v.stock_disponible <= 0) return;
@@ -1014,6 +1036,7 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
           codigo_modelo: prod.codigo_modelo,
           nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
           nombre_fantasia: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+          categoria: prod.categoria || '',
           material: prod.material,
           imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
           color: v.color,
@@ -1028,7 +1051,7 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
   });
 
   // CASO A: Quiebre de stock para la combinación cruzada acumulada
-  if (variantesDisponibles.length === 0 && (tieneTalla || tieneColor || tieneModelo)) {
+  if (variantesDisponibles.length === 0 && (tieneTalla || tieneColor || tieneModelo || tieneCategoria)) {
     // Buscar alternativas: en la misma talla consultada
     const alternativas = [];
     productosLocales.forEach(prod => {
@@ -1043,6 +1066,7 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
               codigo_modelo: prod.codigo_modelo,
               nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
               nombre_fantasia: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+              categoria: prod.categoria || '',
               material: prod.material,
               imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
               color: v.color,
@@ -1055,32 +1079,40 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
           }
         });
       } else if (nuevoContexto.talla) {
-        // Otros modelos disponibles en esa talla
-        (prod.inventario_variantes || []).forEach(v => {
-          if (v.stock_disponible > 0 && String(v.talla) === String(nuevoContexto.talla)) {
-            alternativas.push({
-              id: v.id,
-              variante_id: v.id,
-              codigo: prod.codigo_modelo,
-              codigo_modelo: prod.codigo_modelo,
-              nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
-              nombre_fantasia: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
-              material: prod.material,
-              imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
-              color: v.color,
-              talla: v.talla,
-              precio: Number(v.precio_vendedores),
-              precio_vendedores: Number(v.precio_vendedores),
-              stock: v.stock_disponible,
-              producto_id: prod.id
-            });
-          }
-        });
+        // Otros modelos disponibles en esa talla (priorizando categoría si existe)
+        const matchCatAlt = nuevoContexto.categoria
+          ? String(prod.categoria || '').toLowerCase() === nuevoContexto.categoria.toLowerCase()
+          : true;
+
+        if (matchCatAlt) {
+          (prod.inventario_variantes || []).forEach(v => {
+            if (v.stock_disponible > 0 && String(v.talla) === String(nuevoContexto.talla)) {
+              alternativas.push({
+                id: v.id,
+                variante_id: v.id,
+                codigo: prod.codigo_modelo,
+                codigo_modelo: prod.codigo_modelo,
+                nombre: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+                nombre_fantasia: prod.nombre_fantasia || `Modelo ${prod.codigo_modelo}`,
+                categoria: prod.categoria || '',
+                material: prod.material,
+                imagen_url: v.imagen_portada_variante || prod.imagen_defecto_url,
+                color: v.color,
+                talla: v.talla,
+                precio: Number(v.precio_vendedores),
+                precio_vendedores: Number(v.precio_vendedores),
+                stock: v.stock_disponible,
+                producto_id: prod.id
+              });
+            }
+          });
+        }
       }
     });
 
     const descripAgotado = [
       nuevoContexto.modelo_codigo ? `el modelo ${nuevoContexto.modelo_codigo}` : '',
+      nuevoContexto.categoria ? `en categoría ${nuevoContexto.categoria}` : '',
       nuevoContexto.color ? `color ${nuevoContexto.color}` : '',
       nuevoContexto.talla ? `en talla ${nuevoContexto.talla}` : ''
     ].filter(Boolean).join(' ');
@@ -1096,6 +1128,7 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
   if (variantesDisponibles.length > 0) {
     const filtrosTxt = [
       nuevoContexto.modelo_codigo ? `modelo ${nuevoContexto.modelo_codigo}` : '',
+      nuevoContexto.categoria ? `categoría ${nuevoContexto.categoria}` : '',
       nuevoContexto.color ? `color ${nuevoContexto.color}` : '',
       nuevoContexto.talla ? `talla ${nuevoContexto.talla}` : '',
       nuevoContexto.minPrice ? `desde $${nuevoContexto.minPrice.toLocaleString('es-CL')}` : '',
