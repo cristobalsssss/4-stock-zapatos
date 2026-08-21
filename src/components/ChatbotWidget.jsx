@@ -182,7 +182,7 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
         }] : []
       });
 
-      const codigoRes = reservaCreada.codigo_reserva || `RES-${Math.floor(1000 + Math.random() * 9000)}`;
+      const codigoRes = reservaCreada?.codigo_reserva || `RES-${Math.floor(1000 + Math.random() * 9000)}`;
 
       // 2. Construir mensaje estructurado para WhatsApp con Código de Reserva
       let mensajeWhatsApp = `👠 *SOLICITUD DE RESERVA #${codigoRes}*\n\n`;

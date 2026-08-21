@@ -531,6 +531,7 @@ export async function getReservas() {
  * Crea una reserva conectando a n8n Skill 4 con fallback directo a Supabase
  */
 export async function crearReserva({
+  codigo_reserva,
   cliente_nombre,
   cliente_whatsapp,
   cliente_comuna,
@@ -545,6 +546,7 @@ export async function crearReserva({
   notas = '',
   items = []
 }) {
+  const codigoGenerado = codigo_reserva || `RES-${Math.floor(1000 + Math.random() * 9000)}`;
   const primerItem = (Array.isArray(items) && items.length > 0) ? items[0] : {};
   const varId = variante_id || primerItem.variante_id || primerItem.id || null;
   const modCod = (modelo_codigo && modelo_codigo !== 'N/A') ? modelo_codigo : (primerItem.codigo_modelo || primerItem.codigo || primerItem.modelo_codigo || '');
@@ -872,28 +874,6 @@ export async function consultarChatbot(mensaje, productosLocales = [], contextoP
       tarjetasSugeridas: [],
       nuevoContexto: {}
     };
-  }
-
-  // 4. Consulta a Skill de n8n si no fue una FAQ estática
-  try {
-    const res = await fetch(`${N8N_URL}/webhook/chatbot-stock`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mensaje, contexto: contextoPrevio }),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data && (data.respuesta || data.text || data.message)) {
-        return {
-          text: data.respuesta || data.text || data.message,
-          tarjetasSugeridas: data.tarjetas || [],
-          nuevoContexto: data.contexto || contextoPrevio
-        };
-      }
-    }
-  } catch (err) {
-    console.warn('Chatbot n8n no disponible, usando asistente local contextual:', err);
   }
 
   const q = mensaje.toLowerCase().trim();
