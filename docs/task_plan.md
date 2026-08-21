@@ -90,6 +90,7 @@
 - [x] ESTABILIZACIÓN & UAT: Blindaje integral de `crearReserva` (#RES-XXXX), eliminación de endpoints fantasma en Chatbot y verificación de promesas de stock en tiempo real
 - [x] REVISIÓN #26: Optimización Mobile-First ('Above the Fold'), Header boutique claro y compacto en móviles y Pastilla Callout en Chatbot
 - [x] REVISIÓN #27: Precio Vendedores oficial sincronizado, filtro de stock implícito y eliminación de desborde móvil
+- [x] ETL PRECIOS SUPABASE: Actualización obligatoria y real de `precio_vendedores` y `precio_interno` en `inventario_variantes` desde `data/inventario_real.xlsx` vía `scripts/sync_precios_excel.js` (732 variantes procesadas, 100% éxito)
 - [x] Desplegar y compilar sitio web para producción en Vercel con 0 errores
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
@@ -101,16 +102,18 @@
 - [x] Validar chatbot con memoria acumulativa, slot filling, filtro por categoría y botón "Ver Catálogo"
 - [x] Validar subida y lectura de imágenes en bucket oficial `productos-imagenes`
 - [x] Validar auditoría celda por celda (`diff_excel_vs_db.py`): 732 variantes en BD y 0 discrepancias de stock
+- [x] Validar precios en BD Supabase: `precio_vendedores` y `precio_interno` sincronizados al 100% con Excel
 
 ---
 
-### 🏆 HITO ALCANZADO: Versión 4.4.0 Estable
-1. **Precio Vendedores Oficial:** Verificado y renderizado de forma consistente en Catálogo (`ProductCard.jsx`), Ficha Multi-Ángulo (`GalleryModal.jsx`), Bolsa de Reserva (`ReservationDrawer.jsx`) y Chatbot (`ChatbotWidget.jsx`).
-2. **Barra de Filtros Mobile-First (Cero Desborde):** Selector "Solo con stock" oculto de la interfaz y activo de forma implícita por defecto, con selectores de Talla/Color adaptados al 100% del ancho móvil.
-3. **Mobile-First 'Above the Fold':** Cabecera boutique clara y ultra-compacta en móviles que muestra la primera fila de zapatos de inmediato (ocupando <= 35% de la pantalla) y cabecera editorial completa en escritorio.
-4. **Pastilla Callout Interactiva en Chatbot:** Badge flotante interactivo ("✨ ¿Dudas de stock?") con micro-destello e indicador de actividad que incrementa la conversión hacia el asistente virtual.
-5. **Flujo de Reservas Blindado:** Invocación limpia de Skill 4 (`/webhook/crear-reserva`) con generación estricta de `#RES-XXXX` y fallback directo a Supabase.
-6. **Base de Datos Cuadrada 100%:** 84 modelos categorizados (Botines, Sandalias, Zapatillas, Botas, Zapatos), 122 colores y 732 variantes con 265 unidades en bodega.
+### 🏆 HITO ALCANZADO: Versión 4.4.1 Estable
+1. **ETL y Sincronización Real de Precios en Supabase:** Ejecución exitosa de `scripts/sync_precios_excel.js` con Forward Fill. 732 variantes de `inventario_variantes` actualizadas con los valores oficiales de "Precio Vendedores" y "Precio Interno Remate".
+2. **Precio Vendedores Oficial:** Verificado y renderizado de forma consistente en Catálogo (`ProductCard.jsx`), Ficha Multi-Ángulo (`GalleryModal.jsx`), Bolsa de Reserva (`ReservationDrawer.jsx`) y Chatbot (`ChatbotWidget.jsx`).
+3. **Barra de Filtros Mobile-First (Cero Desborde):** Selector "Solo con stock" oculto de la interfaz y activo de forma implícita por defecto, con selectores de Talla/Color adaptados al 100% del ancho móvil.
+4. **Mobile-First 'Above the Fold':** Cabecera boutique clara y ultra-compacta en móviles que muestra la primera fila de zapatos de inmediato (ocupando <= 35% de la pantalla) y cabecera editorial completa en escritorio.
+5. **Pastilla Callout Interactiva en Chatbot:** Badge flotante interactivo ("✨ ¿Dudas de stock?") con micro-destello e indicador de actividad que incrementa la conversión hacia el asistente virtual.
+6. **Flujo de Reservas Blindado:** Invocación limpia de Skill 4 (`/webhook/crear-reserva`) con generación estricta de `#RES-XXXX` y fallback directo a Supabase.
+7. **Base de Datos Cuadrada 100%:** 84 modelos categorizados (Botines, Sandalias, Zapatillas, Botas, Zapatos), 122 colores y 732 variantes con 265 unidades en bodega.
 
 ---
 

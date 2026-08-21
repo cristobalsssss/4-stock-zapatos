@@ -1,19 +1,20 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "4.3.0",
+    "version": "4.4.0",
     "status": "ESTABLE",
-    "last_updated": "2026-08-20 21:26:00",
+    "last_updated": "2026-08-21 17:45:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "PRODUCCIÓN: VERSIÓN 4.3.0 ESTABLE",
-    "last_completed_task": "ESTABILIZACIÓN DE RESERVAS Y LIMPIEZA DE ARQUITECTURA: Blindaje de crearReserva con Skill 4, eliminación de llamadas residuales en Chatbot y micro-copys de stock en tiempo real",
+    "active_phase": "PRODUCCIÓN: VERSIÓN 4.4.0 ESTABLE",
+    "last_completed_task": "ETL DE PRECIOS: Sincronización obligatoria y real de precio_vendedores y precio_interno en Supabase desde Excel con Forward Fill (732 variantes procesadas, 100% éxito)",
     "current_task": "Mantenimiento, Monitoreo de Ventas y Despliegue Continuo en Vercel",
     "milestones_achieved": [
         "1. Base de datos Supabase con catálogo completo 100% verificado (84 modelos, 122 colores, 732 variantes, 265 unidades en bodega).",
-        "2. Flujo de Reservas 100% estabilizado con generación infalible de #RES-XXXX, integración a Skill 4 (/webhook/crear-reserva) y fallback directo a Supabase.",
-        "3. Chatbot Contextual 100% Local en frontend sin llamadas residuales, con búsqueda cruzada por categoría/talla y enlace directo a WhatsApp.",
-        "4. Mensajes de confianza 'Sin Pago Inmediato / Apartado al Instante' en Bolsa y Chatbot, alineados con la promesa de Stock en Tiempo Real.",
-        "5. Branding oficial Tinyglam ('Calzado de Cuero Premium Argentino en Chile') con logo armónico en Header, Hero y fallback tipográfico.",
-        "6. Conversión atómica de Reserva a Venta y almacenamiento verificado en bucket 'productos-imagenes'."
+        "2. Sincronización Real de Precios: 732 variantes con 'precio_vendedores' y 'precio_interno' actualizados directamente desde data/inventario_real.xlsx con Forward Fill.",
+        "3. Flujo de Reservas 100% estabilizado con generación infalible de #RES-XXXX, integración a Skill 4 (/webhook/crear-reserva) y fallback directo a Supabase.",
+        "4. Chatbot Contextual 100% Local en frontend sin llamadas residuales, con búsqueda cruzada por categoría/talla y enlace directo a WhatsApp.",
+        "5. Mensajes de confianza 'Sin Pago Inmediato / Apartado al Instante' en Bolsa y Chatbot, alineados con la promesa de Stock en Tiempo Real.",
+        "6. Branding oficial Tinyglam ('Calzado de Cuero Premium Argentino en Chile') con logo armónico en Header, Hero y fallback tipográfico.",
+        "7. Conversión atómica de Reserva a Venta y almacenamiento verificado en bucket 'productos-imagenes'."
     ],
     "environment": {
         "os": "Windows (PowerShell)",
