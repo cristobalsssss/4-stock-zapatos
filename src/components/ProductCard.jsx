@@ -64,10 +64,10 @@ export default function ProductCard({ product, onOpenGallery, onAddToBag }) {
     return varConFoto?.imagen_portada_variante || product.imagen_defecto_url || null;
   }, [selectedColor, variantes, product.imagen_defecto_url]);
 
-  // Precio a mostrar
+  // Precio a mostrar (precio_vendedores oficial)
   const precio = activeVariant 
-    ? Number(activeVariant.precio_vendedores) 
-    : (variantes[0] ? Number(variantes[0].precio_vendedores) : 0);
+    ? (Number(activeVariant.precio_vendedores) || Number(activeVariant.precio_interno) || 0)
+    : (variantes.find(v => Number(v.precio_vendedores) > 0)?.precio_vendedores || (variantes[0] ? Number(variantes[0].precio_vendedores || variantes[0].precio_interno || 0) : 0));
 
   const [addedAnimation, setAddedAnimation] = useState(false);
 

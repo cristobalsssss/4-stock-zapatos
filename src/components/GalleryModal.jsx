@@ -159,10 +159,10 @@ export default function GalleryModal({ product, initialVariant, onClose, onAddTo
     setTimeout(() => setAddedAnimation(false), 1200);
   };
 
-  // Precio referencial o del item activo
+  // Precio referencial o del item activo (precio_vendedores oficial)
   const precio = activeVariant 
-    ? Number(activeVariant.precio_vendedores) 
-    : (variantes[0] ? Number(variantes[0].precio_vendedores) : 0);
+    ? (Number(activeVariant.precio_vendedores) || Number(activeVariant.precio_interno) || 0)
+    : (variantes.find(v => Number(v.precio_vendedores) > 0)?.precio_vendedores || (variantes[0] ? Number(variantes[0].precio_vendedores || variantes[0].precio_interno || 0) : 0));
 
   // Estado del botón de reserva
   const isReservationReady = Boolean(selectedColor && activeVariant && activeVariant.stock_disponible > 0);

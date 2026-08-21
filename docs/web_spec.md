@@ -212,12 +212,16 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
       * **Código Único `#RES-XXXX`:** Cada reserva genera su código único visible en el chat, en el mensaje preformateado de WhatsApp y en el panel administrativo.
       * **Paginación Interactiva ("Ver más"):** Muestra 4 tarjetas a la vez con indicador (*"Mostrando 4 de X calzados disponibles"*) y botón interactivo `[✨ Ver 4 modelos más]`.
       * **Sincronización Reactiva Global (`useTiendaConfig`):** Cambios de vendedora o WhatsApp en /admin se reflejan de inmediato en toda la interfaz sin recargar.
-    - **Armonización Visual de Marca & Optimización Mobile-First (Revisión #25 / #26):**
+    - **Armonización Visual de Marca & Optimización Mobile-First (Revisión #25 / #26 / #27):**
       * **Navbar Header Compacto:** Altura optimizada (`h-14 sm:h-16`) con micro-banner superior condensado y logo responsivo (`h-8 sm:h-10 md:h-11`) con fallback tipográfico refinado.
       * **Hero Banner Dual (Regla "Above the Fold"):**
         - **En Móvil (`< md`):** Encabezado boutique compacto en tonos claros/marfil con borde sutil (`bg-gradient-to-r from-amber-50/80 via-white to-rose-50/70 py-2.5 px-3.5`), logo nítido (`h-7 sm:h-8`), título y slogan en una sola línea, omitiendo párrafos largos para garantizar que la primera fila del catálogo quede visible en el 35% superior de la pantalla sin requerir scroll.
         - **En Escritorio (`>= md`):** Hero editorial premium con fondo estilizado oscuro, contenedor translúcido para el logo oficial y micro-copy completo de reserva sin pago inmediato.
       * **Pastilla / Pill Badge Callout en Chatbot:** Botón flotante enriquecido con pastilla interactiva (`✨ ¿Dudas de stock?`) en fondo blanco con borde boutique, destello sutil e indicador de actividad en verde esmeralda, que al hacer clic despliega el asistente virtual y se oculta automáticamente con la ventana abierta.
+      * **Precio Vendedores Oficial & Filtro de Stock Implícito (Revisión #27):**
+        - Todos los componentes del frontend (`ProductCard.jsx`, `GalleryModal.jsx`, `ReservationDrawer.jsx`, `ChatbotWidget.jsx`) priorizan estrictamente `precio_vendedores` como el precio público oficial visible al cliente.
+        - Eliminado el botón/toggle "Solo con stock" de la interfaz pública, manteniéndose activa internamente por defecto la regla de mostrar exclusivamente modelos y variantes con existencias disponibles (`stock_disponible > 0`).
+        - Los selectores de Talla y Color se adaptan al 100% del ancho móvil mediante `grid grid-cols-2`, eliminando desbordes o scroll horizontal involuntario en teléfonos móviles.
 
 2. **Ruta Privada (`/admin`):**
    - **Acceso Protegido por PIN & Sesión Persistente (Revisión #16.1):** Autenticación por contraseña configurada en `VITE_ADMIN_PASSWORD` (por defecto `Tiny1234` / `Gaspi.123#2026`). Al autenticarse, persiste el token de sesión en `sessionStorage.getItem('admin_auth')` para evitar deslogueos al recargar la página, incluyendo botón visible de **"Cerrar Sesión"** en la cabecera del panel.

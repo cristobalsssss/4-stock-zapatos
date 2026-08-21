@@ -295,26 +295,27 @@ export default function App() {
           </div>
 
           {/* Barra de Búsqueda y Filtros Rápidos */}
-          <div className="bg-white p-3 sm:p-4 md:p-6 rounded-2xl sm:rounded-3xl border border-zinc-200 shadow-xs space-y-3 sm:space-y-4">
-            <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
+          <div className="bg-white p-3 sm:p-4 md:p-6 rounded-2xl sm:rounded-3xl border border-zinc-200 shadow-xs space-y-3 sm:space-y-4 w-full overflow-hidden">
+            <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center w-full">
               {/* Buscador de Texto */}
-              <div className="relative flex-1">
+              <div className="relative flex-1 min-w-0 w-full">
                 <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-zinc-400" />
                 <input
                   type="text"
-                  placeholder="Buscar por código (ej: AA0002), modelo, material o color..."
+                  placeholder="Buscar por código (ej: AA0002), modelo o color..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-2xl text-xs sm:text-sm text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-brand-500 font-medium transition-all"
                 />
               </div>
 
-              {/* Selector de Talla */}
-              <div className="flex items-center gap-2">
+              {/* Selectores de Talla y Color */}
+              <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
+                {/* Selector de Talla */}
                 <select
                   value={filterTalla}
                   onChange={e => setFilterTalla(e.target.value)}
-                  className="px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-2xl text-xs sm:text-sm font-semibold text-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-brand-500"
+                  className="w-full sm:w-auto px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-2xl text-xs sm:text-sm font-semibold text-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-brand-500 cursor-pointer"
                 >
                   <option value="all">Todas las Tallas</option>
                   {allTallas.map(t => (
@@ -326,34 +327,20 @@ export default function App() {
                 <select
                   value={filterColor}
                   onChange={e => setFilterColor(e.target.value)}
-                  className="px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-2xl text-xs sm:text-sm font-semibold text-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-brand-500"
+                  className="w-full sm:w-auto px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-2xl text-xs sm:text-sm font-semibold text-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-brand-500 cursor-pointer"
                 >
                   <option value="all">Todos los Colores</option>
                   {allColores.map(c => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
-
-                {/* Toggle Solo con Stock */}
-                <button
-                  type="button"
-                  onClick={() => setOnlyWithStock(!onlyWithStock)}
-                  className={`px-3 py-2.5 rounded-2xl text-xs font-bold border transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                    onlyWithStock
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                      : 'bg-zinc-100 text-zinc-600 border-zinc-200'
-                  }`}
-                >
-                  <span className={`w-2 h-2 rounded-full ${onlyWithStock ? 'bg-emerald-500' : 'bg-zinc-400'}`}></span>
-                  <span>Solo con Stock</span>
-                </button>
               </div>
             </div>
 
             {/* Contador de Resultados */}
-            <div className="flex items-center justify-between text-xs text-zinc-500 border-t border-zinc-100 pt-3">
+            <div className="flex items-center justify-between text-xs text-zinc-500 border-t border-zinc-100 pt-2.5">
               <span>
-                Mostrando <strong>{filteredProducts.length}</strong> de {products.length} modelos en catálogo
+                Mostrando <strong>{filteredProducts.length}</strong> modelos con stock disponible
               </span>
               {(searchTerm || filterTalla !== 'all' || filterColor !== 'all') && (
                 <button
@@ -361,9 +348,8 @@ export default function App() {
                     setSearchTerm('');
                     setFilterTalla('all');
                     setFilterColor('all');
-                    setOnlyWithStock(true);
                   }}
-                  className="text-brand-600 hover:text-brand-800 font-semibold"
+                  className="text-brand-600 hover:text-brand-800 font-semibold cursor-pointer"
                 >
                   Limpiar filtros
                 </button>

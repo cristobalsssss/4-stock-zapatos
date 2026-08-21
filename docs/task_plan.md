@@ -89,6 +89,7 @@
 - [x] REVISIÓN #25: Refuerzo de confianza en reservas ("Sin Pago Inmediato"), botón tranquilizador y armonización visual de Logo Tinyglam en Header y Hero
 - [x] ESTABILIZACIÓN & UAT: Blindaje integral de `crearReserva` (#RES-XXXX), eliminación de endpoints fantasma en Chatbot y verificación de promesas de stock en tiempo real
 - [x] REVISIÓN #26: Optimización Mobile-First ('Above the Fold'), Header boutique claro y compacto en móviles y Pastilla Callout en Chatbot
+- [x] REVISIÓN #27: Precio Vendedores oficial sincronizado, filtro de stock implícito y eliminación de desborde móvil
 - [x] Desplegar y compilar sitio web para producción en Vercel con 0 errores
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
@@ -103,12 +104,12 @@
 
 ---
 
-### 🏆 HITO ALCANZADO: Versión 4.3.0 Estable
-1. **Mobile-First 'Above the Fold':** Cabecera boutique clara y ultra-compacta en móviles que muestra la primera fila de zapatos de inmediato (ocupando <= 35% de la pantalla) y cabecera editorial completa en escritorio.
-2. **Pastilla Callout Interactiva en Chatbot:** Badge flotante interactivo ("✨ ¿Dudas de stock?") con micro-destello e indicador de actividad que incrementa la conversión hacia el asistente virtual.
-3. **Flujo de Reservas Blindado:** Invocación limpia de Skill 4 (`/webhook/crear-reserva`) con generación estricta de `#RES-XXXX` y fallback directo a Supabase.
-4. **Chatbot 100% Local y Contextual:** Asistente conversacional sin llamadas residuales, filtrado multi-categoría y enlace directo a WhatsApp.
-5. **Confianza y Cero Fricción:** Mensajes de "Reserva gratuita • Sin pago inmediato. Tu par queda apartado en el sistema".
+### 🏆 HITO ALCANZADO: Versión 4.4.0 Estable
+1. **Precio Vendedores Oficial:** Verificado y renderizado de forma consistente en Catálogo (`ProductCard.jsx`), Ficha Multi-Ángulo (`GalleryModal.jsx`), Bolsa de Reserva (`ReservationDrawer.jsx`) y Chatbot (`ChatbotWidget.jsx`).
+2. **Barra de Filtros Mobile-First (Cero Desborde):** Selector "Solo con stock" oculto de la interfaz y activo de forma implícita por defecto, con selectores de Talla/Color adaptados al 100% del ancho móvil.
+3. **Mobile-First 'Above the Fold':** Cabecera boutique clara y ultra-compacta en móviles que muestra la primera fila de zapatos de inmediato (ocupando <= 35% de la pantalla) y cabecera editorial completa en escritorio.
+4. **Pastilla Callout Interactiva en Chatbot:** Badge flotante interactivo ("✨ ¿Dudas de stock?") con micro-destello e indicador de actividad que incrementa la conversión hacia el asistente virtual.
+5. **Flujo de Reservas Blindado:** Invocación limpia de Skill 4 (`/webhook/crear-reserva`) con generación estricta de `#RES-XXXX` y fallback directo a Supabase.
 6. **Base de Datos Cuadrada 100%:** 84 modelos categorizados (Botines, Sandalias, Zapatillas, Botas, Zapatos), 122 colores y 732 variantes con 265 unidades en bodega.
 
 ---
