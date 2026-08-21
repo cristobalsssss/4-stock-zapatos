@@ -26,8 +26,8 @@
   - Payload: `{ variante_id, cantidad, motivo, venta_id }`
 - **Skill 4 (Crear Reserva):** `https://n8n-backend-finanzas.onrender.com/webhook/crear-reserva`
   - Método: `POST`
-  - Payload: `{ cliente_nombre, cliente_whatsapp, cliente_comuna, tipo_entrega, variante_id, modelo_codigo, modelo_nombre, color, talla, cantidad, precio_unitario, notas, items, codigo_reserva }`
-  - Resiliencia: Si n8n presenta latencia o suspensión en Render, aplica automáticamente fallback transaccional directo a Supabase (`public.reservas`).
+  - Payload: `{ codigo_reserva, cliente_nombre, cliente_whatsapp, cliente_comuna, tipo_entrega, variante_id, modelo_codigo, modelo_nombre, color, talla, cantidad, precio_unitario, notas, items }`
+  - Estabilización: Generación y propagación estricta de `codigo_reserva` (`#RES-XXXX`). Si n8n presenta latencia o suspensión en Render, aplica automáticamente fallback transaccional directo a Supabase (`public.reservas`).
 - **Skill 5 (Cancelar Reserva):** `https://n8n-backend-finanzas.onrender.com/webhook/cancelar-reserva`
   - Método: `POST`
   - Payload: `{ id, reserva_id, motivo, estado: 'Cancelada' }`
@@ -200,8 +200,8 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
     - **Bolsa de Reserva, Micro-copys de Confianza & WhatsApp Directo (Revisión #25):** Drawer de reserva donde el cliente añade pares seleccionados.
       * **Refuerzo de Confianza Sin Pago Inmediato:** Debajo del total a reservar, se destaca la tarjeta: *"🔒 Reserva gratuita • Sin pago inmediato. Tu par queda apartado en el sistema; nuestra vendedora te contactará por WhatsApp para coordinar el método de pago y entrega."*
       * **Botón Tranquilizador:** `"Confirmar Reserva por WhatsApp"`.
-      * **Captura Normalizada de Datos:** Formulario con Nombre, Teléfono WhatsApp (con prefijo pre-llenado `+56 9 ` para autocompletar 8 dígitos) y Comuna/Ciudad, seleccionando modalidad (Entrega presencial en Concepción/Penco o Envío Starken Por Pagar). Al enviar, genera un código amigable `#RES-XXXX`, normaliza los calzados con `variante_id`, `modelo_codigo`, `modelo_nombre`, `color`, `talla`, `cantidad` y `precio_unitario`, persiste de forma asíncrona en Supabase y n8n (`crearReserva`), abre `wa.me` hacia el número oficial configurado con el formato Tinyglam y vacía de inmediato la bolsa de compras.
-    - **Widget de Chatbot Asistente con Búsqueda por Categoría y Micro-Copy de Confianza (Revisión #25):** Chatbot flotante interactivo en la esquina inferior derecha (`/`), contextualizado sobre la tienda Tinyglam.
+      * **Captura Normalizada de Datos & Generación Infalible de Código:** Formulario con Nombre, Teléfono WhatsApp (con prefijo pre-llenado `+56 9 ` para autocompletar 8 dígitos) y Comuna/Ciudad, seleccionando modalidad (Entrega presencial en Concepción/Penco o Envío Starken Por Pagar). Al enviar, genera el código amigable `#RES-XXXX`, normaliza los calzados con `variante_id`, `modelo_codigo`, `modelo_nombre`, `color`, `talla`, `cantidad` y `precio_unitario`, persiste de forma asíncrona en Supabase y n8n (`crearReserva`), abre `wa.me` hacia el número oficial configurado con el formato Tinyglam y vacía de inmediato la bolsa de compras.
+    - **Widget de Chatbot Asistente 100% Local con Búsqueda por Categoría (Revisión #25):** Chatbot flotante interactivo en la esquina inferior derecha (`/`), contextualizado sobre la tienda Tinyglam y ejecutado 100% en cliente sin llamadas residuales ni dependencias de endpoints externos.
       * **Micro-Copy de Reserva Segura:** En el formulario de confirmación, se incluye la nota: *"💡 Recuerda: Tu calzado queda apartado al instante sin cobro previo. Coordinaremos el pago y despacho directamente por WhatsApp."*
       * **Búsqueda Cruzada por Categoría y Talla:** Parser inteligente que detecta intenciones por categoría (*zapatillas, botines, sandalias, botas, zapatos*). Si el usuario consulta (ej: *"tienes zapatillas talla 38"*), filtra estrictamente por `categoria = 'Zapatillas'` y `stock_disponible > 0` en esa talla.
       * **Botón "Ver Catálogo":** Cada tarjeta de calzado sugerido en el chat dispone de los botones interactivos `[👁️ Ver Catálogo]` y `[🛍️ Reservar]`.
@@ -212,9 +212,12 @@ Como experto en arquitectura de software para E-commerce y Gestión de Inventari
       * **Código Único `#RES-XXXX`:** Cada reserva genera su código único visible en el chat, en el mensaje preformateado de WhatsApp y en el panel administrativo.
       * **Paginación Interactiva ("Ver más"):** Muestra 4 tarjetas a la vez con indicador (*"Mostrando 4 de X calzados disponibles"*) y botón interactivo `[✨ Ver 4 modelos más]`.
       * **Sincronización Reactiva Global (`useTiendaConfig`):** Cambios de vendedora o WhatsApp en /admin se reflejan de inmediato en toda la interfaz sin recargar.
-    - **Armonización Visual de Marca Tinyglam (Revisión #25):**
-      * **Navbar Header:** Integración del isotipo `/logo.png` con escalado responsive (`h-9 sm:h-10 md:h-11`), contraste nítido y fallback tipográfico con monograma "T" y distintivo "Cuero Premium Argentino".
-      * **Hero Banner Editorial:** Integración destacada del logo oficial en contenedor translúcido estilizado (`bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15`) junto al encabezado tipográfico Tinyglam y el slogan oficial "Calzado de Cuero Premium Argentino en Chile".
+    - **Armonización Visual de Marca & Optimización Mobile-First (Revisión #25 / #26):**
+      * **Navbar Header Compacto:** Altura optimizada (`h-14 sm:h-16`) con micro-banner superior condensado y logo responsivo (`h-8 sm:h-10 md:h-11`) con fallback tipográfico refinado.
+      * **Hero Banner Dual (Regla "Above the Fold"):**
+        - **En Móvil (`< md`):** Encabezado boutique compacto en tonos claros/marfil con borde sutil (`bg-gradient-to-r from-amber-50/80 via-white to-rose-50/70 py-2.5 px-3.5`), logo nítido (`h-7 sm:h-8`), título y slogan en una sola línea, omitiendo párrafos largos para garantizar que la primera fila del catálogo quede visible en el 35% superior de la pantalla sin requerir scroll.
+        - **En Escritorio (`>= md`):** Hero editorial premium con fondo estilizado oscuro, contenedor translúcido para el logo oficial y micro-copy completo de reserva sin pago inmediato.
+      * **Pastilla / Pill Badge Callout en Chatbot:** Botón flotante enriquecido con pastilla interactiva (`✨ ¿Dudas de stock?`) en fondo blanco con borde boutique, destello sutil e indicador de actividad en verde esmeralda, que al hacer clic despliega el asistente virtual y se oculta automáticamente con la ventana abierta.
 
 2. **Ruta Privada (`/admin`):**
    - **Acceso Protegido por PIN & Sesión Persistente (Revisión #16.1):** Autenticación por contraseña configurada en `VITE_ADMIN_PASSWORD` (por defecto `Tiny1234` / `Gaspi.123#2026`). Al autenticarse, persiste el token de sesión en `sessionStorage.getItem('admin_auth')` para evitar deslogueos al recargar la página, incluyendo botón visible de **"Cerrar Sesión"** en la cabecera del panel.

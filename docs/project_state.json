@@ -1,19 +1,19 @@
 {
     "project_name": "4-Stock-Zapatos",
-    "version": "4.2.0",
-    "status": "ESTABLE - GOLDEN MILESTONE",
-    "last_updated": "2026-08-20 20:43:00",
+    "version": "4.3.0",
+    "status": "ESTABLE",
+    "last_updated": "2026-08-21 14:03:00",
     "repository_url": "https://github.com/cristobalsssss/4-stock-zapatos.git",
-    "active_phase": "PRODUCCIÓN: VERSIÓN 4.2.0 ESTABLE (GOLDEN MILESTONE)",
-    "last_completed_task": "REVISIÓN #25: Refuerzo de Confianza en Reservas (Sin Pago Inmediato) y Armonización Visual de Logo Tinyglam",
+    "active_phase": "PRODUCCIÓN: VERSIÓN 4.3.0 ESTABLE",
+    "last_completed_task": "REVISIÓN #26: Optimización Mobile-First ('Above the Fold'), Header Boutique Compacto y Pastilla Callout en Chatbot",
     "current_task": "Mantenimiento, Monitoreo de Ventas y Despliegue Continuo en Vercel",
     "milestones_achieved": [
         "1. Base de datos Supabase con catálogo completo 100% verificado (84 modelos, 122 colores, 732 variantes, 265 unidades en bodega).",
-        "2. Soporte oficial de Categorías (Botines, Sandalias, Zapatillas, Botas, Zapatos) sincronizado desde inventario_real.xlsx.",
-        "3. Branding oficial Tinyglam ('Calzado de Cuero Premium Argentino en Chile') con logo armónico en Header, Hero y fallback tipográfico.",
-        "4. Mensajes de confianza 'Sin Pago Inmediato' integrados en Drawer de Reserva y Chatbot ('🔒 Reserva 100% gratuita').",
-        "5. Regla de escasez visual (< 3 pares '¡Últimas unidades!', >= 3 limpio 'Disponible') y paso 2 dinámico según color.",
-        "6. Auto-apertura inmediata de la bolsa de reserva, Chatbot con filtro por categoría y botón 'Ver Catálogo'."
+        "2. Optimización Mobile-First ('Above the Fold') con Hero boutique claro y compacto en móviles y editorial completo en escritorio.",
+        "3. Pastilla Callout interactiva ('✨ ¿Dudas de stock?') en el botón flotante del Chatbot.",
+        "4. Flujo de Reservas 100% estabilizado con generación infalible de #RES-XXXX, integración a Skill 4 (/webhook/crear-reserva) y fallback directo a Supabase.",
+        "5. Chatbot Contextual 100% Local en frontend sin llamadas residuales, con búsqueda cruzada por categoría/talla y enlace directo a WhatsApp.",
+        "6. Mensajes de confianza 'Sin Pago Inmediato / Apartado al Instante' en Bolsa y Chatbot, alineados con la promesa de Stock en Tiempo Real."
     ],
     "environment": {
         "os": "Windows (PowerShell)",

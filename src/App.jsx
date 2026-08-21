@@ -220,9 +220,45 @@ export default function App() {
 
       {/* VISTA 1: CATÁLOGO PÚBLICO */}
       {currentView === 'catalog' && (
-        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8 w-full">
-          {/* Hero Section Editorial */}
-          <div className="relative rounded-3xl bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800 text-white p-6 sm:p-10 md:p-12 overflow-hidden shadow-xl border border-zinc-800">
+        <main className="flex-1 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 md:py-8 space-y-3.5 sm:space-y-6 md:space-y-8 w-full">
+          {/* Hero Section Móvil: Compacto, Boutique y Claro (< md) */}
+          <div className="block md:hidden bg-gradient-to-r from-amber-50/80 via-white to-rose-50/70 rounded-2xl border border-zinc-200/90 py-2.5 px-3.5 shadow-2xs">
+            <div className="flex items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2.5 min-w-0">
+                {!heroLogoError ? (
+                  <img 
+                    src="/logo.png" 
+                    alt="Tinyglam" 
+                    onError={() => setHeroLogoError(true)}
+                    className="h-7 sm:h-8 w-auto object-contain flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center text-white font-display font-black text-xs flex-shrink-0 shadow-2xs">
+                    T
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h1 className="font-display font-black text-sm text-zinc-900 leading-none tracking-tight">
+                      Tinyglam
+                    </h1>
+                    <span className="text-[10px] text-zinc-400 font-medium leading-none">• Cuero Argentino</span>
+                  </div>
+                  <p className="text-[9.5px] text-brand-700 font-semibold tracking-wide truncate mt-0.5">
+                    Calzado de Cuero Premium en Chile
+                  </p>
+                </div>
+              </div>
+
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-700 border border-brand-500/20 text-[9px] font-bold whitespace-nowrap flex-shrink-0">
+                <Sparkles className="w-2.5 h-2.5 text-brand-500" />
+                <span>Stock Real</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Hero Section Escritorio: Editorial y Premium (>= md) */}
+          <div className="hidden md:block relative rounded-3xl bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800 text-white p-8 lg:p-12 overflow-hidden shadow-xl border border-zinc-800">
             <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-10 bg-[radial-gradient(#fb7185_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
             
             <div className="max-w-3xl relative z-10 space-y-4">
@@ -231,35 +267,35 @@ export default function App() {
                 <span>Tinyglam • Stock Físico en Bodega</span>
               </div>
               
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 pt-1">
+              <div className="flex items-center gap-6 pt-1">
                 {!heroLogoError && (
                   <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 inline-flex items-center justify-center max-w-[200px] shadow-md group">
                     <img 
                       src="/logo.png" 
                       alt="Tinyglam Logo" 
                       onError={() => setHeroLogoError(true)}
-                      className="h-10 md:h-12 w-auto object-contain"
+                      className="h-12 w-auto object-contain"
                     />
                   </div>
                 )}
                 <div>
-                  <h1 className="font-display font-black text-3xl sm:text-5xl tracking-tight text-white leading-tight">
+                  <h1 className="font-display font-black text-4xl lg:text-5xl tracking-tight text-white leading-tight">
                     Tinyglam
                   </h1>
-                  <p className="text-brand-300 text-sm sm:text-lg font-bold tracking-wide mt-0.5">
+                  <p className="text-brand-300 text-base lg:text-lg font-bold tracking-wide mt-0.5">
                     Calzado de Cuero Premium Argentino en Chile
                   </p>
                 </div>
               </div>
 
-              <p className="text-zinc-300 text-xs sm:text-sm font-normal max-w-xl leading-relaxed">
+              <p className="text-zinc-300 text-sm font-normal max-w-xl leading-relaxed">
                 Encuentra tu talla y modelo favorito en tiempo real. Añade a tu bolsa y reserva directo con nuestra vendedora oficial vía WhatsApp <strong className="text-white font-semibold underline decoration-brand-500/60 underline-offset-2">sin pago inmediato</strong>.
               </p>
             </div>
           </div>
 
           {/* Barra de Búsqueda y Filtros Rápidos */}
-          <div className="bg-white p-4 sm:p-6 rounded-3xl border border-zinc-200 shadow-xs space-y-4">
+          <div className="bg-white p-3 sm:p-4 md:p-6 rounded-2xl sm:rounded-3xl border border-zinc-200 shadow-xs space-y-3 sm:space-y-4">
             <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
               {/* Buscador de Texto */}
               <div className="relative flex-1">

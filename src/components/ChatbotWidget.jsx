@@ -239,23 +239,36 @@ export default function ChatbotWidget({ products = [], onSelectProduct }) {
 
   return (
     <>
-      {/* Botón Flotante de Apertura */}
+      {/* Botón Flotante de Apertura y Pastilla Callout Destacada */}
       {!isOpen && (
-        <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-5 right-5 z-40 bg-gradient-to-r from-zinc-900 via-brand-800 to-zinc-900 text-white p-3.5 sm:px-4 sm:py-3 rounded-full shadow-2xl hover:shadow-brand-600/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 group border border-white/20 cursor-pointer"
-          title="Abrir Asistente Virtual de Stock"
-        >
-          <div className="relative">
-            <MessageCircle className="w-6 h-6 text-brand-400 group-hover:rotate-12 transition-transform" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
-          </div>
-          <span className="hidden sm:inline font-bold text-xs tracking-wide">
-            Consultar Stock
-          </span>
-        </button>
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 group">
+          {/* Pastilla / Pill Badge Callout Interactiva */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-white/95 backdrop-blur-md border border-brand-200/90 text-zinc-800 rounded-full shadow-lg shadow-zinc-900/10 hover:shadow-brand-500/20 hover:scale-105 active:scale-95 transition-all text-xs font-semibold cursor-pointer"
+            aria-label="Consultar dudas de stock"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-brand-500 animate-pulse" />
+            <span className="font-bold text-zinc-800 tracking-tight text-[11px] sm:text-xs">¿Dudas de stock?</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block shadow-2xs"></span>
+          </button>
+
+          {/* Botón Circular Principal */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            className="bg-gradient-to-r from-zinc-900 via-brand-800 to-zinc-900 text-white p-3 sm:p-3.5 rounded-full shadow-xl hover:shadow-brand-600/30 hover:scale-105 active:scale-95 transition-all flex items-center justify-center border border-white/20 cursor-pointer"
+            title="Abrir Asistente Virtual de Stock"
+            aria-label="Abrir Asistente Virtual de Stock"
+          >
+            <div className="relative">
+              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-brand-300 group-hover:rotate-12 transition-transform" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></span>
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full"></span>
+            </div>
+          </button>
+        </div>
       )}
 
       {/* Ventana Flotante de Chat */}

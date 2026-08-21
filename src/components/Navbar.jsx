@@ -14,25 +14,25 @@ export default function Navbar({
   const [logoError, setLogoError] = React.useState(false);
 
   return (
-    <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-zinc-200/80 transition-all">
+    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-zinc-200/80 transition-all">
       {/* Top micro banner */}
-      <div className="bg-zinc-900 text-zinc-300 text-xs py-1.5 px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-brand-400 animate-pulse" />
-        <span>Tinyglam • Calzado de Cuero Premium Argentino en Chile • Stock en Tiempo Real</span>
+      <div className="bg-zinc-900 text-zinc-300 text-[10.5px] sm:text-xs py-1 sm:py-1.5 px-3 sm:px-4 text-center tracking-wide font-medium flex items-center justify-center gap-1.5 sm:gap-2">
+        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-400 animate-pulse flex-shrink-0" />
+        <span className="truncate">Tinyglam • Calzado de Cuero Premium Argentino en Chile • Stock en Tiempo Real</span>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-4">
         {/* Brand Logo */}
         <div 
           onClick={() => setCurrentView('catalog')}
-          className="flex items-center gap-2.5 cursor-pointer group"
+          className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group"
         >
           {!logoError ? (
             <img 
               src="/logo.png" 
               alt="Tinyglam" 
               onError={() => setLogoError(true)}
-              className="h-9 sm:h-10 md:h-11 w-auto object-contain max-w-[160px] group-hover:scale-103 transition-transform" 
+              className="h-8 sm:h-10 md:h-11 w-auto object-contain max-w-[140px] sm:max-w-[160px] group-hover:scale-103 transition-transform" 
             />
           ) : (
             <div className="flex items-center gap-2.5">

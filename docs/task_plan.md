@@ -87,6 +87,8 @@
 - [x] REVISIÓN #23: Corrección de mapeo en el origen de reservas y unificación total al bucket productos-imagenes
 - [x] REVISIÓN #24: Corrección de SKUs sin colisiones, 732 variantes (84 modelos, 122 colores, 265 pares) y sincronización de columna Categorías
 - [x] REVISIÓN #25: Refuerzo de confianza en reservas ("Sin Pago Inmediato"), botón tranquilizador y armonización visual de Logo Tinyglam en Header y Hero
+- [x] ESTABILIZACIÓN & UAT: Blindaje integral de `crearReserva` (#RES-XXXX), eliminación de endpoints fantasma en Chatbot y verificación de promesas de stock en tiempo real
+- [x] REVISIÓN #26: Optimización Mobile-First ('Above the Fold'), Header boutique claro y compacto en móviles y Pastilla Callout en Chatbot
 - [x] Desplegar y compilar sitio web para producción en Vercel con 0 errores
 
 ## FASE 5: PRUEBAS END-TO-END Y VALIDACIÓN
@@ -101,13 +103,13 @@
 
 ---
 
-### 🏆 HITO ALCANZADO: Versión 4.2.0 Estable (Golden Milestone)
-1. **Confianza y Cero Fricción:** Mensajes explícitos de "Reserva 100% gratuita • No requiere pago ahora" en Drawer y Chatbot con botón "Confirmar Reserva por WhatsApp".
-2. **Branding Tinyglam Armonizado:** Calzado de Cuero Premium Argentino en Chile con soporte de Logo `/logo.png` en Header y Hero banner con fallback tipográfico refinado.
-3. **Base de Datos & Categorías:** 84 modelos categorizados (Botines, Sandalias, Zapatillas, Botas, Zapatos), 122 colores y 732 variantes con 265 unidades en bodega 100% cuadradas con Excel.
-4. **Psicología de Compra y UX:** Regla de escasez visual (< 3 pares "¡Últimas unidades!"), paso 2 dinámico según color y auto-apertura inmediata de la bolsa de reserva.
-5. **Chatbot Inteligente Multi-Filtro:** Búsqueda cruzada por categoría + talla, memoria contextual y botón "Ver Catálogo".
-6. **Supabase Storage y Admin:** Bucket `productos-imagenes` oficial, conversión atómica de reservas a venta, monitor de stock crítico y gestión de galería.
+### 🏆 HITO ALCANZADO: Versión 4.3.0 Estable
+1. **Mobile-First 'Above the Fold':** Cabecera boutique clara y ultra-compacta en móviles que muestra la primera fila de zapatos de inmediato (ocupando <= 35% de la pantalla) y cabecera editorial completa en escritorio.
+2. **Pastilla Callout Interactiva en Chatbot:** Badge flotante interactivo ("✨ ¿Dudas de stock?") con micro-destello e indicador de actividad que incrementa la conversión hacia el asistente virtual.
+3. **Flujo de Reservas Blindado:** Invocación limpia de Skill 4 (`/webhook/crear-reserva`) con generación estricta de `#RES-XXXX` y fallback directo a Supabase.
+4. **Chatbot 100% Local y Contextual:** Asistente conversacional sin llamadas residuales, filtrado multi-categoría y enlace directo a WhatsApp.
+5. **Confianza y Cero Fricción:** Mensajes de "Reserva gratuita • Sin pago inmediato. Tu par queda apartado en el sistema".
+6. **Base de Datos Cuadrada 100%:** 84 modelos categorizados (Botines, Sandalias, Zapatillas, Botas, Zapatos), 122 colores y 732 variantes con 265 unidades en bodega.
 
 ---
 
